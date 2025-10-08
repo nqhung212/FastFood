@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import MercedesLogo from './assets/images/Github-Mark-ea2971cee799.png'
 import VietNam_flagLogo from './assets/images/Flag_of_Vietnam.svg.png'
-import './App.css'
+import './assets/styles/Home.css'
 
 function App() {
   const [count, setCount] = useState(0)
