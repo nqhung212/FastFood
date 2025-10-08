@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import reactLogo from './assets/images/react.svg'
-import viteLogo from '/vite.svg'
+import MercedesLogo from './assets/images/Github-Mark-ea2971cee799.png'
+import VietNam_flagLogo from './assets/images/Flag_of_Vietnam.svg.png'
 import './App.css'
 
 function App() {
@@ -9,25 +9,22 @@ function App() {
   return (
     <>
       <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
+        <a href="https://www.vietnam.vn" target="_blank">
+          <img src={VietNam_flagLogo} className="logo" alt="Vietnam_flag logo" />
         </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
+        <a href="https://guthib.com" target="_blank">
+          <img src={MercedesLogo} className="logo react" alt="Github logo" />
         </a>
       </div>
-      <h1>Vite + React</h1>
+      <h1>Vite and React</h1>
       <div className="card">
         <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
+           {count}
         </button>
         <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
+          Test vui vẻ thôi
         </p>
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </>
   )
 }
