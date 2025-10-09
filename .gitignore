@@ -1,0 +1,72 @@
+# ===============================
+# Node / Dependencies
+# ===============================
+node_modules/
+package-lock.json
+yarn.lock
+
+# ===============================
+# Build / Generated
+# ===============================
+dist/
+build/
+dist-ssr/
+web-build/
+.expo/
+.ios/
+.android/
+*.tsbuildinfo
+
+# ===============================
+# Expo / Native
+# ===============================
+.expo/
+expo-env.d.ts
+.kotlin/
+*.orig.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+<reference types="expo/types" />
+
+# ===============================
+# Metro / React Native
+# ===============================
+.metro-health-check*
+
+# ===============================
+# Debug / Logs
+# ===============================
+logs/
+*.log
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+
+# ===============================
+# Environment
+# ===============================
+.env
+.env.local
+.env.*.local
+
+# ===============================
+# Editor / OS
+# ===============================
+.vscode/
+!.vscode/extensions.json
+.idea/
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+*.pem
+
+# ===============================
+# Examples / Templates
+# ===============================
+app-example
