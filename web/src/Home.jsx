@@ -1,54 +1,16 @@
 import { useEffect, useState } from 'react'
+import { Link } from "react-router-dom";
 import MercedesLogo from './assets/images/Github-Mark-ea2971cee799.png'
 import VietNam_flagLogo from './assets/images/Flag_of_Vietnam.svg.png'
-import { productApi } from "./api/product.js";
 import './assets/styles/Home.css'
 
-function App() {
+
+
+function Web() {
   const [count, setCount] = useState(0)
-  const [products, setProducts] = useState([]);
-
-   useEffect(() => {
-    productApi.getAll().then(setProducts).catch(console.error);
-  }, []); //gọi api 1 lần khi component mount
-
-
   return (
+    <>  
     <>
-      { /* <div>
-        <a href="https://www.vietnam.vn" target="_blank">
-          <img src={VietNam_flagLogo} className="logo" alt="Vietnam_flag logo" />
-        </a>
-        <a href="https://guthib.com" target="_blank">
-          <img src={MercedesLogo} className="logo react" alt="Github logo" />
-        </a>
-      </div>
-      <h1>Vite and React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-           {count}  
-        </button>
-        <p>
-          Test vui vẻ thôi
-        </p>
-      </div> */ }
-     
-    <>
-      <div className="menu-page">
-      <h1>Menu</h1>
-      <div className="product-list">
-        {products.map((p) => (
-          <div key={p.id} className="product-item">
-            <img src={p.image} alt={p.title} width={100} />
-            <h3>{p.title}</h3>
-            <p>{p.price}$</p>
-            <button onClick={() => window.location.href = `/product/${p.id}`}>
-              View Detail
-            </button>
-          </div>
-        ))}
-      </div>
-    </div>
         <div className="header-top-bar">
           {
             <div>
@@ -116,7 +78,10 @@ function App() {
         </header> 
         <div className="body-home"> 
           {/* Body Home */}
-          đây là body-home
+          <h1>Chào mừng đến với trang Home</h1>
+        <Link to="/products">
+          <button>Xem danh sách sản phẩm</button>
+        </Link>
           <div className="body-home-top">
             {}
             đây là body-home-top
@@ -147,4 +112,4 @@ function App() {
   )
 }
 
-export default App
+export default Web
