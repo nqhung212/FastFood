@@ -1,10 +1,17 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import MercedesLogo from './assets/images/Github-Mark-ea2971cee799.png'
 import VietNam_flagLogo from './assets/images/Flag_of_Vietnam.svg.png'
+import { productApi } from "./api/product.js";
 import './assets/styles/Home.css'
 
 function App() {
   const [count, setCount] = useState(0)
+  const [products, setProducts] = useState([]);
+
+   useEffect(() => {
+    productApi.getAll().then(setProducts).catch(console.error);
+  }, []); //gọi api 1 lần khi component mount
+
 
   return (
     <>
@@ -27,7 +34,21 @@ function App() {
       </div> */ }
      
     <>
-      
+      <div className="menu-page">
+      <h1>Menu</h1>
+      <div className="product-list">
+        {products.map((p) => (
+          <div key={p.id} className="product-item">
+            <img src={p.image} alt={p.title} width={100} />
+            <h3>{p.title}</h3>
+            <p>{p.price}$</p>
+            <button onClick={() => window.location.href = `/product/${p.id}`}>
+              View Detail
+            </button>
+          </div>
+        ))}
+      </div>
+    </div>
         <div className="header-top-bar">
           {
             <div>
