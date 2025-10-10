@@ -1,10 +1,9 @@
-import { useEffect, useState } from 'react'
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { useState } from 'react'
+import { Link } from 'react-router-dom';
 import MercedesLogo from './assets/images/Github-Mark-ea2971cee799.png'
 import VietNam_flagLogo from './assets/images/Flag_of_Vietnam.svg.png'
 import './assets/styles/Home.css'
-// import  Product  from './pages/menu.jsx'
-import Categories from './components/product-categories-list.jsx';
+import ProductCategoriesList from './components/product-categories-list.jsx';
 
 
 function Web() {
@@ -33,7 +32,7 @@ function Web() {
         </div>
         </div>
         <header className="header-banner"> 
-          {/* Header Banner - logo, search, login, cart, category */}
+          {/* Header Banner - logo, search, login, cart */}
           <div className="header-container">
             <div className="header-left">
               {/* Logo container */}
@@ -62,6 +61,12 @@ function Web() {
               <div className="header-cart" id="header-cart">
                 <button type="button">Giỏ hàng (0)</button>
               </div>
+              Menu
+              <div className="header-menu" id="header-menu">
+                <Link to="/menu">
+                  <button type="button">Danh sách sản phẩm (0)</button>
+                </Link>  
+              </div>
             </div>
           </div>
 
@@ -87,9 +92,9 @@ function Web() {
                     {}
                      <nav className="header-categories" id="header-categories" aria-label="Danh mục">
                   <ul>
-                  <Categories category="Burger" />
-                  <Categories category="Chicken" />
-                  <Categories category="Fries" /> 
+                  <ProductCategoriesList category="Burger" />
+                  <ProductCategoriesList category="Chicken" />
+                  <ProductCategoriesList category="Fries" /> 
                   </ul>
                 </nav>
                     </div>

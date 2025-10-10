@@ -1,20 +1,29 @@
-// import { DataProducts } from "../data/products-data.js";
-// import { Link } from "react-router-dom";
+//src/pages/menu.jsx
+import { Link } from "react-router-dom";
+import { productsData } from "../data/products-data.js";
+export default function Menu() {
+  return (
+    <div className="menu-page">
+      <h2 className="menu-title">Danh sách sản phẩm</h2>
 
-// export default function Product() {
-//   return (
-//     <div className="product-page">
-//       <div className="product-list">
-//         {DataProducts.map((p) => (
-//           <div key={p.id} className="product-card">
-//             <img src={p.image} alt={p.name} width={100} />
-//             <h3>{p.name}</h3>
-//             <p>{p.description}</p>
-//             <p>Giá: {p.price.toLocaleString()}đ</p>
-//             <Link to={`/product/${p.id}`}>Xem chi tiết</Link>
-//           </div>
-//         ))}
-//       </div>
-//     </div>
-//   );
-// }
+      <div className="product-list">
+        {productsData.map((p) => (
+          <Link
+            key={p.id}
+            to={`/product/${p.slug}`} // Link đến ProductDetail
+            className="product-card"
+          >
+            <img src={p.image} alt={p.name} className="product-image" width={150}/> {/* css tạm */}
+            <div className="product-info">
+              <h3 className="product-name">{p.name}</h3>
+              <p className="product-description">{p.description}</p>
+              <p className="product-price">
+                {p.price.toLocaleString()}₫
+              </p>
+            </div>
+          </Link>
+        ))}
+      </div>
+    </div>
+  );
+}

@@ -1,31 +1,28 @@
-// src/components/product-categories-list.jsx
-import React, { useMemo } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useMemo } from "react";
+import { Link, useParams } from "react-router-dom";
 import { productsData } from "../data/products-data.js";
 
-export default function Categories({ category: propCategory }) {
-  const navigate = useNavigate();
+export default function ProductCategoriesList({ category: propCategory }) {
   const { category: paramCategory } = useParams();
   const category = propCategory || paramCategory;
 
-  const products = useMemo(
-    () => productsData.filter(
+  const products = useMemo(() => {
+    return productsData.filter(
       (p) => p.categories.toLowerCase() === category?.toLowerCase()
-    ),
-    [category]
-  );
+    );
+  }, [category]);
 
   return (
     <div className="categories-container">
       <h2 className="categories-title">{category}</h2>
       <div className="categories-grid">
         {products.map((p) => (
-          <div
+          <Link
             key={p.id}
+            to={`/product/${p.slug}`}
             className="product-card"
-            onClick={() => navigate(`/product/${p.id}`)}
           >
-            <img src={p.image} alt={p.name} className="product-image" />
+            <img src={p.image} alt={p.name} className="product-image" width={150} /> {/* css tạm */}
             <div className="product-info">
               <h3 className="product-name">{p.name}</h3>
               <p className="product-description">{p.description}</p>
@@ -33,7 +30,7 @@ export default function Categories({ category: propCategory }) {
                 <strong>{p.price.toLocaleString()}₫</strong>
               </p>
             </div>
-          </div>
+          </Link>
         ))}
       </div>
     </div>
