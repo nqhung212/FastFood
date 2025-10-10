@@ -1,15 +1,15 @@
 import { useEffect, useState } from 'react'
-import { Link } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import MercedesLogo from './assets/images/Github-Mark-ea2971cee799.png'
 import VietNam_flagLogo from './assets/images/Flag_of_Vietnam.svg.png'
 import './assets/styles/Home.css'
-
+// import  Product  from './pages/menu.jsx'
+import Categories from './components/product-categories-list.jsx';
 
 
 function Web() {
   const [count, setCount] = useState(0)
   return (
-    <>  
     <>
         <div className="header-top-bar">
           {
@@ -78,21 +78,24 @@ function Web() {
         </header> 
         <div className="body-home"> 
           {/* Body Home */}
-          <h1>Chào mừng đến với trang Home</h1>
-        <Link to="/products">
-          <button>Xem danh sách sản phẩm</button>
-        </Link>
+       
           <div className="body-home-top">
             {}
-            đây là body-home-top
-            </div>
-            <div className="body-home-main">
-              {}
-              đây là body-home-main
-              </div>
-            <div className="body-home-trend">
-              {}
-              đây là body-home-trend
+            {/* <Product /> */}
+                  </div>
+                  <div className="body-home-main">
+                    {}
+                     <nav className="header-categories" id="header-categories" aria-label="Danh mục">
+                  <ul>
+                  <Categories category="Burger" />
+                  <Categories category="Chicken" />
+                  <Categories category="Fries" /> 
+                  </ul>
+                </nav>
+                    </div>
+                  <div className="body-home-trend">
+                    {/* Trend */}
+                    đây là body-home-trend
             </div>
         </div> 
         <footer className="footer-banner"> 
@@ -108,7 +111,6 @@ function Web() {
             </div>  
         </footer>  
       </>
-    </> 
   )
 }
 
