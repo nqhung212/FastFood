@@ -5,7 +5,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./assets/styles/main.css";
 import Menu from "./pages/menu.jsx";
 import ProductDetail from "./pages/product-detail.jsx";
-import Web from './Home.jsx'
+import Web from './pages/home.jsx'
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>

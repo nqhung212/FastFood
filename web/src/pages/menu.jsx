@@ -1,11 +1,13 @@
 //src/pages/menu.jsx
 import { Link } from "react-router-dom";
+import MainLayout from "../layouts/home-layout.jsx";
+import '../assets/styles/home-layout.css'
 import { productsData } from "../data/products-data.js";
 export default function Menu() {
   return (
+    <MainLayout>
     <div className="menu-page">
       <h2 className="menu-title">Danh sách sản phẩm</h2>
-
       <div className="product-list">
         {productsData.map((p) => (
           <Link
@@ -25,5 +27,6 @@ export default function Menu() {
         ))}
       </div>
     </div>
+    </MainLayout>
   );
 }

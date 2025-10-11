@@ -1,3 +1,4 @@
+// src/components/product-categories-list.jsx
 import { useMemo } from "react";
 import { Link, useParams } from "react-router-dom";
 import { productsData } from "../data/products-data.js";

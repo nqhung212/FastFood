@@ -1,13 +1,11 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom';
-import MercedesLogo from './assets/images/Github-Mark-ea2971cee799.png'
-import VietNam_flagLogo from './assets/images/Flag_of_Vietnam.svg.png'
-import './assets/styles/Home.css'
-import ProductCategoriesList from './components/product-categories-list.jsx';
+import MercedesLogo from '../assets/images/Github-Mark-ea2971cee799.png'
+import VietNam_flagLogo from '../assets/images/Flag_of_Vietnam.svg.png'
+import '../assets/styles/home-layout.css'
 
 
-function Web() {
-  const [count, setCount] = useState(0)
+export default function MainLayout({ children }) {
   return (
     <>
         <div className="header-top-bar">
@@ -81,28 +79,9 @@ function Web() {
             </ul>
           </nav>
         </header> 
-        <div className="body-home"> 
-          {/* Body Home */}
-       
-          <div className="body-home-top">
-            {}
-            {/* <Product /> */}
-                  </div>
-                  <div className="body-home-main">
-                    {}
-                     <nav className="header-categories" id="header-categories" aria-label="Danh mục">
-                  <ul>
-                  <ProductCategoriesList category="Burger" />
-                  <ProductCategoriesList category="Chicken" />
-                  <ProductCategoriesList category="Fries" /> 
-                  </ul>
-                </nav>
-                    </div>
-                  <div className="body-home-trend">
-                    {/* Trend */}
-                    đây là body-home-trend
-            </div>
-        </div> 
+        <main className="body-home"> 
+            {children}
+        </main> 
         <footer className="footer-banner"> 
           {/* Footer Banner */}
           đây là footer-banner
@@ -119,4 +98,3 @@ function Web() {
   )
 }
 
-export default Web
