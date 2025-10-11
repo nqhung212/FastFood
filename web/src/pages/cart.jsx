@@ -13,7 +13,7 @@ export default function CartPage() {
         {cartItems.length === 0 ? (
           <p>Giỏ hàng trống</p>
         ) : (
-          <ul className="cart-list">
+          <ul className="cart-list" style={{ listStyle: "none" }}>
             {cartItems.map((item) => (
               <li key={item.id} className="cart-item">
                 <img src={item.image} alt={item.name} width={80} />

@@ -25,7 +25,7 @@ export default function Menu() {
               className="product-card"
               style={{ cursor: "pointer", textDecoration: "none", color: "inherit" }} 
             >
-              <img src={`/images/${p.image}`} alt={p.name} />
+              <img src={`/images/${p.image}`} width={150} alt={p.name} />
               <div className="product-info">
                 <h3 className="product-name">{p.name}</h3>
                 <p className="product-description">{p.description}</p>

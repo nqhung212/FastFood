@@ -7,7 +7,6 @@ export default function ProductCategoriesList({ category: propCategory }) {
   const category = propCategory || paramCategory;
   const [products, setProducts] = useState([]);
 
-  // ✅ Giả lập gọi API từ json-server
   useEffect(() => {
     fetch("http://localhost:3001/products")
       .then((res) => res.json())
@@ -27,7 +26,7 @@ export default function ProductCategoriesList({ category: propCategory }) {
       <div className="categories-grid">
         {filteredProducts.map((p) => (
           <Link key={p.id} to={`/product/${p.slug}`} className="product-card">
-            <img src={`/images/${p.image}`} alt={p.name} />
+            <img src={`/images/${p.image}`} width={150} alt={p.name} />
             <div className="product-info">
               <h3 className="product-name">{p.name}</h3>
               <p className="product-description">{p.description}</p>

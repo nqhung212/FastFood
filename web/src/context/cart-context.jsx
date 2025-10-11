@@ -9,7 +9,6 @@ export function CartProvider({ children }) {
 
   const addToCart = (product) => {
     setCartItems((prev) => {
-      // Nếu sản phẩm đã có trong giỏ thì không thêm trùng
       if (prev.find((item) => item.id === product.id)) return prev;
       return [...prev, { ...product, quantity: 1 }];
     });
