@@ -1,11 +1,13 @@
+// src/layouts/home-layout.jsx
 import { useState } from 'react'
 import { Link } from 'react-router-dom';
 import MercedesLogo from '../assets/images/Github-Mark-ea2971cee799.png'
 import VietNam_flagLogo from '../assets/images/Flag_of_Vietnam.svg.png'
 import '../assets/styles/home-layout.css'
-
-
+import { useCart } from "../context/cart-context";
+import CartPage from '../pages/cart.jsx';
 export default function MainLayout({ children }) {
+     const { cartItems, toggleCart } = useCart();
   return (
     <>
         <div className="header-top-bar">
@@ -56,9 +58,11 @@ export default function MainLayout({ children }) {
               </div>
 
               {/* Cart */}
-              <div className="header-cart" id="header-cart">
-                <button type="button">Giỏ hàng (0)</button>
-              </div>
+              <div className="header-cart">
+              <Link to="/cart">
+                <button type="button">Giỏ hàng ({cartItems.length})</button>
+              </Link>
+            </div>
               Menu
               <div className="header-menu" id="header-menu">
                 <Link to="/menu">
