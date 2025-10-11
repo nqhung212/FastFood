@@ -1,8 +1,6 @@
 // src/layouts/home-layout.jsx
 import { useState } from 'react'
 import { Link } from 'react-router-dom';
-import MercedesLogo from '../assets/images/Github-Mark-ea2971cee799.png'
-import VietNam_flagLogo from '../assets/images/Flag_of_Vietnam.svg.png'
 import '../assets/styles/home-layout.css'
 import { useCart } from "../context/cart-context";
 import CartPage from '../pages/cart.jsx';
@@ -14,10 +12,10 @@ export default function MainLayout({ children }) {
           {
             <div>
         <a href="https://www.vietnam.vn" target="_blank">
-          <img src={VietNam_flagLogo} className="logo" alt="Vietnam_flag logo" />
+          {/* <img src={VietNam_flagLogo} className="logo" alt="Vietnam_flag logo" /> */}
         </a>
         <a href="https://guthib.com" target="_blank">
-          <img src={MercedesLogo} className="logo react" alt="Github logo" />
+          {/* <img src={MercedesLogo} className="logo react" alt="Github logo" /> */}
         </a>
       </div>
       }
@@ -38,7 +36,7 @@ export default function MainLayout({ children }) {
               {/* Logo container */}
               <div className="header-logo" id="header-logo">
                 <a href="/" aria-label="Homepage">
-                  <img src={MercedesLogo} alt="Logo" />
+                  {/* <img src={MercedesLogo} alt="Logo" /> */}
                 </a>
               </div>
             </div>

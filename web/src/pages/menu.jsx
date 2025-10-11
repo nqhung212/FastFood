@@ -1,32 +1,42 @@
-//src/pages/menu.jsx
+// src/pages/menu.jsx
 import { Link } from "react-router-dom";
 import MainLayout from "../layouts/home-layout.jsx";
-import '../assets/styles/home-layout.css'
-import { productsData } from "../data/products-data.js";
+import "../assets/styles/home-layout.css";
+import { useProducts } from "../hooks/use-products.js";
+
 export default function Menu() {
+  const { products = [], loading, error } = useProducts();
+
   return (
     <MainLayout>
-    <div className="menu-page">
-      <h2 className="menu-title">Danh sách sản phẩm</h2>
-      <div className="product-list">
-        {productsData.map((p) => (
-          <Link
-            key={p.id}
-            to={`/product/${p.slug}`} // Link đến ProductDetail
-            className="product-card"
-          >
-            <img src={p.image} alt={p.name} className="product-image" width={150}/> {/* css tạm */}
-            <div className="product-info">
-              <h3 className="product-name">{p.name}</h3>
-              <p className="product-description">{p.description}</p>
-              <p className="product-price">
-                {p.price.toLocaleString()}₫
-              </p>
-            </div>
-          </Link>
-        ))}
+      <div className="menu-page">
+        <h2 className="menu-title">Danh sách sản phẩm</h2>
+
+        {loading && <p>Đang tải sản phẩm...</p>}
+        {error && <p style={{ color: "red" }}>Lỗi tải dữ liệu: {error}</p>}
+
+        <div className="product-list">
+          {(!loading && products.length === 0) && <p>Không có sản phẩm.</p>}
+
+          {products.map((p) => (
+            <Link
+              key={p.id}
+              to={`/product/${p.slug}`}
+              className="product-card"
+              style={{ cursor: "pointer", textDecoration: "none", color: "inherit" }} 
+            >
+              <img src={`/images/${p.image}`} alt={p.name} />
+              <div className="product-info">
+                <h3 className="product-name">{p.name}</h3>
+                <p className="product-description">{p.description}</p>
+                <p className="product-price">
+                  <strong>{p.price.toLocaleString()}₫</strong>
+                </p>
+              </div>
+            </Link>
+          ))}
+        </div>
       </div>
-    </div>
     </MainLayout>
   );
 }
