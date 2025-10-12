@@ -1,32 +1,13 @@
 // src/layouts/home-layout.jsx
+import '../assets/styles/home-layout.css'
 import { useState } from 'react'
 import { Link } from 'react-router-dom';
-import '../assets/styles/home-layout.css'
 import { useCart } from "../context/cart-context";
-import CartPage from '../pages/cart.jsx';
+
 export default function MainLayout({ children }) {
      const { cartItems, toggleCart } = useCart();
 return (
     <>
-        <div className="page-header">
-            <div className="panel-warpper"></div>
-
-            <div className="header-content">
-                <div className="column colomn-left">
-                    <div className="toggle-header"></div>
-
-                    <div className="logo-header">
-                        <a href="https://www.vietnam.vn" target="_blank" rel="noreferrer">
-                            <img src="/images/Flag_of_Vietnam.svg.png" alt="Vietnam flag logo" className="logo-fastfood" />
-                        </a>
-                    </div>
-                </div>
-
-                <div className="column column-mid"></div>
-
-                <div className="column column-right"></div>
-            </div>
-        </div>
         <header className="header-banner">
             {/* Header Banner - logo, search, login, cart */}
             <div className="header-container">
@@ -69,7 +50,8 @@ return (
             </div>
 
             {/* Category row - can be a horizontal nav or dropdowns */}
-            <nav className="header-categories" id="header-categories" aria-label="Danh mục">
+            <div className="header-separator">
+                <nav className="header-categories" id="header-categories" aria-label="Danh mục">
                 <ul>
                     <li><a href="#">Tất cả</a></li>
                     <li><a href="#">Điện thoại</a></li>
@@ -77,7 +59,8 @@ return (
                     <li><a href="#">Phụ kiện</a></li>
                     <li><a href="#">Khuyến mãi</a></li>
                 </ul>
-            </nav>
+                </nav>
+            </div>
         </header>
         <main className="body-home">
             {children}

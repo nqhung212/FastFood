@@ -8,6 +8,7 @@ import Menu from "./pages/menu.jsx";
 import ProductDetail from "./pages/product-detail.jsx";
 import Web from "./pages/home.jsx";
 import { CartProvider } from "./context/cart-context.jsx";
+import MenuCategories from "./pages/menu-categories.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -16,6 +17,7 @@ createRoot(document.getElementById("root")).render(
         <Routes>
           <Route path="/" element={<Web />} />
           <Route path="/menu" element={<Menu />} />
+          <Route path="/menu/:category" element={<MenuCategories />} />
           <Route path="/product/:slug" element={<ProductDetail />} />
           <Route path="/cart" element={<CartPage />} />
         </Routes>
