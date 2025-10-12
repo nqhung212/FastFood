@@ -37,7 +37,9 @@ export default function MainLayout({ children }) {
           <div className="header-right">
             {/* Login */}
             <div className="header-login" id="header-login">
-              <button type="button">Đăng nhập</button>
+              <Link to="/login">
+                <button type="button">Đăng nhập</button>
+              </Link>
             </div>
             {/* Cart */}
             <div className="header-cart">
@@ -59,10 +61,10 @@ export default function MainLayout({ children }) {
           <nav className="header-categories" id="header-categories" aria-label="Danh mục">
             <ul>
               <li>
-                <a href="#">About</a>
+                <Link to="/">Home</Link>
               </li>
               <li>
-                <a href="#">Menu</a>
+                <Link to="/menu">Menu</Link>
               </li>
               <li>
                 <a href="#">Contact</a>

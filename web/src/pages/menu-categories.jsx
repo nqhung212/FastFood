@@ -1,7 +1,7 @@
 // src/pages/menu-categories.jsx
 import { useParams, Link } from 'react-router-dom'
 import MenuLayout from '../layouts/menu-layout.jsx'
-import { useProductsByCategory } from '../hooks/use-products-by-category.js'
+import { useProductsByCategory } from '../hooks/use-categories.js'
 
 export default function MenuCategories() {
   const { category } = useParams()

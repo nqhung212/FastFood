@@ -9,7 +9,7 @@ import ProductDetail from './pages/product-detail.jsx'
 import Web from './pages/home.jsx'
 import { CartProvider } from './context/cart-context.jsx'
 import MenuCategories from './pages/menu-categories.jsx'
-
+import Login from "./pages/login.jsx";
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <CartProvider>
@@ -20,6 +20,7 @@ createRoot(document.getElementById('root')).render(
           <Route path="/menu/:category" element={<MenuCategories />} />
           <Route path="/product/:slug" element={<ProductDetail />} />
           <Route path="/cart" element={<CartPage />} />
+          <Route path="/login" element={<Login/>} />
         </Routes>
       </BrowserRouter>
     </CartProvider>

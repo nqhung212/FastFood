@@ -39,7 +39,7 @@ export default function ProductDetail() {
           onClick={() =>
             addToCart({
               ...product,
-              image: `/images/${product.image}`, // đảm bảo lưu đường dẫn đầy đủ
+              image: `/images/${product.image}`, 
             })
           }
         >

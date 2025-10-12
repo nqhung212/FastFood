@@ -6,20 +6,23 @@ export default function MenuLayout({ children }) {
   return (
     <MainLayout>
       <div className="menu-layout">
-        {/* Hình banner riêng của trang menu */}
         <div className="menu-banner">
           sad sad
           <h1>Menu Banner</h1>
           <nav>
             <ul>
-              <li><Link to="/menu/Burger">Burger</Link></li>
-              <li><Link to="/menu/Chicken">Chicken</Link></li>
-              <li><Link to="/menu/Fries">Fries</Link></li>
+              <li>
+                <Link to="/menu/Burger">Burger</Link>
+              </li>
+              <li>
+                <Link to="/menu/Chicken">Chicken</Link>
+              </li>
+              <li>
+                <Link to="/menu/Fries">Fries</Link>
+              </li>
             </ul>
           </nav>
         </div>
-
-        {/* Nội dung chính của các trang menu */}
         <div className="menu-content">{children}</div>
       </div>
     </MainLayout>
