@@ -1,8 +1,17 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'MergeBlack', sans-serif;
+  background-color: #fff5f5;
+  color: #333;
+}
 :root {
-  font-family: 'MergeBlack', sans-serif;
-  background-color: #242424;
-} 
-.root 
-{
-  font-family: 'MergeBlack', sans-serif;
+  --primary-red: #e31837;
+  --secondary-yellow: #f6c100;
+  --light-bg: #fff5f5;
+  --text-dark: #333;
 }

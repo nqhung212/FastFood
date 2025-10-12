@@ -1,19 +1,35 @@
-/* ====== Reset cơ bản ====== */
-body {
-  margin: 0;
-  font-family: 'MergeBlack', sans-serif;
-  background-color: #fff5f5;
-  color: #333;
-}
-
-/* ====== Header Banner ====== */
 .header-banner {
-  background-color: #e31837; 
+  background-color: var(--primary-red); 
   color: white;
-  border-bottom: 4px solid #f6c100; 
+  border-bottom: 4px solid var(--secondary-yellow); 
   position: sticky;
   top: 0;
   z-index: 100;
+}
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.header-banner {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.body-home {
+  flex: 1;
+  padding-top: 10px;
+}
+
+.footer-banner {
+  margin-top: auto;
 }
 
 .header-container {
@@ -24,14 +40,10 @@ body {
   margin: 0 auto;
   padding: 10px 30px;
 }
-
-/* ===== Logo ===== */
 .header-logo img {
   height: 55px;
   width: auto;
 }
-
-/* ===== Search box ===== */
 .header-search {
   display: flex;
   align-items: center;
@@ -50,8 +62,8 @@ body {
 }
 
 .header-search .search-button {
-  background-color: #f6c100;
-  color: #e31837;
+  background-color: var(--secondary-yellow);
+  color: var(--primary-red);
   border: none;
   padding: 8px 14px;
   border-radius: 8px;
@@ -63,8 +75,6 @@ body {
 .header-search .search-button:hover {
   background-color: #ffd733;
 }
-
-/* ===== Right section ===== */
 .header-right {
   display: flex;
   align-items: center;
@@ -72,8 +82,8 @@ body {
 }
 
 .header-right button {
-  background-color: #f6c100;
-  color: #e31837;
+  background-color: var(--secondary-yellow);
+  color: var(--primary-red);
   border: none;
   border-radius: 20px;
   padding: 8px 16px;
@@ -90,11 +100,9 @@ body {
   text-decoration: none;
   color: inherit;
 }
-
-/* ===== Category bar ===== */
 .header-separator {
-  background-color: #e31837;
-  border-top: 2px solid #f6c100;
+  background-color: var(--primary-red);
+  border-top: 2px solid var(--secondary-yellow);
   text-align: center;
 }
 
@@ -117,7 +125,7 @@ body {
 }
 
 .header-categories a:hover {
-  color: #f6c100;
+  color: var(--secondary-yellow);
 }
 
 .header-categories a::after {
@@ -125,7 +133,7 @@ body {
   position: absolute;
   width: 0%;
   height: 3px;
-  background: #f6c100;
+  background: var(--secondary-yellow);
   left: 0;
   bottom: -6px;
   transition: width 0.3s ease;
@@ -134,17 +142,13 @@ body {
 .header-categories a:hover::after {
   width: 100%;
 }
-
-/* ===== Main content ===== */
 .body-home {
   padding: 40px;
   max-width: 1300px;
   margin: 0 auto;
 }
-
-/* ===== Footer ===== */
 .footer-banner {
-  background-color: #e31837;
+  background-color: var(--primary-red);
   color: #fff;
   text-align: center;
   padding: 30px 0;
@@ -160,8 +164,6 @@ body {
   font-size: 13px;
   opacity: 0.8;
 }
-
-/* ===== Responsive ===== */
 @media (max-width: 768px) {
   .header-container {
     flex-direction: column;
@@ -177,45 +179,4 @@ body {
     gap: 15px;
     padding: 10px;
   }
-}
-/* --- Danh mục Home --- */
-.home-categories {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 24px;
-  padding: 40px;
-  justify-items: center;
-}
-
-.category-card {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background: #fff5f5;
-  border-radius: 16px;
-  overflow: hidden;
-  text-decoration: none;
-  color: #b22222;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-  transition: all 0.3s ease;
-  width: 220px;
-  height: 240px;
-}
-
-.category-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-}
-
-.category-image {
-  width: 100%;
-  height: 160px;
-  object-fit: cover;
-}
-
-.category-title {
-  margin-top: 12px;
-  font-size: 18px;
-  font-weight: bold;
-  text-transform: uppercase;
 }

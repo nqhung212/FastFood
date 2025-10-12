@@ -1,5 +1,5 @@
 // src/pages/home.jsx
-import '../assets/styles/home-layout.css'
+import '../assets/styles/home.css'
 import { Link } from 'react-router-dom'
 import React from 'react'
 import MainLayout from '../layouts/home-layout.jsx'
