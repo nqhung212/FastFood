@@ -78,7 +78,12 @@ body {
 .header-right {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 20px;
+}
+.header-auth {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .header-right button {
@@ -113,6 +118,23 @@ body {
   list-style: none;
   margin: 0;
   padding: 12px 0;
+}
+
+.header-auth button,
+.header-cart button {
+  background-color: var(--secondary-yellow);
+  color: var(--primary-red);
+  border: none;
+  border-radius: 20px;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.2s;
+}
+
+.header-auth button:hover,
+.header-cart button:hover {
+  background-color: #ffe45c;
 }
 
 .header-categories a {
@@ -179,4 +201,18 @@ body {
     gap: 15px;
     padding: 10px;
   }
+  .header-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.user-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 2px solid var(--secondary-yellow);
+  object-fit: cover;
+}
+
 }
