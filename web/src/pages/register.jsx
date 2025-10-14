@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-
+import MainLayout from '../layouts/home-layout'
 export default function Register() {
   const navigate = useNavigate()
   const [form, setForm] = useState({
@@ -44,6 +44,7 @@ export default function Register() {
   }
 
   return (
+    <MainLayout>
     <div className="auth-page">
       <h2>Đăng ký tài khoản</h2>
       <form onSubmit={handleSubmit} className="auth-form">
@@ -94,5 +95,6 @@ export default function Register() {
       </form>
       {message && <p>{message}</p>}
     </div>
+    </MainLayout>
   )
 }
