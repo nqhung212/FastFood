@@ -2,10 +2,12 @@
 import { Link } from 'react-router-dom'
 import { useCart } from '../context/cart-context'
 import { useAuth } from '../context/auth-context'
+import { useSearch } from '../hooks/use-search'
 
 export default function Header() {
   const { cartItems } = useCart()
   const { user, logout } = useAuth()
+  const { searchTerm, setSearchTerm, handleSearch, handleKeyPress } = useSearch()
 
   return (
     <header className="header-banner">
@@ -20,8 +22,21 @@ export default function Header() {
 
         <div className="header-center">
           <div className="header-search" id="header-search">
-            <input type="search" placeholder="Tìm kiếm sản phẩm, danh mục..." aria-label="Search" />
-            <button type="button" className="search-button">Tìm</button>
+            <input 
+              type="search"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              onKeyPress={handleKeyPress}
+              placeholder="Tìm kiếm sản phẩm, danh mục..."
+              aria-label="Search"
+            />
+            <button 
+              type="button" 
+              className="search-button"
+              onClick={handleSearch}
+            >
+              Tìm
+            </button>
           </div>
         </div>
 
