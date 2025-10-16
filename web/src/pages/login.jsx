@@ -1,9 +1,10 @@
 // src/pages/login.jsx
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useUsers } from '../hooks/use-users'
 import MainLayout from '../layouts/home-layout'
+import { useUsers } from '../hooks/use-users'
 import { useAuth } from '../context/auth-context'
+import { API_BASE_URL } from '../constants'
 
 export default function Login() {
   const { users, loading, error } = useUsers()
@@ -13,18 +14,27 @@ export default function Login() {
   const [message, setMessage] = useState('')
   const navigate = useNavigate()
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault()
     if (loading || error) return
 
-    const user = users.find((u) => u.username === username && u.password === password)
+    try {
+      const res = await fetch(`${API_BASE_URL}/users`)
+      const apiUsers = await res.json()
+      const localUsers = JSON.parse(sessionStorage.getItem('users')) || []
+      const allUsers = [...apiUsers, ...localUsers]
 
-    if (user) {
-      setTimeout(() => login(user), 800)
-      setMessage('Đăng nhập thành công!')
-      setTimeout(() => navigate('/'), 800)
-    } else {
-      setMessage('Sai tài khoản hoặc mật khẩu')
+      const user = allUsers.find((u) => u.username === username && u.password === password)
+
+      if (user) {
+        setTimeout(() => login(user), 800)
+        setMessage('Đăng nhập thành công!')
+        setTimeout(() => navigate('/'), 800)
+      } else {
+        setMessage('Sai tài khoản hoặc mật khẩu')
+      }
+    } catch (err) {
+      setMessage('Lỗi khi đăng nhập: ' + err.message)
     }
   }
 

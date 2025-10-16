@@ -64,7 +64,8 @@
     "phone": "0909123456",
     "email": "buyer@example.com",
     "address": "123 Lê Lợi, Quận 1, TP.HCM",
-    "role": "buyer"
+    "role": "buyer",
+    "token": "token_buyer_demo_123"
   },
   {
     "id": 2,
@@ -74,7 +75,8 @@
     "phone": "0988123456",
     "email": "admin@example.com",
     "address": "456 Nguyễn Huệ, Quận 1, TP.HCM",
-    "role": "admin"
+    "role": "admin",
+    "token": "token_admin_demo_456"
   },
   {
     "id": 3,
@@ -84,7 +86,8 @@
     "phone": "0909123123",
     "email": "hehe@example.com",
     "address": "789 CMT8, Quận 3, TP.HCM",
-    "role": "buyer"
+    "role": "buyer",
+    "token": "token_hehe_demo_789"
   }
 ],
   "carts": [],
