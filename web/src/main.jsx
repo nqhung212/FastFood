@@ -9,16 +9,16 @@ import { publicRoutes } from './routes'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <AuthProvider>
+    <BrowserRouter>
       <CartProvider>
-        <BrowserRouter>
+        <AuthProvider>
           <Routes>
             {publicRoutes.map(({ path, element: Element }) => (
               <Route key={path} path={path} element={<Element />} />
             ))}
           </Routes>
-        </BrowserRouter>
+        </AuthProvider>
       </CartProvider>
-    </AuthProvider>
+    </BrowserRouter>
   </StrictMode>
 )

@@ -1,41 +1,36 @@
 // src/context/auth-context.jsx
 import { createContext, useContext, useState, useEffect } from 'react'
-import { TOKEN_KEY, USER_KEY } from '../constants'
+import { useNavigate } from 'react-router-dom'
+import { AUTH_KEY } from '../constants'
+import { useCart } from './cart-context'
 
 const AuthContext = createContext()
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null)
-  const [token, setToken] = useState(null)
+  const navigate = useNavigate()
+  const { clearCart } = useCart()
 
   useEffect(() => {
-    const storedUser = localStorage.getItem(USER_KEY)
-    const storedToken = localStorage.getItem(TOKEN_KEY)
-    if (storedUser && storedToken) {
-      setUser(JSON.parse(storedUser))
-      setToken(storedToken)
-    }
+    const savedUser = localStorage.getItem(AUTH_KEY)
+    if (savedUser) setUser(JSON.parse(savedUser))
   }, [])
 
-  const login = (user) => {
-    setUser(user)
-    setToken(user.token)
-    localStorage.setItem(USER_KEY, JSON.stringify(user))
-    localStorage.setItem(TOKEN_KEY, user.token)
+  const login = (userData) => {
+    setUser(userData)
+    localStorage.setItem(AUTH_KEY, JSON.stringify(userData))
   }
 
   const logout = () => {
     setUser(null)
-    setToken(null)
-    localStorage.removeItem(USER_KEY)
-    localStorage.removeItem(TOKEN_KEY)
+    localStorage.removeItem(AUTH_KEY)
+    clearCart()
+    navigate('/')
   }
 
-  return (
-    <AuthContext.Provider value={{ user, token, login, logout }}>
-      {children}
-    </AuthContext.Provider>
-  )
+  return <AuthContext.Provider value={{ user, login, logout }}>{children}</AuthContext.Provider>
 }
 
-export const useAuth = () => useContext(AuthContext)
+export function useAuth() {
+  return useContext(AuthContext)
+}

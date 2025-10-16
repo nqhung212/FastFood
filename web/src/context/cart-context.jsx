@@ -30,9 +30,21 @@ export function CartProvider({ children }) {
 
   const toggleCart = () => setIsCartOpen((prev) => !prev)
 
-  return (
+  const clearCart = () => {
+    setCartItems([])
+    localStorage.removeItem(CART_KEY)
+  }
+
+   return (
     <CartContext.Provider
-      value={{ cartItems, addToCart, removeFromCart, isCartOpen, toggleCart }}
+      value={{
+        cartItems,
+        addToCart,
+        removeFromCart,
+        clearCart,
+        isCartOpen,
+        toggleCart
+      }}
     >
       {children}
     </CartContext.Provider>

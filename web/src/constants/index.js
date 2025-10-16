@@ -4,7 +4,8 @@ export const API_BASE_URL = 'http://localhost:3001'
 // Key dùng cho lưu trữ local/session (để đồng bộ login, cart, v.v.)
 export const TOKEN_KEY = 'auth_token'
 export const USER_KEY = 'auth_user'
-export const CART_KEY = 'user_cart'
+export const CART_KEY = 'cart_data'
+export const AUTH_KEY = 'auth_user'
 
 // Thông tin app (hiển thị trong title, footer,...)
 export const APP_NAME = 'FastFood'
@@ -24,5 +25,4 @@ export const ENDPOINTS = {
   ORDERS: `${API_BASE_URL}/orders`
 }
 
-// Thời gian timeout hoặc delay demo
 export const DEFAULT_DELAY = 800
