@@ -29,7 +29,7 @@ export default function MenuScreen() {
                 <Text style={styles.headerText}>Chọn món</Text>
             </View>
             
-            <CategoryList 
+            <CategoryList
                 categories={CATEGORIES}
                 selectedCategory={selectedCategory}
                 onSelectCategory={setSelectedCategory}

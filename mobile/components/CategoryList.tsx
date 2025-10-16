@@ -17,7 +17,7 @@ const CategoryList = ({ categories, selectedCategory, onSelectCategory }: Catego
     const renderItem = ({ item }: { item: CategoryItem }) => {
         const isSelected = selectedCategory === item.id;
         return (
-            <TouchableOpacity 
+            <TouchableOpacity
                 style={[styles.categoryButton, isSelected && styles.activeCategoryButton]}
                 onPress={() => onSelectCategory(item.id)}
             >
