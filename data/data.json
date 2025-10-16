@@ -55,41 +55,112 @@
       "image": "5-2-3-number-png.png"
     }
   ],
+
   "users": [
-  {
-    "id": 1,
-    "username": "buyer",
-    "password": "123",
-    "fullname": "Nguyễn Văn A",
-    "phone": "0909123456",
-    "email": "buyer@example.com",
-    "address": "123 Lê Lợi, Quận 1, TP.HCM",
-    "role": "buyer",
-    "token": "token_buyer_demo_123"
-  },
-  {
-    "id": 2,
-    "username": "admin",
-    "password": "123",
-    "fullname": "Quản trị viên",
-    "phone": "0988123456",
-    "email": "admin@example.com",
-    "address": "456 Nguyễn Huệ, Quận 1, TP.HCM",
-    "role": "admin",
-    "token": "token_admin_demo_456"
-  },
-  {
-    "id": 3,
-    "username": "hehe",
-    "password": "123456",
-    "fullname": "Nguyễn Thị B",
-    "phone": "0909123123",
-    "email": "hehe@example.com",
-    "address": "789 CMT8, Quận 3, TP.HCM",
-    "role": "buyer",
-    "token": "token_hehe_demo_789"
-  }
-],
+    {
+      "id": 1,
+      "username": "buyer",
+      "password": "123",
+      "fullname": "Nguyễn Văn A",
+      "phone": "0909123456",
+      "email": "buyer@example.com",
+      "address": "123 Lê Lợi, Quận 1, TP.HCM",
+      "role": "buyer",
+      "token": "token_buyer_demo_123"
+    },
+    {
+      "id": 2,
+      "username": "admin",
+      "password": "123",
+      "fullname": "Quản trị viên",
+      "phone": "0988123456",
+      "email": "admin@example.com",
+      "address": "456 Nguyễn Huệ, Quận 1, TP.HCM",
+      "role": "admin",
+      "token": "token_admin_demo_456"
+    },
+    {
+      "id": 3,
+      "username": "hehe",
+      "password": "123456",
+      "fullname": "Nguyễn Thị B",
+      "phone": "0909123123",
+      "email": "hehe@example.com",
+      "address": "789 CMT8, Quận 3, TP.HCM",
+      "role": "buyer",
+      "token": "token_hehe_demo_789"
+    }
+  ],
+
   "carts": [],
-  "orders": []
+
+  "payments": [
+    {
+      "id": 1,
+      "method": "Tiền mặt",
+      "description": "Thanh toán trực tiếp khi nhận hàng (COD)"
+    },
+    {
+      "id": 2,
+      "method": "Chuyển khoản ngân hàng",
+      "description": "Chuyển khoản qua tài khoản Vietcombank / MBBank"
+    },
+    {
+      "id": 3,
+      "method": "Momo",
+      "description": "Thanh toán qua ví điện tử Momo"
+    }
+  ],
+
+  "orders": [
+    {
+      "id": 1001,
+      "userId": 1,
+      "date": "2025-10-15T10:30:00",
+      "total": 125000,
+      "paymentId": 3,
+      "status": "Đang xử lý",
+      "shippingAddress": "123 Lê Lợi, Quận 1, TP.HCM"
+    },
+    {
+      "id": 1002,
+      "userId": 3,
+      "date": "2025-10-14T16:45:00",
+      "total": 65000,
+      "paymentId": 1,
+      "status": "Đã giao",
+      "shippingAddress": "789 CMT8, Quận 3, TP.HCM"
+    }
+  ],
+
+  "orderDetails": [
+    {
+      "id": 1,
+      "orderId": 1001,
+      "productId": 1,
+      "quantity": 1,
+      "price": 65000
+    },
+    {
+      "id": 2,
+      "orderId": 1001,
+      "productId": 3,
+      "quantity": 1,
+      "price": 35000
+    },
+    {
+      "id": 3,
+      "orderId": 1001,
+      "productId": 6,
+      "quantity": 1,
+      "price": 55000
+    },
+    {
+      "id": 4,
+      "orderId": 1002,
+      "productId": 4,
+      "quantity": 1,
+      "price": 65000
+    }
+  ]
 }
