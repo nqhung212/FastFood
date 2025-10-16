@@ -6,6 +6,7 @@ export const TOKEN_KEY = 'auth_token'
 export const USER_KEY = 'auth_user'
 export const CART_KEY = 'cart_data'
 export const AUTH_KEY = 'auth_user'
+export const USERS_KEY = "app_users";
 
 // Thông tin app (hiển thị trong title, footer,...)
 export const APP_NAME = 'FastFood'
