@@ -1,4 +1,4 @@
-//hooks/use-products.js
+// src/hooks/use-products.js
 import { useEffect, useState } from 'react'
 import { ENDPOINTS } from '../constants'
 
