@@ -1,16 +1,17 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet, Dimensions } from 'react-native';
+import { Text, Image, StyleSheet, Dimensions, TouchableOpacity} from 'react-native';
 import { IMAGES } from '../constants/menuDATA';
+import { Link } from 'expo-router';
 
 const { width } = Dimensions.get("window");
 const CARD_WIDTH = width / 2 - 20;
 
-// Định nghĩa kiểu dữ liệu cho một sản phẩm để code an toàn hơn
 type Product = {
     id: number;
     name: string;
     price: number;
     image: string;
+    description: string;
 };
 
 type ProductCardProps = {
@@ -19,18 +20,25 @@ type ProductCardProps = {
 
 const ProductCard = ({ item }: ProductCardProps) => {
     return (
-        <View style={styles.card}>
-            <Image
-                source={IMAGES[item.image]}
-                style={styles.image}
-                resizeMode="contain"
-            />
-            <Text style={styles.name} numberOfLines={2}>{item.name}</Text>
-            <Text style={styles.price}>{item.price.toLocaleString()}đ</Text>
-        </View>
+        <Link
+            href={{
+                pathname: "../product/[id]",
+                params: { id: item.id }
+            }}
+            asChild
+        >
+            <TouchableOpacity style={styles.card}>
+                <Image
+                    source={IMAGES[item.image]}
+                    style={styles.image}
+                    resizeMode="contain"
+                />
+                <Text style={styles.name} numberOfLines={2}>{item.name}</Text>
+                <Text style={styles.price}>{item.price.toLocaleString()}đ</Text>
+            </TouchableOpacity>
+        </Link>
     );
 };
-
 const styles = StyleSheet.create({
     card: {
         width: CARD_WIDTH,
