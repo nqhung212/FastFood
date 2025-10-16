@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
-import { styles } from '/Users/vanhien/Documents/source_git/FastFood/mobile/assets/css/login.style';
+import { styles } from '../../assets/css/login.style';
 import { useColorScheme } from 'react-native';
 
 export default function LoginScreen() {

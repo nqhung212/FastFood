@@ -20,13 +20,22 @@ export default function Login() {
     const user = users.find((u) => u.username === username && u.password === password)
 
     if (user) {
-      setTimeout(() => login(user), 800)
-      setMessage('Đăng nhập thành công!')
-      setTimeout(() => navigate('/'), 800)
+      const tokenData = {
+        id: user.id,
+        username: user.username,
+        fullname: user.fullname,
+        role: user.role,
+        token: user.token, 
+      };
+
+      setTimeout(() => login(tokenData), 800);
+      setMessage("Đăng nhập thành công!");
+      setTimeout(() => navigate("/"), 800);
     } else {
-      setMessage('Sai tài khoản hoặc mật khẩu')
+      setMessage("Sai tài khoản hoặc mật khẩu");
     }
-  }
+  };
+
 
   return (
     <MainLayout>
@@ -34,7 +43,7 @@ export default function Login() {
         <h2>Đăng nhập</h2>
 
         {loading && <p>Đang tải dữ liệu...</p>}
-        {error && <p style={{ color: 'red' }}>Lỗi tải dữ liệu: {error}</p>}
+        {error && <p style={{ color: "red" }}>Lỗi tải dữ liệu: {error}</p>}
 
         <form onSubmit={handleLogin} className="login-form">
           <div>
@@ -63,5 +72,5 @@ export default function Login() {
         {message && <p>{message}</p>}
       </div>
     </MainLayout>
-  )
+  );
 }
