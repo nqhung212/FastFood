@@ -11,6 +11,7 @@ import Login from '../pages/login'
 import Register from '../pages/register'
 import Search from '../pages/search'
 import PaymentRollbackPage from '../pages/payment-rollback'
+
 export const publicRoutes = [
   { path: '/', element: Web },
   { path: '/menu', element: Menu },
