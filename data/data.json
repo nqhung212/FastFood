@@ -1,4 +1,25 @@
 {
+  "categories": [
+    {
+      "id": 1,
+      "name": "Burger",
+      "slug": "burger",
+      "icon": "/images/burger-icon.png"
+    },
+    {
+      "id": 2,
+      "name": "Chicken",
+      "slug": "chicken",
+      "icon": "/images/chicken-icon.png"
+    },
+    {
+      "id": 3,
+      "name": "Fries",
+      "slug": "fries",
+      "icon": "/images/fries-icon.png"
+    }
+  ],
+
   "products": [
     {
       "id": 1,

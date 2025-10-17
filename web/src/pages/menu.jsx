@@ -2,6 +2,7 @@
 import { Link } from 'react-router-dom'
 import MenuLayout from '../layouts/menu-layout.jsx'
 import { useProducts } from '../hooks/use-products.js'
+import '../assets/styles/menu-categories.css'
 
 export default function Menu() {
   const { products = [], loading, error } = useProducts()
@@ -9,23 +10,44 @@ export default function Menu() {
   return (
     <MenuLayout>
       <div className="menu-page">
-        <h2 className="menu-title">Danh sách sản phẩm</h2>
+        {/* Page Title */}
+        <div className="menu-header">
+          <h2 className="menu-title">Tất cả sản phẩm</h2>
+          <p className="menu-subtitle">Chọn những món ăn yêu thích của bạn</p>
+        </div>
 
-        {loading && <p>Đang tải sản phẩm...</p>}
-        {error && <p style={{ color: 'red' }}>Lỗi tải dữ liệu: {error}</p>}
+        {/* Loading & Error States */}
+        {loading && (
+          <div className="loading-state">
+            <p>Đang tải sản phẩm...</p>
+          </div>
+        )}
+        {error && (
+          <div className="error-state">
+            <p>❌ Lỗi tải dữ liệu: {error}</p>
+          </div>
+        )}
 
-        <div className="product-list">
-          {!loading && products.length === 0 && <p>Không có sản phẩm.</p>}
+        {/* Products Grid */}
+        <div className="product-grid">
+          {!loading && products.length === 0 && (
+            <div className="no-products">
+              <p>Không có sản phẩm.</p>
+            </div>
+          )}
 
-          {products.map((p) => (
-            <Link key={p.id} to={`/product/${p.slug}`} className="product-card">
-              <img src={`/images/${p.image}`} width={150} alt={p.name} />
+          {products.map((product) => (
+            <Link key={product.id} to={`/product/${product.slug}`} className="product-card">
+              <div className="product-image">
+                <img src={`/images/${product.image}`} alt={product.name} />
+              </div>
               <div className="product-info">
-                <h3>{p.name}</h3>
-                <p>{p.description}</p>
-                <p>
-                  <strong>{p.price.toLocaleString()}₫</strong>
-                </p>
+                <h3 className="product-name">{product.name}</h3>
+                <p className="product-description">{product.description}</p>
+                <div className="product-footer">
+                  <span className="product-price">{product.price.toLocaleString()}₫</span>
+                  <button className="btn-add-to-cart">Thêm vào giỏ</button>
+                </div>
               </div>
             </Link>
           ))}
