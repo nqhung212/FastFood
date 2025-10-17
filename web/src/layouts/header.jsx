@@ -4,7 +4,7 @@ import { useCart } from '../context/cart-context'
 import { useAuth } from '../context/auth-context'
 import { useSearch } from '../hooks/use-search'
 import { useCategories } from '../hooks/use-categories'
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 
 export default function Header() {
   const navigate = useNavigate()
@@ -14,12 +14,47 @@ export default function Header() {
   const { searchTerm, setSearchTerm, handleSearch, handleKeyPress } = useSearch()
   const { categories = [] } = useCategories()
   const [showCategoryDropdown, setShowCategoryDropdown] = useState(false)
+  const menuRef = useRef(null)
 
   const handleAvatarClick = () => {
     navigate('/account')
   }
 
   const isMenuPage = location.pathname.includes('/menu')
+
+  // Luôn mở dropdown khi ở /menu
+  useEffect(() => {
+    if (isMenuPage) {
+      setShowCategoryDropdown(true)
+    }
+  }, [isMenuPage])
+
+  const handleMenuClick = (e) => {
+    // Chỉ prevent default nếu click trực tiếp vào div menu-item hoặc Link
+    if (e.target.tagName === 'A' && e.target.textContent === 'MENU') {
+      e.preventDefault()
+      // Luôn navigate đến /menu
+      navigate('/menu')
+      // Nếu chưa ở /menu, toggle dropdown
+      if (!isMenuPage) {
+        setShowCategoryDropdown(!showCategoryDropdown)
+      }
+    }
+  }
+
+  // Close dropdown when clicking outside (chỉ khi không ở /menu)
+  useEffect(() => {
+    if (isMenuPage) return // Không đóng dropdown khi ở /menu
+
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setShowCategoryDropdown(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [isMenuPage])
 
   return (
     <header className="header-banner">
@@ -115,12 +150,17 @@ export default function Header() {
             HOME
           </Link>
           <div
+            ref={menuRef}
             className={`nav-item menu-item ${isMenuPage ? 'active' : ''}`}
-            onMouseEnter={() => setShowCategoryDropdown(true)}
-            onMouseLeave={() => setShowCategoryDropdown(false)}
+            onClick={handleMenuClick}
+            onMouseEnter={() => {
+              if (!isMenuPage) setShowCategoryDropdown(true)
+            }}
           >
-            <Link to="/menu">MENU</Link>
-            {showCategoryDropdown && (
+            <Link to="/menu" onClick={(e) => e.preventDefault()}>
+              MENU
+            </Link>
+            {showCategoryDropdown && !isMenuPage && (
               <div className="category-dropdown">
                 {categories.map((cat) => (
                   <Link
@@ -147,6 +187,25 @@ export default function Header() {
           </a>
         </div>
       </nav>
+
+      {/* Category Dropdown khi ở /menu */}
+      {isMenuPage && showCategoryDropdown && (
+        <div className="menu-page-dropdown-section">
+          <div className="menu-page-dropdown">
+            {categories.map((cat) => (
+              <button
+                key={cat.id}
+                className="dropdown-item"
+                onClick={() => navigate(`/menu/${cat.slug}`)}
+                style={{ background: 'none', border: 'none', cursor: 'pointer' }}
+              >
+                <img src={cat.icon} alt={cat.name} />
+                <span>{cat.name}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
     </header>
   )
 }
