@@ -1,0 +1,42 @@
+[
+  {
+    "orderId": "ORDER_1760685688972",
+    "amount": 55000,
+    "orderInfo": "Thanh toan don hang",
+    "items": [
+      {
+        "id": "2",
+        "name": "Gà Rán Giòn Cay 2",
+        "slug": "ga-ran-gion-cay-2",
+        "description": "Miếng gà rán giòn rụm, hương vị cay nồng.",
+        "price": 55000,
+        "categories": "Chicken",
+        "image": "/images/2-2-2-number-png.png",
+        "quantity": 1
+      }
+    ],
+    "timestamp": "2025-10-17T07:21:34.447Z",
+    "status": "success",
+    "transactionId": "TXN_1760685694455_jbwetowpn"
+  },
+  {
+    "orderId": "ORDER_1760685706494",
+    "amount": 55000,
+    "orderInfo": "Thanh toan don hang",
+    "items": [
+      {
+        "id": "2",
+        "name": "Gà Rán Giòn Cay 2",
+        "slug": "ga-ran-gion-cay-2",
+        "description": "Miếng gà rán giòn rụm, hương vị cay nồng.",
+        "price": 55000,
+        "categories": "Chicken",
+        "image": "/images/2-2-2-number-png.png",
+        "quantity": 1
+      }
+    ],
+    "timestamp": "2025-10-17T07:21:51.189Z",
+    "status": "success",
+    "transactionId": "TXN_1760685711197_e2v5dxtdt"
+  }
+]
