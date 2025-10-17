@@ -10,7 +10,8 @@ export default function Footer() {
           </div>
           <div className="footer-info">
             <p>
-              <strong>Address:</strong> 26th Floor, CII Tower, 152 Dien Bien Phu Street, Thanh My Tay Ward, Ho Chi Minh City, Vietnam
+              <strong>Address:</strong> 26th Floor, CII Tower, 152 Dien Bien Phu Street, Thanh My
+              Tay Ward, Ho Chi Minh City, Vietnam
             </p>
             <p>
               <strong>Phone:</strong> (028) 39309168
@@ -38,14 +39,30 @@ export default function Footer() {
           <div className="footer-links">
             <h4>Contact</h4>
             <ul>
-              <li><a href="#">Policies and regulations</a></li>
-              <li><a href="#">Payment policy when ordering</a></li>
-              <li><a href="#">Operation policy</a></li>
-              <li><a href="#">Information security policy</a></li>
-              <li><a href="#">Cookie Policy</a></li>
-              <li><a href="#">Shipping and forwarding information</a></li>
-              <li><a href="#">General transaction registration information</a></li>
-              <li><a href="#">Instructions for ordering meals</a></li>
+              <li>
+                <a href="#">Policies and regulations</a>
+              </li>
+              <li>
+                <a href="#">Payment policy when ordering</a>
+              </li>
+              <li>
+                <a href="#">Operation policy</a>
+              </li>
+              <li>
+                <a href="#">Information security policy</a>
+              </li>
+              <li>
+                <a href="#">Cookie Policy</a>
+              </li>
+              <li>
+                <a href="#">Shipping and forwarding information</a>
+              </li>
+              <li>
+                <a href="#">General transaction registration information</a>
+              </li>
+              <li>
+                <a href="#">Instructions for ordering meals</a>
+              </li>
             </ul>
           </div>
         </div>
