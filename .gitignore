@@ -53,6 +53,13 @@ yarn-error.*
 .env.*.local
 
 # ===============================
+# Sensitive Data / Payments
+# ===============================
+payments.json
+server/payments.json
+web/server/payments.json
+
+# ===============================
 # Editor / OS
 # ===============================
 .vscode/
