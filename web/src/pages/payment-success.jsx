@@ -17,11 +17,15 @@ export default function PaymentSuccessPage() {
       setOrderId(state.orderId)
       clearCart()
 
-      // Check payment status từ server
+      // Check payment status từ server (chỉ chạy 1 lần)
       const checkStatus = async () => {
-        const status = await checkPaymentStatus(state.orderId)
-        setPaymentStatus(status)
-        console.log('✅ Payment status:', status)
+        try {
+          const status = await checkPaymentStatus(state.orderId)
+          setPaymentStatus(status)
+          console.log('✅ Payment status:', status)
+        } catch (error) {
+          console.error('Error fetching payment status:', error)
+        }
       }
 
       checkStatus()
@@ -29,7 +33,7 @@ export default function PaymentSuccessPage() {
       const timer = setTimeout(() => navigate('/cart'), 2000)
       return () => clearTimeout(timer)
     }
-  }, [location.state, navigate, clearCart])
+  }, [])
 
   return (
     <MainLayout>
