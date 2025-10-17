@@ -1,13 +1,18 @@
 // src/layouts/header.jsx
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useCart } from '../context/cart-context'
 import { useAuth } from '../context/auth-context'
 import { useSearch } from '../hooks/use-search'
 
 export default function Header() {
+  const navigate = useNavigate()
   const { cartItems } = useCart()
   const { user, logout } = useAuth()
   const { searchTerm, setSearchTerm, handleSearch, handleKeyPress } = useSearch()
+
+  const handleAvatarClick = () => {
+    navigate('/account')
+  }
 
   return (
     <header className="header-banner">
@@ -22,7 +27,7 @@ export default function Header() {
 
         <div className="header-center">
           <div className="header-search" id="header-search">
-            <input 
+            <input
               type="search"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -30,11 +35,7 @@ export default function Header() {
               placeholder="Tìm kiếm sản phẩm, danh mục..."
               aria-label="Search"
             />
-            <button 
-              type="button" 
-              className="search-button"
-              onClick={handleSearch}
-            >
+            <button type="button" className="search-button" onClick={handleSearch}>
               Tìm
             </button>
           </div>
@@ -43,13 +44,24 @@ export default function Header() {
         <div className="header-right">
           {user ? (
             <div className="header-user">
-              <img src="/images/images.jpg" alt="User Avatar" className="user-avatar" />
+              <img
+                src="/images/images.jpg"
+                alt="User Avatar"
+                className="user-avatar"
+                onClick={handleAvatarClick}
+                style={{ cursor: 'pointer' }}
+                title="Go to account"
+              />
               <button onClick={logout}>Đăng xuất</button>
             </div>
           ) : (
             <div className="header-auth">
-              <Link to="/login"><button type="button">Đăng nhập</button></Link>
-              <Link to="/register"><button type="button">Đăng ký</button></Link>
+              <Link to="/login">
+                <button type="button">Đăng nhập</button>
+              </Link>
+              <Link to="/register">
+                <button type="button">Đăng ký</button>
+              </Link>
             </div>
           )}
           <div className="header-cart">
@@ -63,11 +75,21 @@ export default function Header() {
       <div className="header-separator">
         <nav className="header-categories" id="header-categories" aria-label="Danh mục">
           <ul>
-            <li><Link to="/">Home</Link></li>
-            <li><Link to="/menu">Menu</Link></li>
-            <li><a href="#">Contact</a></li>
-            <li><a href="#">About</a></li>
-            <li><a href="#">Career</a></li>
+            <li>
+              <Link to="/">Home</Link>
+            </li>
+            <li>
+              <Link to="/menu">Menu</Link>
+            </li>
+            <li>
+              <a href="#">Contact</a>
+            </li>
+            <li>
+              <a href="#">About</a>
+            </li>
+            <li>
+              <a href="#">Career</a>
+            </li>
           </ul>
         </nav>
       </div>
