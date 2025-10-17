@@ -1,13 +1,15 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import MainLayout from '../layouts/home-layout.jsx'
-import { getMoMoCheckoutUrl } from '../api/momo-payment.js'
+import { initiateMoMoPayment } from '../api/momo-payment.js'
 
 export default function CheckoutPage() {
   const navigate = useNavigate()
   const [checkoutData, setCheckoutData] = useState(null)
   const [selectedPayment, setSelectedPayment] = useState('momo')
   const [paymentInitiated, setPaymentInitiated] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null)
 
   useEffect(() => {
     const data = sessionStorage.getItem('checkoutData')
@@ -18,20 +20,40 @@ export default function CheckoutPage() {
     setCheckoutData(JSON.parse(data))
   }, [navigate])
 
-  const handlePayment = () => {
+  const handlePayment = async () => {
     if (!checkoutData) return
 
     if (selectedPayment === 'momo') {
-      const orderId = `ORDER_${Date.now()}`
-      const checkoutUrl = getMoMoCheckoutUrl({
-        amount: checkoutData.total,
-        orderId: orderId,
-        orderInfo: 'Thanh toan don hang',
-      })
+      setLoading(true)
+      setError(null)
+      try {
+        const orderId = `ORDER_${Date.now()}`
+        sessionStorage.setItem('currentOrderId', orderId)
+        sessionStorage.setItem('checkoutData', JSON.stringify(checkoutData))
+        setPaymentInitiated(true)
 
-      sessionStorage.setItem('currentOrderId', orderId)
-      setPaymentInitiated(true)
-      window.open(checkoutUrl, '_blank')
+        // Gọi hàm initiateMoMoPayment với callback
+        await initiateMoMoPayment(
+          {
+            amount: checkoutData.total,
+            orderId: orderId,
+            orderInfo: 'Thanh toán đơn hàng FastFood',
+            items: checkoutData.items,
+          },
+          (orderId) => {
+            // Callback khi tab MoMo đóng - chuyển sang payment success
+            console.log('💚 Redirecting to payment success...')
+            sessionStorage.removeItem('checkoutData')
+            navigate('/payment-success', { state: { orderId } })
+          }
+        )
+      } catch (err) {
+        setError(err.message)
+        setPaymentInitiated(false)
+        console.error('Payment error:', err)
+      } finally {
+        setLoading(false)
+      }
     }
   }
 
@@ -85,6 +107,21 @@ export default function CheckoutPage() {
           </label>
         </div>
 
+        {error && (
+          <div
+            style={{
+              backgroundColor: '#ffebee',
+              border: '1px solid #ef5350',
+              color: '#c62828',
+              padding: '12px',
+              borderRadius: '4px',
+              marginBottom: '20px',
+            }}
+          >
+            ❌ {error}
+          </div>
+        )}
+
         <div style={{ display: 'flex', gap: '10px' }}>
           <button
             onClick={() => navigate('/cart')}
@@ -103,17 +140,19 @@ export default function CheckoutPage() {
           {!paymentInitiated ? (
             <button
               onClick={handlePayment}
+              disabled={loading}
               style={{
                 flex: 1,
                 padding: '10px',
-                backgroundColor: '#FF6B6B',
-                color: 'white',
+                backgroundColor: loading ? '#ddd' : '#FF6B6B',
+                color: loading ? '#666' : 'white',
                 border: 'none',
                 borderRadius: '4px',
-                cursor: 'pointer',
+                cursor: loading ? 'not-allowed' : 'pointer',
+                fontWeight: 'bold',
               }}
             >
-              Thanh Toán
+              {loading ? 'Đang xử lý...' : 'Thanh Toán'}
             </button>
           ) : (
             <button
@@ -126,6 +165,7 @@ export default function CheckoutPage() {
                 border: 'none',
                 borderRadius: '4px',
                 cursor: 'pointer',
+                fontWeight: 'bold',
               }}
             >
               Tôi đã thanh toán

@@ -2,23 +2,34 @@ import { useEffect, useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import MainLayout from '../layouts/home-layout.jsx'
 import { useCart } from '../context/cart-context.jsx'
+import { checkPaymentStatus } from '../api/momo-payment.js'
 
 export default function PaymentSuccessPage() {
   const navigate = useNavigate()
   const location = useLocation()
   const { clearCart } = useCart()
   const [orderId, setOrderId] = useState('')
+  const [paymentStatus, setPaymentStatus] = useState(null)
 
   useEffect(() => {
     const state = location.state
     if (state?.orderId) {
       setOrderId(state.orderId)
       clearCart()
+
+      // Check payment status từ server
+      const checkStatus = async () => {
+        const status = await checkPaymentStatus(state.orderId)
+        setPaymentStatus(status)
+        console.log('✅ Payment status:', status)
+      }
+
+      checkStatus()
     } else {
       const timer = setTimeout(() => navigate('/cart'), 2000)
       return () => clearTimeout(timer)
     }
-  }, [])
+  }, [location.state, navigate, clearCart])
 
   return (
     <MainLayout>
@@ -51,6 +62,28 @@ export default function PaymentSuccessPage() {
             <p style={{ fontSize: '18px', color: '#4CAF50', margin: '5px 0' }}>{orderId}</p>
           </div>
         )}
+
+        {paymentStatus && (
+          <div
+            style={{
+              backgroundColor: 'white',
+              padding: '12px',
+              borderRadius: '4px',
+              marginBottom: '20px',
+              fontSize: '14px',
+              color: '#666',
+            }}
+          >
+            <p>
+              <strong>Số tiền:</strong> {paymentStatus.amount?.toLocaleString() || '...'} ₫
+            </p>
+            <p>
+              <strong>Thời gian:</strong>{' '}
+              {new Date(paymentStatus.timestamp).toLocaleString('vi-VN')}
+            </p>
+          </div>
+        )}
+
         <button
           onClick={() => navigate('/')}
           style={{
