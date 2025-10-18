@@ -37,7 +37,6 @@ body {
   background-color: var(--primary-red);
   color: white;
   text-align: center;
-  padding: 30px;
   margin-top: auto;
   border-top: 2px solid var(--secondary-yellow);
 }

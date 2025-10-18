@@ -29,19 +29,6 @@ export default function Header() {
     }
   }, [isMenuPage])
 
-  const handleMenuClick = (e) => {
-    // Chỉ prevent default nếu click trực tiếp vào div menu-item hoặc Link
-    if (e.target.tagName === 'A' && e.target.textContent === 'MENU') {
-      e.preventDefault()
-      // Luôn navigate đến /menu
-      navigate('/menu')
-      // Nếu chưa ở /menu, toggle dropdown
-      if (!isMenuPage) {
-        setShowCategoryDropdown(!showCategoryDropdown)
-      }
-    }
-  }
-
   // Close dropdown when clicking outside (chỉ khi không ở /menu)
   useEffect(() => {
     if (isMenuPage) return // Không đóng dropdown khi ở /menu
@@ -152,26 +139,32 @@ export default function Header() {
           <div
             ref={menuRef}
             className={`nav-item menu-item ${isMenuPage ? 'active' : ''}`}
-            onClick={handleMenuClick}
             onMouseEnter={() => {
               if (!isMenuPage) setShowCategoryDropdown(true)
             }}
+            onMouseLeave={() => {
+              if (!isMenuPage) setShowCategoryDropdown(false)
+            }}
           >
-            <Link to="/menu" onClick={(e) => e.preventDefault()}>
+            <button type="button" onClick={() => navigate('/menu')}>
               MENU
-            </Link>
+            </button>
             {showCategoryDropdown && !isMenuPage && (
               <div className="category-dropdown">
                 {categories.map((cat) => (
-                  <Link
+                  <button
                     key={cat.id}
-                    to={`/menu/${cat.slug}`}
                     className="dropdown-item"
-                    onClick={() => setShowCategoryDropdown(false)}
+                    type="button"
+                    onClick={() => {
+                      navigate(`/menu/${cat.slug}`)
+                      setShowCategoryDropdown(false)
+                    }}
+                    style={{ background: 'none', border: 'none', cursor: 'pointer' }}
                   >
                     <img src={cat.icon} alt={cat.name} />
                     <span>{cat.name}</span>
-                  </Link>
+                  </button>
                 ))}
               </div>
             )}

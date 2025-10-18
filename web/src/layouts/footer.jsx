@@ -1,5 +1,16 @@
 // src/layouts/footer.jsx
+import React, { useEffect, useRef, useState } from 'react'
+
 export default function Footer() {
+  const phoneTopRef = useRef(null)
+  const [badgeWidth, setBadgeWidth] = useState(null)
+
+  useEffect(() => {
+    if (phoneTopRef.current) {
+      setBadgeWidth(phoneTopRef.current.clientWidth)
+    }
+  }, [])
+
   return (
     <footer className="footer-banner">
       <div className="footer-container">
@@ -31,9 +42,16 @@ export default function Footer() {
         {/* Center Section - Phone & Links */}
         <div className="footer-section footer-center">
           <div className="footer-phone">
-            <div className="phone-icon">📞</div>
-            <h3>1900-1533</h3>
-            <p className="delivery-badge">GIAO HÀNG TẬN NƠI</p>
+            <div className="phone-top" ref={phoneTopRef}>
+              <div className="phone-icon">📞</div>
+              <h3>1900-1533</h3>
+            </div>
+            <p
+              className="delivery-badge"
+              style={badgeWidth ? { width: badgeWidth + 'px' } : undefined}
+            >
+              GIAO HÀNG TẬN NƠI
+            </p>
           </div>
 
           <div className="footer-links">

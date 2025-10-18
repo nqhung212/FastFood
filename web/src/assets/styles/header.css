@@ -283,7 +283,7 @@
   color: white;
   text-decoration: none;
   font-weight: 600;
-  font-size: 13px;
+  font-size: 16px;
   letter-spacing: 0.5px;
   transition: all 0.3s ease;
   position: relative;
@@ -332,11 +332,37 @@
 /* Menu Category Dropdown */
 .menu-item {
   position: relative;
+  padding: 0 !important;
+  display: flex;
+  align-items: center;
+}
+
+.menu-item > button {
+  flex: 1;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 12px;
+  color: inherit;
+  font-weight: inherit;
+  font-size: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  background: none;
+  border: none;
+  border-radius: 8px 8px 0 0;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.menu-item > button:hover {
+  color: var(--secondary-yellow);
 }
 
 .category-dropdown {
   position: absolute;
-  top: 100%;
+  top: calc(100% + 8px);
   left: 50%;
   transform: translateX(-50%);
   background: white;
@@ -348,7 +374,7 @@
   grid-template-columns: repeat(4, 1fr);
   gap: 15px;
   z-index: 1001;
-  margin-top: 8px;
+  pointer-events: auto;
 }
 
 /* Khi dropdown ở menu page - hiển thị ở ngoài nav */
@@ -364,7 +390,7 @@
 .menu-page-dropdown {
   width: 100%;
   max-width: 1400px;
-  padding: 30px;
+  padding: 10px;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 20px;
