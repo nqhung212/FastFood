@@ -1,58 +1,13 @@
-/* ===== ROOT COLORS ===== */
-:root {
-  --primary-red: #e74c3c;
-  --secondary-yellow: #ffd966;
-  --dark-red: #c0392b;
-  --light-gray: #f5f5f5;
-  --text-dark: #333;
-  --text-light: #666;
-}
-
-/* ===== GLOBAL STYLES ===== */
-html,
-body {
-  height: 100%;
-  margin: 0;
-  font-family: 'Baloo 2', sans-serif;
-}
-
-body {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
-
-/* ===== BODY ===== */
+/* ===== LAYOUT: HOME ===== */
 .body-home {
   flex: 1;
   padding: 30px;
   max-width: 1400px;
   margin: 0 auto;
   width: 100%;
-  font-family: 'Baloo 2', sans-serif;
 }
 
-/* ===== FOOTER ===== */
-.footer-banner {
-  background-color: var(--primary-red);
-  color: white;
-  text-align: center;
-  margin-top: auto;
-  border-top: 2px solid var(--secondary-yellow);
-}
-
-.footer-banner-main {
-  font-size: 15px;
-  margin-bottom: 10px;
-  font-weight: 600;
-}
-
-.footer-banner-copyright {
-  font-size: 13px;
-  opacity: 0.9;
-}
-
-/* ===== RESPONSIVE ===== */
+/* ===== RESPONSIVE: HOME LAYOUT ===== */
 @media (max-width: 1024px) {
   .body-home {
     padding: 20px;
@@ -63,37 +18,11 @@ body {
   .body-home {
     padding: 15px;
   }
-
-  .footer-banner {
-    padding: 15px;
-  }
-
-  .footer-banner-main {
-    font-size: 13px;
-    margin-bottom: 8px;
-  }
-
-  .footer-banner-copyright {
-    font-size: 12px;
-  }
 }
 
 @media (max-width: 480px) {
   .body-home {
     padding: 10px;
-  }
-
-  .footer-banner {
-    padding: 10px;
-  }
-
-  .footer-banner-main {
-    font-size: 12px;
-    margin-bottom: 6px;
-  }
-
-  .footer-banner-copyright {
-    font-size: 11px;
   }
 }
 
