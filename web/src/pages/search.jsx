@@ -2,6 +2,7 @@
 import { Link, useParams } from 'react-router-dom'
 import MenuLayout from '../layouts/menu-layout.jsx'
 import { useProducts } from '../hooks/use-products.js'
+import '../assets/styles/menu-categories.css'
 
 export default function Search() {
   const { searchTerm } = useParams()
@@ -20,26 +21,41 @@ export default function Search() {
   return (
     <MenuLayout>
       <div className="menu-page">
-        <h2 className="menu-title">Kết quả tìm kiếm: "{searchTerm}"</h2>
-        <p>Tìm thấy {filteredProducts.length} sản phẩm</p>
+        <div className="menu-header">
+          <h2 className="menu-title">Kết quả tìm kiếm: "{searchTerm}"</h2>
+          <p className="menu-subtitle">Tìm thấy {filteredProducts.length} sản phẩm</p>
+        </div>
 
-        {loading && <p>Đang tải sản phẩm...</p>}
-        {error && <p style={{ color: 'red' }}>Lỗi tải dữ liệu: {error}</p>}
+        {loading && (
+          <div className="loading-state">
+            <p>Đang tải sản phẩm...</p>
+          </div>
+        )}
+        {error && (
+          <div className="error-state">
+            <p>❌ Lỗi tải dữ liệu: {error}</p>
+          </div>
+        )}
 
-        <div className="product-list">
+        <div className="product-grid">
           {!loading && filteredProducts.length === 0 && (
-            <p>Không tìm thấy sản phẩm nào phù hợp với "{searchTerm}"</p>
+            <div className="no-products">
+              <p>Không tìm thấy sản phẩm nào phù hợp với "{searchTerm}"</p>
+            </div>
           )}
 
           {filteredProducts.map((p) => (
             <Link key={p.id} to={`/product/${p.slug}`} className="product-card">
-              <img src={`/images/${p.image}`} width={150} alt={p.name} />
+              <div className="product-image">
+                <img src={`/images/${p.image}`} alt={p.name} />
+              </div>
               <div className="product-info">
-                <h3>{p.name}</h3>
-                <p>{p.description}</p>
-                <p>
-                  <strong>{p.price.toLocaleString()}₫</strong>
-                </p>
+                <h3 className="product-name">{p.name}</h3>
+                <p className="product-description">{p.description}</p>
+                <div className="product-footer">
+                  <span className="product-price">{p.price.toLocaleString()}₫</span>
+                  <button className="btn-add-to-cart">Thêm vào giỏ</button>
+                </div>
               </div>
             </Link>
           ))}

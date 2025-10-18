@@ -12,3 +12,14 @@ export function importImages() {
 
   return formatted;
 }
+
+const IMAGES = importImages()
+
+export function getImage(src) {
+  if (!src) return ''
+  if (/^(https?:|data:)/.test(src)) return src
+  const filename = src.split('/').pop()
+  return IMAGES[filename] || src
+}
+
+export default getImage

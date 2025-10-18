@@ -3,6 +3,7 @@ import '../assets/styles/home.css'
 import { Link } from 'react-router-dom'
 import React from 'react'
 import MainLayout from '../layouts/home-layout.jsx'
+import getImage from '../utils/import-image.js'
 
 const categories = [
   { name: 'Burger', image: '/images/burger.jpg' },
@@ -22,7 +23,7 @@ function Web() {
         <section className="home-categories">
           {categories.map((cat) => (
             <Link to={`/menu/${cat.name}`} key={cat.name} className="category-card">
-              <img src={cat.image} alt={cat.name} className="category-image" />
+              <img src={getImage(cat.image)} alt={cat.name} className="category-image" />
               <h3 className="category-title">{cat.name}</h3>
             </Link>
           ))}

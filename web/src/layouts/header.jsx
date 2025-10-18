@@ -3,8 +3,14 @@ import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useCart } from '../context/cart-context'
 import { useAuth } from '../context/auth-context'
 import { useSearch } from '../hooks/use-search'
-import { useCategories } from '../hooks/use-categories'
 import { useState, useEffect, useRef } from 'react'
+import getImage from '../utils/import-image.js'
+
+const categories = [
+  { name: 'Burger', image: '/images/burger.jpg' },
+  { name: 'Chicken', image: '/images/pizza.jpg' },
+  { name: 'Fries', image: '/images/cola.jpg' },
+]
 
 export default function Header() {
   const navigate = useNavigate()
@@ -12,7 +18,6 @@ export default function Header() {
   const { cartItems } = useCart()
   const { user, logout } = useAuth()
   const { searchTerm, setSearchTerm, handleSearch, handleKeyPress } = useSearch()
-  const { categories = [] } = useCategories()
   const [showCategoryDropdown, setShowCategoryDropdown] = useState(false)
   const menuRef = useRef(null)
 
@@ -153,16 +158,17 @@ export default function Header() {
               <div className="category-dropdown">
                 {categories.map((cat) => (
                   <button
-                    key={cat.id}
+                    key={cat.name}
                     className="dropdown-item"
                     type="button"
                     onClick={() => {
-                      navigate(`/menu/${cat.slug}`)
+                      navigate(`/menu/${cat.name}`)
                       setShowCategoryDropdown(false)
                     }}
                     style={{ background: 'none', border: 'none', cursor: 'pointer' }}
                   >
-                    <img src={cat.icon} alt={cat.name} />
+                    <img src={getImage(cat.image)} alt={cat.name} />
+
                     <span>{cat.name}</span>
                   </button>
                 ))}
@@ -187,12 +193,12 @@ export default function Header() {
           <div className="menu-page-dropdown">
             {categories.map((cat) => (
               <button
-                key={cat.id}
+                key={cat.name}
                 className="dropdown-item"
-                onClick={() => navigate(`/menu/${cat.slug}`)}
+                onClick={() => navigate(`/menu/${cat.name}`)}
                 style={{ background: 'none', border: 'none', cursor: 'pointer' }}
               >
-                <img src={cat.icon} alt={cat.name} />
+                <img src={getImage(cat.image)} alt={cat.name} />
                 <span>{cat.name}</span>
               </button>
             ))}
