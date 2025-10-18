@@ -16,7 +16,7 @@
 .services-title {
   font-size: 48px;
   font-weight: 800;
-  color: #c41e3a;
+  color: #e31837;
   margin: 0 0 8px 0;
   text-transform: uppercase;
   letter-spacing: 2px;
@@ -77,7 +77,7 @@
 }
 
 .service-btn {
-  background-color: #c41e3a;
+  background-color: #e31837;
   color: white;
   border: none;
   padding: 12px 28px;
@@ -92,7 +92,7 @@
 }
 
 .service-btn:hover {
-  background-color: #a01830;
+  background-color: #b91430;
   transform: scale(1.05);
 }
 

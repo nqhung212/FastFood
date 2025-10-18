@@ -9,7 +9,7 @@
 .news-title {
   font-size: 48px;
   font-weight: 800;
-  color: #c41e3a;
+  color: #e31837;
   text-align: center;
   margin: 0 0 50px 0;
   text-transform: uppercase;
@@ -47,29 +47,76 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
   font-size: 80px;
   line-height: 1;
 }
 
+.news-image-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.news-image::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.55) 60%);
+  pointer-events: none;
+}
+
+.news-overlay {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 18px;
+  z-index: 2; /* above the image and overlay pseudo-element */
+}
+
 .news-heading {
-  font-size: 16px;
-  font-weight: 700;
-  color: #1a1a1a;
-  margin: 0;
-  padding: 20px 18px 12px;
-  line-height: 1.4;
+  font-size: 18px;
+  font-weight: 800;
+  color: #fff;
+  margin: 0 0 6px 0;
+  line-height: 1.2;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
 .news-excerpt {
   font-size: 13px;
-  line-height: 1.6;
-  color: #666;
+  line-height: 1.45;
+  color: rgba(255,255,255,0.95);
   margin: 0;
-  padding: 0 18px 18px;
-  flex: 1;
+  padding: 0;
   font-style: italic;
+  max-height: 4.2em; /* clamp to ~3 lines */
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.news-card-left .news-heading,
+.news-card-left .news-excerpt {
+  color: #fff;
+}
+
+.news-card-right .news-heading,
+.news-card-right .news-excerpt {
+  color: #fff;
+}
+
+.news-card-left .news-heading {
+  padding-top: 18px;
+}
+
+.news-card-right .news-heading {
+  padding-top: 18px;
 }
 
 .news-footer {
@@ -79,7 +126,7 @@
 }
 
 .news-btn {
-  background-color: #c41e3a;
+  background-color: #e31837;
   color: white;
   border: none;
   padding: 14px 40px;
@@ -94,9 +141,9 @@
 }
 
 .news-btn:hover {
-  background-color: #a01830;
+  background-color: #b91430;
   transform: scale(1.05);
-  box-shadow: 0 8px 20px rgba(196, 30, 58, 0.3);
+  box-shadow: 0 8px 20px rgba(227, 24, 55, 0.3);
 }
 
 .news-btn:active {
