@@ -23,11 +23,12 @@
 
 ## API 
 
-Chạy json-server 
+Chạy json-database 
 
 ```powershell
 npx json-server --watch data/data.json --port 3001
 ```
+Sau đó chạy json-server
 
 ```powershell
 cd server
