@@ -3,7 +3,7 @@
   /* use a fixed max column width so cards appear centered rather than stretched */
   grid-template-columns: repeat(auto-fit, minmax(220px, 320px));
   gap: 28px;
-  padding: 48px 20px;
+  padding: 20px;
   align-items: stretch;
   justify-content: center; /* center the whole grid inside the container */
   justify-items: center; /* center each item inside its grid cell */

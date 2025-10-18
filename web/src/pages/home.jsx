@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom'
 import React from 'react'
 import MainLayout from '../layouts/home-layout.jsx'
 import getImage from '../utils/import-image.js'
+import Services from './services.jsx'
+import Order from './order.jsx'
 
 const categories = [
   { name: 'Burger', image: '/images/burger.jpg' },
@@ -29,9 +31,11 @@ function Web() {
           ))}
         </section>
       </div>
-      <div className="body-home-trend">
-        {/* Trend */}
-        đây là body-home-trend
+      <div className="body-home-services">
+        <Services />
+      </div>
+      <div className="body-home-order">
+        <Order />
       </div>
     </MainLayout>
   )

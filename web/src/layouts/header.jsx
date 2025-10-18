@@ -20,6 +20,8 @@ export default function Header() {
   const { searchTerm, setSearchTerm, handleSearch, handleKeyPress } = useSearch()
   const [showCategoryDropdown, setShowCategoryDropdown] = useState(false)
   const menuRef = useRef(null)
+  const hideTimeoutRef = useRef(null)
+  const HIDE_DELAY = 100 // ms
 
   const handleAvatarClick = () => {
     navigate('/account')
@@ -47,6 +49,16 @@ export default function Header() {
     document.addEventListener('mousedown', handleClickOutside)
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [isMenuPage])
+
+  // clear any pending hide timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (hideTimeoutRef.current) {
+        clearTimeout(hideTimeoutRef.current)
+        hideTimeoutRef.current = null
+      }
+    }
+  }, [])
 
   return (
     <header className="header-banner">
@@ -145,17 +157,44 @@ export default function Header() {
             ref={menuRef}
             className={`nav-item menu-item ${isMenuPage ? 'active' : ''}`}
             onMouseEnter={() => {
+              // clear any pending hide timeout and show dropdown
+              if (hideTimeoutRef.current) {
+                clearTimeout(hideTimeoutRef.current)
+                hideTimeoutRef.current = null
+              }
               if (!isMenuPage) setShowCategoryDropdown(true)
             }}
             onMouseLeave={() => {
-              if (!isMenuPage) setShowCategoryDropdown(false)
+              // delay hiding so user can move into the dropdown without it disappearing
+              if (isMenuPage) return
+              if (hideTimeoutRef.current) clearTimeout(hideTimeoutRef.current)
+              hideTimeoutRef.current = setTimeout(() => {
+                setShowCategoryDropdown(false)
+                hideTimeoutRef.current = null
+              }, HIDE_DELAY)
             }}
           >
             <button type="button" onClick={() => navigate('/menu')}>
               MENU
             </button>
             {showCategoryDropdown && !isMenuPage && (
-              <div className="category-dropdown">
+              <div
+                className="category-dropdown"
+                onMouseEnter={() => {
+                  if (hideTimeoutRef.current) {
+                    clearTimeout(hideTimeoutRef.current)
+                    hideTimeoutRef.current = null
+                  }
+                }}
+                onMouseLeave={() => {
+                  if (isMenuPage) return
+                  if (hideTimeoutRef.current) clearTimeout(hideTimeoutRef.current)
+                  hideTimeoutRef.current = setTimeout(() => {
+                    setShowCategoryDropdown(false)
+                    hideTimeoutRef.current = null
+                  }, HIDE_DELAY)
+                }}
+              >
                 {categories.map((cat) => (
                   <button
                     key={cat.name}
