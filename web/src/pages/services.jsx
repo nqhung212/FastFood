@@ -10,13 +10,13 @@ const services = [
   },
   {
     id: 2,
-    name: 'JOLLIBEE KID PARTY',
+    name: 'FASTFOOD PARTY',
     icon: '🎉',
     description: 'Birthday party packages',
   },
   {
     id: 3,
-    name: 'JOLLIBEE KID CLUB',
+    name: 'FASTFOOD CLUB',
     icon: '🎨',
     description: 'Membership benefits',
   },
@@ -33,7 +33,7 @@ export default function Services() {
     <section className="services-section">
       <div className="services-header">
         <h2 className="services-title">SERVICES</h2>
-        <p className="services-subtitle">ENJOY PERFECT MOMENT WITH JOLLIBEE</p>
+        <p className="services-subtitle">ENJOY PERFECT MOMENT WITH FASTFOOD</p>
       </div>
 
       <div className="services-grid">

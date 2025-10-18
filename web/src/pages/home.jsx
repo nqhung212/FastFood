@@ -6,6 +6,8 @@ import MainLayout from '../layouts/home-layout.jsx'
 import getImage from '../utils/import-image.js'
 import Services from './services.jsx'
 import Order from './order.jsx'
+import FindStore from './findstore.jsx'
+import News from './news.jsx'
 
 const categories = [
   { name: 'Burger', image: '/images/burger.jpg' },
@@ -36,6 +38,12 @@ function Web() {
       </div>
       <div className="body-home-order">
         <Order />
+      </div>
+      <div className="body-home-findstore">
+        <FindStore />
+      </div>
+      <div className="body-home-news">
+        <News />
       </div>
     </MainLayout>
   )
