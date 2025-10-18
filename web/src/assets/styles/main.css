@@ -1,3 +1,13 @@
+/* ===== GOOGLE FONTS IMPORT ===== */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Rounded+Mplus+1c:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bubblegum+Sans&display=swap');
+
 * {
   margin: 0;
   padding: 0;
@@ -5,7 +15,7 @@
 }
 
 body {
-  font-family: 'MergeBlack', sans-serif;
+  font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   background-color: #fff5f5;
   color: #333;
 }
@@ -14,4 +24,15 @@ body {
   --secondary-yellow: #f6c100;
   --light-bg: #fff5f5;
   --text-dark: #333;
+  
+  /* Font Families */
+  --font-roboto: 'Roboto', sans-serif;
+  --font-fredoka: 'Fredoka', sans-serif;
+  --font-fredoka-one: 'Fredoka One', sans-serif;
+  --font-baloo: 'Baloo 2', sans-serif;
+  --font-poppins: 'Poppins', sans-serif;
+  --font-rounded: 'Rounded Mplus 1c', sans-serif;
+  --font-rubik: 'Rubik', sans-serif;
+  --font-bubblegum: 'Bubblegum Sans', sans-serif;
 }
+

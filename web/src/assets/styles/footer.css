@@ -5,6 +5,7 @@
   padding: 40px 20px 20px;
   margin-top: auto;
   border-top: 2px solid var(--secondary-yellow);
+  font-family: 'Baloo 2', sans-serif;
 }
 
 .footer-container {

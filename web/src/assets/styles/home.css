@@ -1,40 +1,120 @@
 .home-categories {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 24px;
-  padding: 40px;
-  justify-items: center;
+  /* use a fixed max column width so cards appear centered rather than stretched */
+  grid-template-columns: repeat(auto-fit, minmax(220px, 320px));
+  gap: 28px;
+  padding: 48px 20px;
+  align-items: stretch;
+  justify-content: center; /* center the whole grid inside the container */
+  justify-items: center; /* center each item inside its grid cell */
 }
 
+/* Category Card: consistent aspect ratio, image cover and overlay title */
 .category-card {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background: var(--light-bg);
-  border-radius: 16px;
+  position: relative;
+  display: block;
+  width: 100%;
+  max-width: 320px;
+  aspect-ratio: 4 / 5; /* keeps cards uniform height */
+  border-radius: 14px;
   overflow: hidden;
   text-decoration: none;
-  color: #b22222;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-  transition: all 0.3s ease;
-  width: 220px;
-  height: 240px;
+  color: var(--text-dark);
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.02));
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+  transition: transform 0.32s cubic-bezier(.2,.9,.2,1), box-shadow 0.32s ease;
+  font-family: 'Baloo 2', sans-serif;
 }
 
+.category-card:focus,
 .category-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  transform: translateY(-8px) scale(1.01);
+  box-shadow: 0 14px 36px rgba(0,0,0,0.18);
+  outline: none;
 }
 
 .category-image {
+  position: absolute;
+  inset: 0;
   width: 100%;
-  height: 160px;
+  height: 100%;
   object-fit: cover;
+  display: block;
+  filter: brightness(0.95) saturate(1.05);
+  transition: transform 0.5s ease, filter 0.35s ease;
+}
+
+.category-card:hover .category-image {
+  transform: scale(1.06);
+  filter: brightness(1) saturate(1.07);
+}
+
+/* Dark overlay to ensure text contrast */
+.category-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0.08) 0%, rgba(0,0,0,0.32) 70%);
+  pointer-events: none;
+  z-index: 1;
 }
 
 .category-title {
-  margin-top: 12px;
-  font-size: 18px;
-  font-weight: bold;
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  bottom: 16px;
+  margin: 0;
+  color: #fff;
+  font-size: 20px;
+  font-weight: 700;
   text-transform: uppercase;
+  letter-spacing: 0.6px;
+  z-index: 2;
+  text-align: center;
+}
+
+/* Optional subtitle under title (not always present) */
+.category-subtitle {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 44px;
+  color: rgba(255,255,255,0.9);
+  font-size: 13px;
+  z-index: 2;
+  text-align: center;
+}
+
+/* Make grid items centered on small screens */
+@media (max-width: 768px) {
+  .home-categories {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 18px;
+    padding: 28px 12px;
+  }
+
+  .category-title {
+    font-size: 18px;
+    bottom: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .home-categories {
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+    padding: 20px 10px;
+  }
+
+  .category-card {
+    max-width: none;
+    aspect-ratio: 3 / 4;
+    border-radius: 12px;
+  }
+
+  .category-title {
+    font-size: 16px;
+    bottom: 10px;
+  }
 }
