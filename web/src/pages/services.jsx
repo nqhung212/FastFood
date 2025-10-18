@@ -5,25 +5,25 @@ const services = [
   {
     id: 1,
     name: 'PICK UP',
-    icon: '🚗',
+    icon: '/images/delivery.jpg',
     description: 'Quick pickup service',
   },
   {
     id: 2,
-    name: 'FASTFOOD PARTY',
-    icon: '🎉',
+    name: 'PARTY CUSTUMIZE',
+    icon: '/images/party.jpg',
     description: 'Birthday party packages',
   },
   {
     id: 3,
-    name: 'FASTFOOD CLUB',
-    icon: '🎨',
+    name: 'FASTFOOD DISCOUNT',
+    icon: '/images/pizza-ad.jpg',
     description: 'Membership benefits',
   },
   {
     id: 4,
-    name: 'BIG SERVICE ORDER',
-    icon: '📦',
+    name: 'LOGISTIC SERVICE ORDER',
+    icon: '/images/logistic.jpg',
     description: 'Catering & bulk orders',
   },
 ]
@@ -39,7 +39,9 @@ export default function Services() {
       <div className="services-grid">
         {services.map((service) => (
           <div key={service.id} className="service-card">
-            <div className="service-icon">{service.icon}</div>
+            <div className="service-icon">
+              <img src={service.icon} alt={service.name} className="service-icon-img" />
+            </div>
             <h3 className="service-name">{service.name}</h3>
             <button className="service-btn">VIEW MORE</button>
           </div>

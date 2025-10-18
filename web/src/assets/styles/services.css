@@ -66,6 +66,14 @@
   height: 100px;
 }
 
+.service-icon-img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 12px;
+  display: block;
+}
+
 .service-name {
   font-size: 18px;
   font-weight: 700;
