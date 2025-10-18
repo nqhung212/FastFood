@@ -19,8 +19,10 @@ export default function Header() {
   const { user, logout } = useAuth()
   const { searchTerm, setSearchTerm, handleSearch, handleKeyPress } = useSearch()
   const [showCategoryDropdown, setShowCategoryDropdown] = useState(false)
+  const [showHeaderTop, setShowHeaderTop] = useState(true)
   const menuRef = useRef(null)
   const hideTimeoutRef = useRef(null)
+  const lastScrollRef = useRef(0)
   const HIDE_DELAY = 100 // ms
 
   const handleAvatarClick = () => {
@@ -60,10 +62,25 @@ export default function Header() {
     }
   }, [])
 
+  // Handle scroll to hide/show header-top
+  useEffect(() => {
+    const handleScroll = () => {
+      // Hide header-top when scrollY > 0, show only when at top (scrollY === 0)
+      if (window.scrollY > 0) {
+        setShowHeaderTop(false)
+      } else {
+        setShowHeaderTop(true)
+      }
+    }
+
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
   return (
     <header className="header-banner">
       {/* Top Bar */}
-      <div className="header-top">
+      <div className={`header-top ${!showHeaderTop ? 'header-top-hidden' : ''}`}>
         <div className="header-top-container">
           <div className="header-top-left">
             <span className="language-selector">EN | VN</span>

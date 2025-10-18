@@ -24,6 +24,15 @@
   background-color: var(--dark-red);
   padding: 8px 0;
   font-size: 12px;
+  transition: all 0.1s ease-out;
+  overflow: hidden;
+  max-height: 50px;
+}
+
+.header-top.header-top-hidden {
+  max-height: 0;
+  padding: 0;
+  opacity: 0;
 }
 
 .header-top-container {

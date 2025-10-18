@@ -117,20 +117,26 @@
 
   "payments": [
     {
-      "id": 1,
-      "method": "Tiền mặt",
-      "description": "Thanh toán trực tiếp khi nhận hàng (COD)"
-    },
-    {
-      "id": 2,
-      "method": "Chuyển khoản ngân hàng",
-      "description": "Chuyển khoản qua tài khoản Vietcombank / MBBank"
-    },
-    {
-      "id": 3,
-      "method": "Momo",
-      "description": "Thanh toán qua ví điện tử Momo"
-    }
+    "orderId": "ORDER_1760785908410",
+    "amount": 65000,
+    "orderInfo": "Thanh toán đơn hàng FastFood",
+    "items": [
+      {
+        "id": "1",
+        "name": "Burger Bò Phô Mai 1",
+        "slug": "burger-bo-pho-mai-1",
+        "description": "Bánh burger bò nướng kèm phô mai tan chảy.",
+        "price": 65000,
+        "categories": "Burger",
+        "image": "/images/7-2-1-number-png.png",
+        "quantity": 1
+      }
+    ],
+    "requestId": "MOMO1760785908767",
+    "timestamp": "2025-10-18T11:11:48.943Z",
+    "status": "pending",
+    "momoResultCode": 0
+  }
   ],
 
   "orders": [
