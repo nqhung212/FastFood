@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import React from 'react'
 import MainLayout from '../layouts/home-layout.jsx'
 import getImage from '../utils/import-image.js'
+import Banner from './banner.jsx'
 import Services from './services.jsx'
 import Order from './order.jsx'
 import FindStore from './findstore.jsx'
@@ -19,8 +20,7 @@ function Web() {
     <MainLayout>
       {/* Body Home */}
       <div className="body-home-top">
-        {}
-        {/* <Product /> */}
+        <Banner />
       </div>
       <div className="body-home-main">
         {}
