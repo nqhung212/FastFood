@@ -2,6 +2,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import MainLayout from '../layouts/home-layout'
+import '../assets/styles/auth.css'
 import { useUsers } from '../hooks/use-users'
 import { useAuth } from '../context/auth-context'
 import { API_BASE_URL } from '../constants'

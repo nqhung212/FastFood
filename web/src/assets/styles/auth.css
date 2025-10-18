@@ -1,0 +1,107 @@
+/* src/assets/styles/auth.css */
+
+.auth-page,
+.login-page {
+  max-width: 820px;
+  margin: 40px auto;
+  padding: 36px 28px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+  font-family: 'Baloo 2', sans-serif;
+}
+
+.auth-page h2,
+.login-page h2 {
+  text-align: center;
+  color: #d74146;
+  font-size: 32px;
+  margin: 0 0 22px 0;
+  letter-spacing: 1.5px;
+}
+
+.auth-form,
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.auth-form input,
+.login-form input,
+.auth-form select {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid rgba(0,0,0,0.12);
+  border-radius: 8px;
+  font-size: 15px;
+  color: #333;
+  background: #fff;
+  transition: box-shadow 0.12s ease, border-color 0.12s ease;
+}
+
+.auth-form input:focus,
+.login-form input:focus,
+.auth-form select:focus {
+  outline: none;
+  border-color: rgba(215,65,70,0.9);
+  box-shadow: 0 4px 18px rgba(215,65,70,0.08);
+}
+
+.auth-form label,
+.login-form label {
+  display: block;
+  font-size: 13px;
+  color: #444;
+  margin-bottom: 6px;
+}
+
+.auth-form button,
+.login-form button {
+  align-self: flex-start;
+  padding: 12px 28px;
+  background: #d74146;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  cursor: pointer;
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+.auth-form button:hover,
+.login-form button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(215,65,70,0.14);
+}
+
+.auth-page p,
+.login-page p {
+  margin-top: 12px;
+  color: #333;
+}
+
+.auth-page .help-text,
+.login-page .help-text {
+  font-size: 13px;
+  color: #666;
+}
+
+/* Responsive */
+@media (max-width: 720px) {
+  .auth-page,
+  .login-page {
+    margin: 20px 12px;
+    padding: 20px;
+  }
+
+  .auth-page h2,
+  .login-page h2 {
+    font-size: 24px;
+  }
+}
+
+/* small helper for success/error messages */
+.auth-success { color: #0a8a3a; font-weight: 700; }
+.auth-error { color: #c62828; font-weight: 700; }

@@ -2,6 +2,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import MainLayout from '../layouts/home-layout'
+import '../assets/styles/auth.css'
 
 export default function Register() {
   const navigate = useNavigate()
@@ -45,12 +46,49 @@ export default function Register() {
       <div className="auth-page">
         <h2>Đăng ký tài khoản</h2>
         <form onSubmit={handleSubmit} className="auth-form">
-          <input name="username" placeholder="Tên đăng nhập" value={form.username} onChange={handleChange} required />
-          <input type="password" name="password" placeholder="Mật khẩu" value={form.password} onChange={handleChange} required />
-          <input name="fullname" placeholder="Họ và tên" value={form.fullname} onChange={handleChange} required />
-          <input name="phone" placeholder="Số điện thoại" value={form.phone} onChange={handleChange} required />
-          <input name="email" placeholder="Email" value={form.email} onChange={handleChange} required />
-          <input name="address" placeholder="Địa chỉ" value={form.address} onChange={handleChange} required />
+          <input
+            name="username"
+            placeholder="Tên đăng nhập"
+            value={form.username}
+            onChange={handleChange}
+            required
+          />
+          <input
+            type="password"
+            name="password"
+            placeholder="Mật khẩu"
+            value={form.password}
+            onChange={handleChange}
+            required
+          />
+          <input
+            name="fullname"
+            placeholder="Họ và tên"
+            value={form.fullname}
+            onChange={handleChange}
+            required
+          />
+          <input
+            name="phone"
+            placeholder="Số điện thoại"
+            value={form.phone}
+            onChange={handleChange}
+            required
+          />
+          <input
+            name="email"
+            placeholder="Email"
+            value={form.email}
+            onChange={handleChange}
+            required
+          />
+          <input
+            name="address"
+            placeholder="Địa chỉ"
+            value={form.address}
+            onChange={handleChange}
+            required
+          />
           <button type="submit">Đăng ký</button>
         </form>
         {message && <p>{message}</p>}
