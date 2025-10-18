@@ -1,9 +1,44 @@
-# CHÚ Ý KHI CLONE VỀ LÀM BÀI
+# FASTFOOD README
+---
 
-## \*Chọn riêng từng folder mà mở terminal. folder mobile -> intergrated terminal -> npm install hoặc folder web -> intergrated terminal -> npm install.
+## Cách chạy
 
-## \*KHÔNG được push node_modules lên -> tìm trong gitignore -> add thêm ignore node_modules
+- Web (thư mục `web`):
 
-## \*Cách chạy. ở website -> npm install (lần đầu clone về) -> npx json-server --watch data/data.json --port 3001 -> mở terminal ở web -> npm run dev -> mở terminal ở server trong web -> npm start. ở mobile -> npm install -> npm start (chưa có API) 
+  ```powershell
+  cd web
+  npm install (lần đầu clone)
+  npm run dev
+  ```
 
-## Có push thì nên push kiểu merch -> request pull -> tui sẽ check request trc khi tui push để tránh nát code
+- Mobile (thư mục `mobile`):
+
+  ```powershell
+  cd mobile
+  npm install (lần đầu clone)
+  npm start
+  ```
+
+---
+
+## API 
+
+Chạy json-server 
+
+```powershell
+npx json-server --watch web/data/data.json --port 3001
+```
+
+```powershell
+cd server
+npm start
+```
+
+---
+
+## Git 
+
+- KHÔNG push `node_modules/`.
+
+
+
