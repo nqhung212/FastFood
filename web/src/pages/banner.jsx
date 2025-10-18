@@ -123,10 +123,18 @@ export default function Banner() {
         </div>
 
         {/* Navigation Arrows */}
-        <button className="banner-arrow banner-arrow-prev" onClick={handlePrev} aria-label="Previous slide">
+        <button
+          className="banner-arrow banner-arrow-prev"
+          onClick={handlePrev}
+          aria-label="Previous slide"
+        >
           ❮
         </button>
-        <button className="banner-arrow banner-arrow-next" onClick={handleNext} aria-label="Next slide">
+        <button
+          className="banner-arrow banner-arrow-next"
+          onClick={handleNext}
+          aria-label="Next slide"
+        >
           ❯
         </button>
 
