@@ -26,7 +26,7 @@
 Chạy json-server 
 
 ```powershell
-npx json-server --watch web/data/data.json --port 3001
+npx json-server --watch data/data.json --port 3001
 ```
 
 ```powershell
