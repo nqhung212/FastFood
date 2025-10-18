@@ -6,57 +6,37 @@ import { useNavigate } from 'react-router-dom'
 const slides = [
   {
     id: 1,
-    title: 'NO CẢNG BỤNG VUI BẬT MOOD',
-    subtitle: 'Combo 79K',
-    image: '🍗',
+    image: '/images/burgur-ad.jpg',
     color: '#E74C3C',
     link: '/menu',
   },
   {
     id: 2,
-    title: 'GÀ RÁN GIÒN CĄCY',
-    subtitle: 'Đặt ngay hôm nay',
-    image: '🍟',
+    image: '/images/chicken-ad3.jpg',
     color: '#D97634',
     link: '/menu/Chicken',
   },
   {
     id: 3,
-    title: 'BURGER BÒ PHÔMÔ MAI',
-    subtitle: 'Thưởng thức hương vị mới',
-    image: '🍔',
+    image: '/images/burgur-ad1.jpg',
     color: '#C41E3A',
     link: '/menu/Burger',
   },
   {
     id: 4,
-    title: 'NƯỚC NGỌT GIẢI KHÁT',
-    subtitle: 'Mát lạnh tươi mới',
-    image: '🥤',
+    image: '/images/pizza-ad.jpg',
     color: '#E8A023',
-    link: '/menu',
-  },
-  {
-    id: 5,
-    title: 'HỌC DẶT MỤC',
-    subtitle: 'Combo tiết kiệm',
-    image: '🍝',
-    color: '#8B4513',
-    link: '/menu',
+    link: '/menu/Fries',
   },
   {
     id: 6,
-    title: 'MỌI CÁCH XỦ ĐỦ TỐT',
-    subtitle: 'Chất lượng tốt nhất',
-    image: '⭐',
+    image: '/images/pasta-ad1.jpg',
     color: '#F39C12',
     link: '/menu',
   },
   {
     id: 7,
-    title: 'KHUYẾN MẠI ĐẶC BIỆT',
-    subtitle: 'Không bỏ lỡ',
-    image: '🎉',
+    image: '/images/fastfood-ad.jpg',
     color: '#E91E63',
     link: '/menu',
   },
@@ -106,13 +86,12 @@ export default function Banner() {
             <div
               key={slide.id}
               className={`banner-slide ${index === currentSlide ? 'active' : ''}`}
-              style={{ backgroundColor: slide.color }}
+              style={{ backgroundImage: `url(${slide.image})`, backgroundColor: slide.color }}
               onClick={handleSlideClick}
               role="button"
               tabIndex={0}
             >
               <div className="banner-slide-content">
-                <div className="banner-slide-image">{slide.image}</div>
                 <div className="banner-slide-text">
                   <h2 className="banner-slide-title">{slide.title}</h2>
                   <p className="banner-slide-subtitle">{slide.subtitle}</p>
@@ -137,6 +116,22 @@ export default function Banner() {
         >
           ❯
         </button>
+
+        {/* Navigation overlay zones: semi-transparent full-height zones at edges that are clickable */}
+        <div
+          className="banner-nav-zone banner-nav-left"
+          onClick={handlePrev}
+          role="button"
+          tabIndex={0}
+          aria-label="Previous slide"
+        />
+        <div
+          className="banner-nav-zone banner-nav-right"
+          onClick={handleNext}
+          role="button"
+          tabIndex={0}
+          aria-label="Next slide"
+        />
 
         {/* Dots */}
         <div className="banner-dots">
