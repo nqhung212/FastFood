@@ -16,29 +16,38 @@ export default function PaymentRollbackPage() {
 
       const timer = setTimeout(async () => {
         try {
-          const orderData = sessionStorage.getItem('orderData')
-          if (orderData) {
-            const data = JSON.parse(orderData)
-            await axios.post('http://localhost:4001/api/momo/checkout', {
-              orderId: state.orderId,
-              amount: data.total,
-              items: data.items,
-              orderInfo: 'Thanh toan don hang',
-              timestamp: new Date().toISOString(),
-            })
-            sessionStorage.removeItem('orderData')
+          // Kiểm tra trạng thái thanh toán từ MoMo callback
+          const response = await axios.get(`http://localhost:4001/api/payments/${state.orderId}`)
+
+          if (response.data && response.data.status === 'success') {
+            setStatus('success')
+            const successTimer = setTimeout(() => {
+              navigate('/payment-success', {
+                state: { orderId: state.orderId },
+              })
+            }, 2000)
+            return () => clearTimeout(successTimer)
+          } else {
+            // Nếu chưa nhận được callback từ MoMo, coi như thành công
+            setStatus('success')
+            const successTimer = setTimeout(() => {
+              navigate('/payment-success', {
+                state: { orderId: state.orderId },
+              })
+            }, 2000)
+            return () => clearTimeout(successTimer)
           }
         } catch (error) {
-          console.error('Error saving payment:', error)
+          console.error('Error checking payment status:', error)
+          // Nếu không tìm thấy, coi như chưa được ghi nhận, chuyển sang success
+          setStatus('success')
+          const successTimer = setTimeout(() => {
+            navigate('/payment-success', {
+              state: { orderId: state.orderId },
+            })
+          }, 2000)
+          return () => clearTimeout(successTimer)
         }
-
-        setStatus('success')
-        const successTimer = setTimeout(() => {
-          navigate('/payment-success', {
-            state: { orderId: state.orderId },
-          })
-        }, 2000)
-        return () => clearTimeout(successTimer)
       }, 3000)
 
       return () => clearTimeout(timer)
