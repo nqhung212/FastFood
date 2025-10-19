@@ -37,7 +37,7 @@ export default function MenuCategories() {
             </div>
           )}
 
-          {products.map((product) => (
+          {products.map((product, index) => (
             <Link key={product.id} to={`/product/${product.slug}`} className="product-card">
               <div className="product-image">
                 <img src={`/images/${product.image}`} alt={product.name} />
@@ -47,7 +47,7 @@ export default function MenuCategories() {
                 <p className="product-description">{product.description}</p>
                 <div className="product-footer">
                   <span className="product-price">{product.price.toLocaleString()}₫</span>
-                  <button className="btn-add-to-cart">Thêm vào giỏ</button>
+                  <button className="btn-add-to-cart">THÊM VÀO GIỎ</button>
                 </div>
               </div>
             </Link>
