@@ -94,16 +94,32 @@
 
 .header-logo {
   flex-shrink: 0;
+  height: 60px;
+  width: 60px;
+  overflow: hidden;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: 2px solid var(--secondary-yellow);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .header-logo a {
   display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 60px;
+  position: relative;
 }
 
 .header-logo img {
   height: 60px;
   width: auto;
   object-fit: contain;
+  transform: scale(2);
+  transform-origin: center;
 }
 
 /* Search Bar */

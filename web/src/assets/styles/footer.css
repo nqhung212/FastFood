@@ -30,14 +30,23 @@
 
 .footer-logo {
   width: 120px;
-  height: auto;
+  height: 120px;
   margin-top: 10px;
- 
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: 2px solid var(--secondary-yellow);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .footer-logo img {
   width: 100%;
   height: auto;
+  transform: scale(2);
+  transform-origin: center;
 }
 
 .footer-info p {

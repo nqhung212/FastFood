@@ -17,7 +17,7 @@ export default function Footer() {
         {/* Left Section - Logo & Info */}
         <div className="footer-section footer-left">
           <div className="footer-logo">
-            <img src="/images/Mercedes-Logo.svg.png" alt="FastFood Logo" />
+            <img src="/images/logo.png" alt="FastFood Logo" />
           </div>
           <div className="footer-info">
             <p>

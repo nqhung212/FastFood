@@ -100,7 +100,7 @@ export default function Header() {
           <div className="header-left">
             <div className="header-logo">
               <Link to="/" aria-label="Homepage">
-                <img src="/images/Mercedes-Logo.svg.png" alt="FastFood Logo" />
+                <img src="/images/logo.png" alt="FastFood Logo" />
               </Link>
             </div>
           </div>
