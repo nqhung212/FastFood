@@ -19,7 +19,7 @@ export default function ProductDetail() {
         const found = data.find((p) => p.slug === slug)
         setProduct(found)
       })
-      .catch((err) => console.error('Lỗi khi tải sản phẩm:', err))
+      .catch((err) => console.error('Error loading product:', err))
   }, [slug])
 
   const handleAddToCart = () => {
@@ -38,7 +38,7 @@ export default function ProductDetail() {
   if (!product)
     return (
       <MainLayout>
-        <p>Đang tải...</p>
+        <p>Loading...</p>
       </MainLayout>
     )
 
@@ -54,11 +54,11 @@ export default function ProductDetail() {
             <p>{product.description}</p>
           </div>
           <div className="product-price">
-            <span className="product-price-label">Giá:</span>
+            <span className="product-price-label">Price:</span>
             <span className="product-price-value">{product.price.toLocaleString()}₫</span>
           </div>
           <div className="product-quantity-control">
-            <label className="qty-label">Số lượng:</label>
+            <label className="qty-label">Quantity:</label>
             <div className="qty-selector">
               <button
                 className="qty-btn-small"
@@ -78,7 +78,7 @@ export default function ProductDetail() {
               </button>
             </div>
           </div>
-          <button onClick={handleAddToCart}>Thêm vào giỏ</button>
+          <button onClick={handleAddToCart}>Add to cart</button>
         </div>
       </div>
     </MainLayout>

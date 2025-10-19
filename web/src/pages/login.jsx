@@ -29,27 +29,27 @@ export default function Login() {
 
       if (user) {
         setTimeout(() => login(user), 800)
-        setMessage('Đăng nhập thành công!')
+        setMessage('Login successful!')
         setTimeout(() => navigate('/'), 800)
       } else {
-        setMessage('Sai tài khoản hoặc mật khẩu')
+        setMessage('Incorrect username or password')
       }
     } catch (err) {
-      setMessage('Lỗi khi đăng nhập: ' + err.message)
+      setMessage('Login error: ' + err.message)
     }
   }
 
   return (
     <MainLayout>
       <div className="login-page">
-        <h2>Đăng nhập</h2>
+        <h2>Login</h2>
 
-        {loading && <p>Đang tải dữ liệu...</p>}
-        {error && <p style={{ color: 'red' }}>Lỗi tải dữ liệu: {error}</p>}
+        {loading && <p>Loading data...</p>}
+        {error && <p style={{ color: 'red' }}>Load error: {error}</p>}
 
         <form onSubmit={handleLogin} className="login-form">
           <div>
-            <label>Tên đăng nhập</label>
+            <label>Username</label>
             <input
               type="text"
               value={username}
@@ -59,7 +59,7 @@ export default function Login() {
           </div>
 
           <div>
-            <label>Mật khẩu</label>
+            <label>Password</label>
             <input
               type="password"
               value={password}
@@ -68,7 +68,7 @@ export default function Login() {
             />
           </div>
 
-          <button type="submit">Đăng nhập</button>
+          <button type="submit">Login</button>
         </form>
 
         {message && <p>{message}</p>}

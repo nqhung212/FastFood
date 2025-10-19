@@ -26,10 +26,10 @@ export default function CartPage() {
   return (
     <MainLayout>
       <div className="cart-page">
-        <h2>🛒 Giỏ hàng của bạn</h2>
+        <h2>🛒 Your Cart</h2>
 
         {cartItems.length === 0 ? (
-          <p>Giỏ hàng trống</p>
+          <p>Your cart is empty</p>
         ) : (
           <>
             <ul className="cart-list">
@@ -53,14 +53,14 @@ export default function CartPage() {
                     <p>{(item.price * (item.quantity || 1)).toLocaleString()}₫</p>
                   </div>
                   <button onClick={() => removeFromCart(item.id)} className="btn-remove">
-                    Xóa
+                    Remove
                   </button>
                 </li>
               ))}
             </ul>
             <div className="cart-summary">
-              <h3>Tổng cộng: {totalPrice.toLocaleString()}₫</h3>
-              <button onClick={handleCheckout}>Thanh Toán</button>
+              <h3>Total: {totalPrice.toLocaleString()}₫</h3>
+              <button onClick={handleCheckout}>Checkout</button>
             </div>
           </>
         )}

@@ -14,13 +14,13 @@ export default function MenuCategories() {
         {/* Page Title */}
         <div className="menu-header">
           <h2 className="menu-title">{category?.toUpperCase()}</h2>
-          <p className="menu-subtitle">Chọn những món ăn yêu thích của bạn</p>
+          <p className="menu-subtitle">Choose your favorite dishes</p>
         </div>
 
         {/* Loading & Error States */}
         {loading && (
           <div className="loading-state">
-            <p>Đang tải sản phẩm...</p>
+            <p>Loading products...</p>
           </div>
         )}
         {error && (
@@ -33,7 +33,7 @@ export default function MenuCategories() {
         <div className="product-grid">
           {!loading && products.length === 0 && (
             <div className="no-products">
-              <p>Không có sản phẩm trong danh mục này.</p>
+              <p>No products in this category.</p>
             </div>
           )}
 
@@ -47,7 +47,7 @@ export default function MenuCategories() {
                 <p className="product-description">{product.description}</p>
                 <div className="product-footer">
                   <span className="product-price">{product.price.toLocaleString()}₫</span>
-                  <button className="btn-add-to-cart">THÊM VÀO GIỎ</button>
+                  <button className="btn-add-to-cart">ADD TO CART</button>
                 </div>
               </div>
             </Link>

@@ -22,25 +22,25 @@ export default function Search() {
     <MenuLayout>
       <div className="menu-page">
         <div className="menu-header">
-          <h2 className="menu-title">Kết quả tìm kiếm: "{searchTerm}"</h2>
-          <p className="menu-subtitle">Tìm thấy {filteredProducts.length} sản phẩm</p>
+          <h2 className="menu-title">Search results: "{searchTerm}"</h2>
+          <p className="menu-subtitle">Found {filteredProducts.length} products</p>
         </div>
 
         {loading && (
           <div className="loading-state">
-            <p>Đang tải sản phẩm...</p>
+            <p>Loading products...</p>
           </div>
         )}
         {error && (
           <div className="error-state">
-            <p>❌ Lỗi tải dữ liệu: {error}</p>
+            <p>❌ Load error: {error}</p>
           </div>
         )}
 
         <div className="product-grid">
           {!loading && filteredProducts.length === 0 && (
             <div className="no-products">
-              <p>Không tìm thấy sản phẩm nào phù hợp với "{searchTerm}"</p>
+              <p>No products found matching "{searchTerm}"</p>
             </div>
           )}
 
@@ -54,7 +54,7 @@ export default function Search() {
                 <p className="product-description">{p.description}</p>
                 <div className="product-footer">
                   <span className="product-price">{p.price.toLocaleString()}₫</span>
-                  <button className="btn-add-to-cart">Thêm vào giỏ</button>
+                  <button className="btn-add-to-cart">Add to cart</button>
                 </div>
               </div>
             </Link>

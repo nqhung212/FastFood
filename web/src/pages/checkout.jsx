@@ -37,11 +37,11 @@ export default function CheckoutPage() {
           {
             amount: checkoutData.total,
             orderId: orderId,
-            orderInfo: 'Thanh toán đơn hàng FastFood',
+            orderInfo: 'Payment for FastFood order',
             items: checkoutData.items,
           },
           (orderId) => {
-            // Callback khi tab MoMo đóng - chuyển sang payment success
+            // Callback when MoMo tab closes - navigate to payment success
             console.log('💚 Redirecting to payment success...')
             sessionStorage.removeItem('checkoutData')
             navigate('/payment-success', { state: { orderId } })
@@ -70,7 +70,7 @@ export default function CheckoutPage() {
   if (!checkoutData) {
     return (
       <MainLayout>
-        <p>Đang tải...</p>
+        <p>Loading...</p>
       </MainLayout>
     )
   }
@@ -78,23 +78,23 @@ export default function CheckoutPage() {
   return (
     <MainLayout>
       <div style={{ maxWidth: '600px', margin: '0 auto', padding: '20px' }}>
-        <h2>Thanh Toán</h2>
+        <h2>Checkout</h2>
 
         <div style={{ border: '1px solid #ccc', padding: '15px', marginBottom: '20px' }}>
-          <h3>Chi tiết đơn hàng</h3>
+          <h3>Order details</h3>
           <div style={{ marginBottom: '10px' }}>
-            <strong>Số lượng sản phẩm:</strong> {checkoutData.items.length}
+            <strong>Items count:</strong> {checkoutData.items.length}
           </div>
           <div style={{ marginBottom: '10px' }}>
-            <strong>Tổng tiền:</strong> {checkoutData.total.toLocaleString()}₫
+            <strong>Total:</strong> {checkoutData.total.toLocaleString()}₫
           </div>
           <div style={{ marginBottom: '10px' }}>
-            <strong>Thời gian:</strong> {new Date(checkoutData.timestamp).toLocaleString('vi-VN')}
+            <strong>Time:</strong> {new Date(checkoutData.timestamp).toLocaleString('en-US')}
           </div>
         </div>
 
         <div style={{ border: '1px solid #ccc', padding: '15px', marginBottom: '20px' }}>
-          <h3>Chọn phương thức thanh toán</h3>
+          <h3>Select payment method</h3>
           <label style={{ display: 'block', marginBottom: '10px' }}>
             <input
               type="radio"
@@ -135,7 +135,7 @@ export default function CheckoutPage() {
               cursor: paymentInitiated ? 'not-allowed' : 'pointer',
             }}
           >
-            Quay Lại
+            Back
           </button>
           {!paymentInitiated ? (
             <button
@@ -152,7 +152,7 @@ export default function CheckoutPage() {
                 fontWeight: 'bold',
               }}
             >
-              {loading ? 'Đang xử lý...' : 'Thanh Toán'}
+              {loading ? 'Processing...' : 'Pay now'}
             </button>
           ) : (
             <button
@@ -168,7 +168,7 @@ export default function CheckoutPage() {
                 fontWeight: 'bold',
               }}
             >
-              Tôi đã thanh toán
+              I have paid
             </button>
           )}
         </div>

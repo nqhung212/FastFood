@@ -10,7 +10,7 @@ export function useUsers() {
   useEffect(() => {
     fetch(ENDPOINTS.USERS)
       .then(res => {
-        if (!res.ok) throw new Error('Lỗi tải dữ liệu người dùng')
+        if (!res.ok) throw new Error('Error loading users')
         return res.json()
       })
       .then(data => setUsers(data))

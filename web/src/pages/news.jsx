@@ -4,22 +4,21 @@ import '../assets/styles/news.css'
 const newsItems = [
   {
     id: 1,
-    title: 'FASTFOOD ĐẠT MỐC 200 CỬA HÀNG TẠI THỊ TRƯỜNG VIỆT NAM',
-    excerpt:
-      'Sự kiện khai trương của hàng thứ 200 là cột mốc quan trọng trong kế hoạch mở rộng kinh...',
+    title: 'FASTFOOD REACHES 200 STORES IN VIETNAM',
+    excerpt: 'The opening of the 200th store marks a major milestone in our expansion plan...',
     image: '/images/store.jpg',
   },
   {
     id: 2,
-    title: 'HỢP TÁC BÊN VỮNG GIÚP FASTFOOD PHÁT TRIỂN TẠI VIỆT NAM SAU HAI THẬP KỶ',
+    title: 'SUSTAINABLE PARTNERSHIPS DRIVE FASTFOOD GROWTH IN VIETNAM',
     excerpt:
-      'Việc có chung mục tiêu và mối quan hệ hợp tác chặt chẽ với các đối tác giúp FastFood Việt...',
+      'Shared goals and close collaboration with partners help FastFood Vietnam continue to grow...',
     image: '/images/cooperation.jpg',
   },
   {
     id: 3,
-    title: 'FASTFOOD VIỆT NAM KHAI TRƯƠNG CỬA HÀNG THỨ 191',
-    excerpt: 'Vào ngày 17/05/2024, tại tuyến phố Mễ Linh sâm uất của phường Liên Bảo, thành...',
+    title: 'FASTFOOD VIETNAM OPENS 191ST STORE',
+    excerpt: 'On 17/05/2024, we opened a new store in the busy Me Linh street area...',
     image: '/images/newstore.jpg',
   },
 ]

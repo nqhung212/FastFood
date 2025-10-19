@@ -17,7 +17,7 @@ export default function PaymentSuccessPage() {
       setOrderId(state.orderId)
       clearCart()
 
-      // Check payment status từ server (chỉ chạy 1 lần)
+      // Check payment status from server (run only once)
       const checkStatus = async () => {
         try {
           const status = await checkPaymentStatus(state.orderId)
@@ -48,9 +48,9 @@ export default function PaymentSuccessPage() {
           backgroundColor: '#f1f8f4',
         }}
       >
-        <h1 style={{ color: '#4CAF50' }}>✅ Thanh toán thành công!</h1>
+        <h1 style={{ color: '#4CAF50' }}>✅ Payment successful!</h1>
         <p style={{ fontSize: '16px', marginBottom: '20px' }}>
-          Cảm ơn bạn đã mua hàng. Đơn hàng của bạn đã được xác nhận.
+          Thank you for your purchase. Your order has been confirmed.
         </p>
         {orderId && (
           <div
@@ -62,7 +62,7 @@ export default function PaymentSuccessPage() {
               borderLeft: '4px solid #4CAF50',
             }}
           >
-            <strong>Mã đơn hàng:</strong>
+            <strong>Order ID:</strong>
             <p style={{ fontSize: '18px', color: '#4CAF50', margin: '5px 0' }}>{orderId}</p>
           </div>
         )}
@@ -79,11 +79,10 @@ export default function PaymentSuccessPage() {
             }}
           >
             <p>
-              <strong>Số tiền:</strong> {paymentStatus.amount?.toLocaleString() || '...'} ₫
+              <strong>Amount:</strong> {paymentStatus.amount?.toLocaleString() || '...'} ₫
             </p>
             <p>
-              <strong>Thời gian:</strong>{' '}
-              {new Date(paymentStatus.timestamp).toLocaleString('vi-VN')}
+              <strong>Time:</strong> {new Date(paymentStatus.timestamp).toLocaleString('en-US')}
             </p>
           </div>
         )}
@@ -100,7 +99,7 @@ export default function PaymentSuccessPage() {
             fontSize: '16px',
           }}
         >
-          Về Trang Chủ
+          Back to Home
         </button>
       </div>
     </MainLayout>

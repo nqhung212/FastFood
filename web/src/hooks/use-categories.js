@@ -11,7 +11,7 @@ export function useCategories() {
     setLoading(true)
     fetch(ENDPOINTS.CATEGORIES)
       .then((res) => {
-        if (!res.ok) throw new Error('Lỗi tải danh mục')
+        if (!res.ok) throw new Error('Error loading categories')
         return res.json()
       })
       .then((data) => setCategories(data))
@@ -33,7 +33,7 @@ export function useProductsByCategory(category) {
     setLoading(true)
     fetch(ENDPOINTS.PRODUCTS)
       .then((res) => {
-        if (!res.ok) throw new Error('Lỗi tải dữ liệu sản phẩm theo danh mục')
+        if (!res.ok) throw new Error('Error loading products for category')
         return res.json()
       })
       .then((data) => {

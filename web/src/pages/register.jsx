@@ -26,7 +26,7 @@ export default function Register() {
 
     const exists = users.some((u) => u.username === form.username)
     if (exists) {
-      setMessage('Tên đăng nhập đã tồn tại')
+      setMessage('Username already exists')
       return
     }
 
@@ -37,18 +37,18 @@ export default function Register() {
     }
 
     sessionStorage.setItem('users', JSON.stringify([...users, newUser]))
-    setMessage('Đăng ký thành công!')
+    setMessage('Registration successful!')
     setTimeout(() => navigate('/login'), 1000)
   }
 
   return (
     <MainLayout>
       <div className="auth-page">
-        <h2>Đăng ký tài khoản</h2>
+        <h2>Create an account</h2>
         <form onSubmit={handleSubmit} className="auth-form">
           <input
             name="username"
-            placeholder="Tên đăng nhập"
+            placeholder="Username"
             value={form.username}
             onChange={handleChange}
             required
@@ -56,21 +56,21 @@ export default function Register() {
           <input
             type="password"
             name="password"
-            placeholder="Mật khẩu"
+            placeholder="Password"
             value={form.password}
             onChange={handleChange}
             required
           />
           <input
             name="fullname"
-            placeholder="Họ và tên"
+            placeholder="Full name"
             value={form.fullname}
             onChange={handleChange}
             required
           />
           <input
             name="phone"
-            placeholder="Số điện thoại"
+            placeholder="Phone number"
             value={form.phone}
             onChange={handleChange}
             required
@@ -84,12 +84,12 @@ export default function Register() {
           />
           <input
             name="address"
-            placeholder="Địa chỉ"
+            placeholder="Address"
             value={form.address}
             onChange={handleChange}
             required
           />
-          <button type="submit">Đăng ký</button>
+          <button type="submit">Register</button>
         </form>
         {message && <p>{message}</p>}
       </div>

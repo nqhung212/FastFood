@@ -28,7 +28,7 @@ export default function PaymentRollbackPage() {
             }, 2000)
             return () => clearTimeout(successTimer)
           } else {
-            // Nếu chưa nhận được callback từ MoMo, coi như thành công
+            // If no callback received from MoMo, assume success
             setStatus('success')
             const successTimer = setTimeout(() => {
               navigate('/payment-success', {
@@ -39,7 +39,7 @@ export default function PaymentRollbackPage() {
           }
         } catch (error) {
           console.error('Error checking payment status:', error)
-          // Nếu không tìm thấy, coi như chưa được ghi nhận, chuyển sang success
+          // If not found, assume not recorded yet, move to success
           setStatus('success')
           const successTimer = setTimeout(() => {
             navigate('/payment-success', {
@@ -61,14 +61,14 @@ export default function PaymentRollbackPage() {
       <div style={{ textAlign: 'center', padding: '40px' }}>
         {status === 'checking' && (
           <div>
-            <h2>Đang kiểm tra kết quả thanh toán...</h2>
-            <p style={{ fontSize: '14px', color: '#666' }}>Vui lòng đợi trong giây lát</p>
+            <h2>Checking payment result...</h2>
+            <p style={{ fontSize: '14px', color: '#666' }}>Please wait a moment</p>
           </div>
         )}
         {status === 'success' && (
           <div>
-            <h2 style={{ color: '#4CAF50' }}>✅ Thanh toán đã nhận được!</h2>
-            <p style={{ fontSize: '14px', color: '#666' }}>Đang chuyển hướng...</p>
+            <h2 style={{ color: '#4CAF50' }}>✅ Payment received!</h2>
+            <p style={{ fontSize: '14px', color: '#666' }}>Redirecting...</p>
           </div>
         )}
       </div>

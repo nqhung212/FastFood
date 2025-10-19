@@ -102,7 +102,7 @@ export default function Footer() {
           </div>
 
           <div className="footer-download">
-            <h4>TẢI ỨNG DỤNG ĐẶT HÀNG VỚI NHIỀU ƯU ĐÃI HƠN</h4>
+            <h4>DOWNLOAD THE APP FOR MORE OFFERS</h4>
             <div className="app-links">
               <a href="#" className="app-btn google-play">
                 <img src="/images/google-play.png" alt="Google Play" />

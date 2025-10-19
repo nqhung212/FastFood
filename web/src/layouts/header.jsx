@@ -40,7 +40,7 @@ export default function Header() {
 
   // Close dropdown when clicking outside (chỉ khi không ở /menu)
   useEffect(() => {
-    if (isMenuPage) return // Không đóng dropdown khi ở /menu
+    if (isMenuPage) return // Do not close dropdown when on /menu
 
     const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
@@ -84,12 +84,12 @@ export default function Header() {
         <div className="header-top-container">
           <div className="header-top-left">
             <span className="language-selector">EN | VN</span>
-            <span className="location">HỒ CHÍ MINH</span>
+            <span className="location">HO CHI MINH</span>
           </div>
           <div className="header-top-right">
             <span className="phone">1900-1533</span>
             <button className="btn-pickup">PICK UP</button>
-            <button className="btn-delivery">GIAO HÀNG TẬN NƠI</button>
+            <button className="btn-delivery">DELIVERY</button>
           </div>
         </div>
       </div>
@@ -112,11 +112,11 @@ export default function Header() {
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 onKeyPress={handleKeyPress}
-                placeholder="Tìm kiếm sản phẩm, danh mục..."
+                placeholder="Search products, categories..."
                 aria-label="Search"
               />
               <button type="button" className="search-button" onClick={handleSearch}>
-                Tìm
+                Search
               </button>
             </div>
           </div>
@@ -134,19 +134,19 @@ export default function Header() {
                   />
                   <span className="user-name">{user.name}</span>
                   <button className="btn-logout" onClick={logout}>
-                    Đăng xuất
+                    Logout
                   </button>
                 </div>
               ) : (
                 <div className="header-auth">
                   <Link to="/login">
                     <button type="button" className="btn-auth">
-                      Đăng nhập
+                      Login
                     </button>
                   </Link>
                   <Link to="/register">
                     <button type="button" className="btn-auth">
-                      Đăng ký
+                      Register
                     </button>
                   </Link>
                 </div>
@@ -156,7 +156,7 @@ export default function Header() {
             <div className="header-cart">
               <Link to="/cart">
                 <button type="button" className="btn-cart">
-                  🛒 Giỏ hàng <span className="cart-count">({cartItems.length})</span>
+                  🛒 Cart <span className="cart-count">({cartItems.length})</span>
                 </button>
               </Link>
             </div>
