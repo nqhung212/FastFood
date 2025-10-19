@@ -1,17 +1,20 @@
 /* src/assets/styles/findstore.css */
 
+body {
+  margin: 0;
+  padding: 0;
+}
+
 .findstore-section {
   background: linear-gradient(135deg, #d97634 0%, #e6924a 50%, #c46728 100%);
-  padding: 50px 0;
+  padding: 50px 24px;
   font-family: 'Baloo 2', sans-serif;
-  /* make the section full-bleed across the viewport */
+  margin: 0 calc(-50vw + 50%);
   position: relative;
-  left: 50%;
-  right: 50%;
-  margin-left: -50vw;
-  margin-right: -50vw;
-  width: 100vw;
-  box-sizing: border-box;
+}
+
+.findstore-section::before {
+  display: none;
 }
 
 .findstore-container {
