@@ -12,7 +12,7 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = process.env.PORT || 4001;
 
-// MoMo Sandbox Configuration - theo hướng dẫn chính thức
+// MoMo Sandbox Configuration - per official guide
 const MOMO_CONFIG = {
   partnerCode: "MOMO",
   accessKey: "F8BBA842ECF85",
@@ -70,7 +70,7 @@ app.post("/api/momo/checkout", async (req, res) => {
 
     // Chuẩn bị dữ liệu theo format chính xác của MoMo
     const requestId = `${MOMO_CONFIG.partnerCode}${Date.now()}`;
-    const ipnUrl = "https://webhook.site/b3088a6a-2d17-4f8d-a383-71389a6c600b"; // Thay bằng URL thực tế của bạn
+  const ipnUrl = "https://webhook.site/b3088a6a-2d17-4f8d-a383-71389a6c600b"; // Replace with your real IPN URL
     const extraData = ""; // Pass empty value if merchant doesn't have stores
     
     const requestData = {
@@ -87,7 +87,7 @@ app.post("/api/momo/checkout", async (req, res) => {
       lang: "vi",
     };
 
-    // Tạo signature
+  // Create signature
     const signature = generateSignature(requestData, MOMO_CONFIG.secretKey);
     requestData.signature = signature;
 
@@ -109,7 +109,7 @@ app.post("/api/momo/checkout", async (req, res) => {
     console.log("   Message:", momoResponse.data.message);
     console.log("   Pay URL:", momoResponse.data.payUrl ? "✓ Available" : "✗ Not available");
 
-    // Lưu thông tin thanh toán
+  // Save payment information
     const paymentRecord = {
       orderId,
       amount,
@@ -124,18 +124,18 @@ app.post("/api/momo/checkout", async (req, res) => {
 
     savePayment(paymentRecord);
 
-    // Kiểm tra kết quả
+  // Check result
     if (momoResponse.data.resultCode === 0 && momoResponse.data.payUrl) {
       return res.json({
         success: true,
         orderId,
         payUrl: momoResponse.data.payUrl,
-        message: "Tạo yêu cầu thanh toán thành công",
+        message: "Payment request created successfully",
       });
     } else {
       return res.status(400).json({
         success: false,
-        message: momoResponse.data.message || "Không thể tạo yêu cầu thanh toán",
+        message: momoResponse.data.message || "Unable to create payment request",
         resultCode: momoResponse.data.resultCode,
       });
     }
@@ -143,13 +143,13 @@ app.post("/api/momo/checkout", async (req, res) => {
     console.error("❌ Server Error:", error.response?.data || error.message);
     return res.status(500).json({
       success: false,
-      message: "Lỗi kết nối MoMo: " + (error.response?.data?.message || error.message),
+      message: "MoMo connection error: " + (error.response?.data?.message || error.message),
       details: error.response?.data,
     });
   }
 });
 
-// POST /api/momo/ipn - Nhận callback từ MoMo
+// POST /api/momo/ipn - Receive IPN callback from MoMo
 app.post("/api/momo/ipn", (req, res) => {
   try {
     const { orderId, resultCode, message, transId } = req.body;
@@ -160,7 +160,7 @@ app.post("/api/momo/ipn", (req, res) => {
       transId,
     });
 
-    // Cập nhật trạng thái thanh toán
+  // Update payment status
     ensurePaymentsFile();
     const payments = JSON.parse(fs.readFileSync(paymentsFile, "utf-8"));
     const payment = payments.find((p) => p.orderId === orderId);
@@ -180,7 +180,7 @@ app.post("/api/momo/ipn", (req, res) => {
   }
 });
 
-// GET /api/payments - Lấy danh sách thanh toán
+// GET /api/payments - Get list of payments
 app.get("/api/payments", (req, res) => {
   try {
     const payments = getPayments();
@@ -190,7 +190,7 @@ app.get("/api/payments", (req, res) => {
   }
 });
 
-// GET /api/payments/:orderId - Lấy chi tiết thanh toán
+// GET /api/payments/:orderId - Get payment details by orderId
 app.get("/api/payments/:orderId", (req, res) => {
   try {
     const payments = getPayments();
@@ -208,6 +208,6 @@ app.get("/api/payments/:orderId", (req, res) => {
 app.listen(PORT, () => {
   console.log(`\n🚀 Payment server running on http://localhost:${PORT}`);
   console.log(`📌 MoMo Sandbox Mode`);
-  console.log(`� MoMo API: ${MOMO_CONFIG.endpoint}\n`);
+  console.log(`🔗 MoMo API: ${MOMO_CONFIG.endpoint}\n`);
 });
 

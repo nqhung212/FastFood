@@ -34,9 +34,9 @@ export default function PaymentCancelPage() {
           backgroundColor: '#ffe0e0',
         }}
       >
-        <h1 style={{ color: '#FF6B6B' }}>❌ Thanh toán bị hủy</h1>
+        <h1 style={{ color: '#FF6B6B' }}>❌ Payment canceled</h1>
         <p style={{ fontSize: '16px', marginBottom: '20px' }}>
-          Bạn đã hủy giao dịch thanh toán. Vui lòng thử lại nếu bạn muốn tiếp tục.
+          You have canceled the payment transaction. Please try again if you want to continue.
         </p>
         <div
           style={{
@@ -48,7 +48,7 @@ export default function PaymentCancelPage() {
           }}
         >
           <p>
-            Quay lại giỏ hàng trong <strong>{countdown}</strong>s...
+            Returning to cart in <strong>{countdown}</strong>s...
           </p>
         </div>
         <button
@@ -64,7 +64,7 @@ export default function PaymentCancelPage() {
             marginRight: '10px',
           }}
         >
-          Quay Lại Giỏ Hàng
+          Back to Cart
         </button>
         <button
           onClick={() => navigate('/')}
@@ -78,7 +78,7 @@ export default function PaymentCancelPage() {
             fontSize: '16px',
           }}
         >
-          Về Trang Chủ
+          Back to Home
         </button>
       </div>
     </MainLayout>

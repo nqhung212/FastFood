@@ -11,7 +11,7 @@ async function testMoMoPayment() {
     items: [
       {
         id: 1,
-        name: "Burger Bò Phô Mai",
+        name: "Beef Cheeseburger",
         price: 65000,
         quantity: 1,
       },

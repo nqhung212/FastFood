@@ -4,6 +4,11 @@ import { Link } from 'react-router-dom'
 import React from 'react'
 import MainLayout from '../layouts/home-layout.jsx'
 import getImage from '../utils/import-image.js'
+import Banner from './banner.jsx'
+import Services from './services.jsx'
+import Order from './order.jsx'
+import FindStore from './findstore.jsx'
+import News from './news.jsx'
 
 const categories = [
   { name: 'Burger', image: '/images/burger.jpg' },
@@ -15,8 +20,7 @@ function Web() {
     <MainLayout>
       {/* Body Home */}
       <div className="body-home-top">
-        {}
-        {/* <Product /> */}
+        <Banner />
       </div>
       <div className="body-home-main">
         {}
@@ -29,9 +33,17 @@ function Web() {
           ))}
         </section>
       </div>
-      <div className="body-home-trend">
-        {/* Trend */}
-        đây là body-home-trend
+      <div className="body-home-services">
+        <Services />
+      </div>
+      <div className="body-home-order">
+        <Order />
+      </div>
+      <div className="body-home-findstore">
+        <FindStore />
+      </div>
+      <div className="body-home-news">
+        <News />
       </div>
     </MainLayout>
   )

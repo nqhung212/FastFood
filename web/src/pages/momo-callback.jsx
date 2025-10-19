@@ -20,7 +20,7 @@ export default function MoMoCallbackPage() {
   return (
     <MainLayout>
       <div style={{ textAlign: 'center', padding: '40px' }}>
-        <p>Đang xử lý kết quả thanh toán từ MoMo...</p>
+        <p>Processing payment result from MoMo...</p>
       </div>
     </MainLayout>
   )

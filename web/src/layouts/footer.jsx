@@ -19,7 +19,7 @@ export default function Footer() {
         {/* Left Section - Logo & Info */}
         <div className="footer-section footer-left">
           <div className="footer-logo">
-            <img src="/images/Mercedes-Logo.svg.png" alt="FastFood Logo" />
+            <img src="/images/logo.png" alt="FastFood Logo" />
           </div>
           <div className="footer-info">
             <p>
@@ -104,7 +104,7 @@ export default function Footer() {
           </div>
 
           <div className="footer-download">
-            <h4>TẢI ỨNG DỤNG ĐẶT HÀNG VỚI NHIỀU ƯU ĐÃI HƠN</h4>
+            <h4>DOWNLOAD THE APP FOR MORE OFFERS</h4>
             <div className="app-links">
               <a href="#" className="app-btn google-play">
                 <img src="/images/google-play.png" alt="Google Play" />

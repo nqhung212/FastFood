@@ -10,7 +10,7 @@ export function useProducts() {
   useEffect(() => {
     fetch(ENDPOINTS.PRODUCTS)
       .then((res) => {
-        if (!res.ok) throw new Error('Lỗi tải dữ liệu sản phẩm')
+        if (!res.ok) throw new Error('Error loading products')
         return res.json()
       })
       .then((data) => setProducts(data))

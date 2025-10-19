@@ -1,5 +1,5 @@
 //src/utils/ImportImage.js
-//chỗ này là để import ảnh từ folder assets/images vì vite không hỗ trợ import động nên phải làm vậy
+// Helper to import images from assets/images because Vite doesn't support dynamic import of static files
 export function importImages() {
   const images = import.meta.glob('../assets/images/*.{jpg,jpeg,png,webp}', {
     eager: true,

@@ -1,0 +1,150 @@
+/* src/assets/styles/findstore.css */
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.findstore-section {
+  background: linear-gradient(135deg, #d97634 0%, #e6924a 50%, #c46728 100%);
+  padding: 50px 24px;
+  font-family: 'Baloo 2', sans-serif;
+  margin: 0 calc(-50vw + 50%);
+  position: relative;
+}
+
+.findstore-section::before {
+  display: none;
+}
+
+.findstore-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px; /* inner padding for content */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 30px;
+}
+
+.findstore-title {
+  font-size: 42px;
+  font-weight: 800;
+  color: white;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  min-width: 280px;
+}
+
+.findstore-form {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  flex: 1;
+  flex-wrap: wrap;
+}
+
+.findstore-select {
+  flex: 1;
+  min-width: 200px;
+  padding: 12px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  border: none;
+  border-radius: 8px;
+  background: white;
+  color: #666;
+  font-family: 'Baloo 2', sans-serif;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.findstore-select:hover:not(:disabled) {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.findstore-select:disabled {
+  background: #e8e8e8;
+  color: #999;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.findstore-select:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3);
+}
+
+.findstore-btn {
+  padding: 12px 36px;
+  font-size: 14px;
+  font-weight: 700;
+  background-color: #e31837;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  font-family: 'Baloo 2', sans-serif;
+}
+
+.findstore-btn:hover {
+  background-color: #b91430;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+.findstore-btn:active {
+  transform: translateY(0);
+}
+
+@media (max-width: 768px) {
+  .findstore-section {
+    padding: 35px 15px;
+  }
+
+  .findstore-container {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 20px;
+    padding: 0 12px; /* keep small mobile padding */
+  }
+
+  .findstore-title {
+    font-size: 32px;
+    text-align: center;
+    min-width: unset;
+  }
+
+  .findstore-form {
+    flex-direction: column;
+  }
+
+  .findstore-select,
+  .findstore-btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .findstore-section {
+    padding: 25px 12px;
+  }
+
+  .findstore-title {
+    font-size: 24px;
+  }
+
+  .findstore-select {
+    font-size: 13px;
+    padding: 10px 12px;
+  }
+
+  .findstore-btn {
+    padding: 10px 20px;
+    font-size: 12px;
+  }
+}

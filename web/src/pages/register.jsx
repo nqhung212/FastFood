@@ -2,6 +2,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import MainLayout from '../layouts/home-layout'
+import '../assets/styles/auth.css'
 
 export default function Register() {
   const navigate = useNavigate()
@@ -25,7 +26,7 @@ export default function Register() {
 
     const exists = users.some((u) => u.username === form.username)
     if (exists) {
-      setMessage('Tên đăng nhập đã tồn tại')
+      setMessage('Username already exists')
       return
     }
 
@@ -36,22 +37,59 @@ export default function Register() {
     }
 
     sessionStorage.setItem('users', JSON.stringify([...users, newUser]))
-    setMessage('Đăng ký thành công!')
+    setMessage('Registration successful!')
     setTimeout(() => navigate('/login'), 1000)
   }
 
   return (
     <MainLayout>
       <div className="auth-page">
-        <h2>Đăng ký tài khoản</h2>
+        <h2>Create an account</h2>
         <form onSubmit={handleSubmit} className="auth-form">
-          <input name="username" placeholder="Tên đăng nhập" value={form.username} onChange={handleChange} required />
-          <input type="password" name="password" placeholder="Mật khẩu" value={form.password} onChange={handleChange} required />
-          <input name="fullname" placeholder="Họ và tên" value={form.fullname} onChange={handleChange} required />
-          <input name="phone" placeholder="Số điện thoại" value={form.phone} onChange={handleChange} required />
-          <input name="email" placeholder="Email" value={form.email} onChange={handleChange} required />
-          <input name="address" placeholder="Địa chỉ" value={form.address} onChange={handleChange} required />
-          <button type="submit">Đăng ký</button>
+          <input
+            name="username"
+            placeholder="Username"
+            value={form.username}
+            onChange={handleChange}
+            required
+          />
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            value={form.password}
+            onChange={handleChange}
+            required
+          />
+          <input
+            name="fullname"
+            placeholder="Full name"
+            value={form.fullname}
+            onChange={handleChange}
+            required
+          />
+          <input
+            name="phone"
+            placeholder="Phone number"
+            value={form.phone}
+            onChange={handleChange}
+            required
+          />
+          <input
+            name="email"
+            placeholder="Email"
+            value={form.email}
+            onChange={handleChange}
+            required
+          />
+          <input
+            name="address"
+            placeholder="Address"
+            value={form.address}
+            onChange={handleChange}
+            required
+          />
+          <button type="submit">Register</button>
         </form>
         {message && <p>{message}</p>}
       </div>

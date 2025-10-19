@@ -1,8 +1,8 @@
 /* ===== ROOT COLORS ===== */
 :root {
-  --primary-red: #e74c3c;
-  --secondary-yellow: #ffd966;
-  --dark-red: #c0392b;
+  --primary-red: #e31837;
+  --secondary-yellow: #fac437;
+  --dark-red: #b91430;
   --light-gray: #f5f5f5;
   --text-dark: #333;
   --text-light: #666;
@@ -24,6 +24,15 @@
   background-color: var(--dark-red);
   padding: 8px 0;
   font-size: 12px;
+  transition: all 0.1s ease-out;
+  overflow: hidden;
+  max-height: 50px;
+}
+
+.header-top.header-top-hidden {
+  max-height: 0;
+  padding: 0;
+  opacity: 0;
 }
 
 .header-top-container {
@@ -85,16 +94,32 @@
 
 .header-logo {
   flex-shrink: 0;
+  height: 80px;
+  width: 80px;
+  overflow: hidden;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: 2px solid var(--secondary-yellow);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .header-logo a {
   display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 60px;
+  position: relative;
 }
 
 .header-logo img {
   height: 60px;
   width: auto;
   object-fit: contain;
+  transform: scale(2);
+  transform-origin: center;
 }
 
 /* Search Bar */
@@ -321,8 +346,9 @@
 }
 
 .menu-item.active {
-  color: var(--secondary-yellow);
-  background-color: rgba(0, 0, 0, 0.1);
+  /* let MENU inherit the same active color as other nav items */
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.06);
 }
 
 .menu-item.active::after {
@@ -344,7 +370,8 @@
   align-items: center;
   justify-content: center;
   padding: 0 12px;
-  color: inherit;
+  /* make MENU button default color match other nav items (white) */
+  color: white;
   font-weight: inherit;
   font-size: inherit;
   letter-spacing: inherit;
@@ -356,7 +383,15 @@
   transition: all 0.3s ease;
 }
 
+/* Prevent MENU button from changing color on hover/active */
+/* no special color overrides for menu button; it inherits nav styles */
+
 .menu-item > button:hover {
+  color: var(--secondary-yellow);
+}
+
+/* when menu wrapper is active, show the same active color as other nav items */
+.menu-item.active > button {
   color: var(--secondary-yellow);
 }
 
@@ -371,7 +406,7 @@
   min-width: 300px;
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 15px;
   z-index: 1001;
   pointer-events: auto;
@@ -389,7 +424,7 @@
 
 .menu-page-dropdown {
   width: 100%;
-  max-width: 1400px;
+  max-width: 950px;
   padding: 10px;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -410,6 +445,7 @@
   font-size: 12px;
   font-weight: 600;
   text-align: center;
+  overflow: hidden; /* clip scaled image so it doesn't create a floating white box */
 }
 
 .dropdown-item:hover {
@@ -421,7 +457,14 @@
 .dropdown-item img {
   width: 50px;
   height: 50px;
-  object-fit: contain;
+  object-fit: cover;
+  border-radius: 8px;
+  transform-origin: center center;
+  transform: scale(1.35);
+}
+
+.dropdown-item:hover img {
+  transform: scale(1.45);
 }
 
 /* ===== RESPONSIVE ===== */

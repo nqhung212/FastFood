@@ -3,12 +3,12 @@ import axios from "axios";
 const PROXY_SERVER_URL = "http://localhost:4001";
 
 /**
- * Gọi API thanh toán MoMo Sandbox
- * @param {Object} paymentData - Dữ liệu thanh toán
- * @param {number} paymentData.amount - Số tiền (VNĐ)
- * @param {string} paymentData.orderId - ID đơn hàng
- * @param {string} paymentData.orderInfo - Mô tả đơn hàng
- * @param {Array} paymentData.items - Danh sách sản phẩm
+ * Call MoMo Sandbox payment API
+ * @param {Object} paymentData - Payment data
+ * @param {number} paymentData.amount - Amount (VND)
+ * @param {string} paymentData.orderId - Order ID
+ * @param {string} paymentData.orderInfo - Order description
+ * @param {Array} paymentData.items - Items list
  * @returns {Promise<Object>} { success, payUrl, message }
  */
 export async function processMoMoPayment(paymentData) {
@@ -18,7 +18,7 @@ export async function processMoMoPayment(paymentData) {
     const response = await axios.post(`${PROXY_SERVER_URL}/api/momo/checkout`, {
       amount: paymentData.amount,
       orderId: paymentData.orderId,
-      orderInfo: paymentData.orderInfo || "Thanh toán đơn hàng",
+  orderInfo: paymentData.orderInfo || "Payment for order",
       items: paymentData.items || [],
     });
 
@@ -34,36 +34,36 @@ export async function processMoMoPayment(paymentData) {
       console.error("❌ MoMo response error:", response.data);
       return {
         success: false,
-        message: response.data.message || "Không thể tạo yêu cầu thanh toán",
+        message: response.data.message || "Unable to create payment request",
       };
     }
   } catch (error) {
     console.error("❌ Payment error:", error.response?.data || error.message);
     return {
       success: false,
-      message: error.response?.data?.message || "Lỗi kết nối đến dịch vụ thanh toán",
+      message: error.response?.data?.message || "Connection error to payment service",
     };
   }
 }
 
 /**
- * Khởi tạo thanh toán MoMo - Mở tab mới và monitor
- * @param {Object} paymentData - Dữ liệu thanh toán
- * @param {Function} onSuccess - Callback khi thanh toán thành công
+ * Initiate MoMo payment - open new tab and monitor
+ * @param {Object} paymentData - Payment data
+ * @param {Function} onSuccess - Callback when payment succeeds
  */
 export async function initiateMoMoPayment(paymentData, onSuccess) {
   const result = await processMoMoPayment(paymentData);
 
   if (result.success && result.payUrl) {
-    console.log("🔗 Opening MoMo payment page in new tab...");
+  console.log("🔗 Opening MoMo payment page in new tab...");
     
-    // Lưu orderId vào sessionStorage để tracking
+  // Save orderId to sessionStorage for tracking
     sessionStorage.setItem("currentOrderId", paymentData.orderId);
     
     // Mở tab mới
     const momoWindow = window.open(result.payUrl, "_blank");
     
-    // Monitor tab MoMo - kiểm tra mỗi 2 giây
+  // Monitor MoMo tab - check every 2 seconds
     const checkInterval = setInterval(async () => {
       try {
         // Nếu tab MoMo đã đóng
@@ -71,7 +71,7 @@ export async function initiateMoMoPayment(paymentData, onSuccess) {
           clearInterval(checkInterval);
           console.log("🔍 MoMo tab closed, checking payment status...");
           
-          // Gọi API kiểm tra trạng thái thanh toán
+          // Call API to check payment status
           const paymentStatus = await axios.get(
             `${PROXY_SERVER_URL}/api/payments/${paymentData.orderId}`
           );
@@ -88,7 +88,7 @@ export async function initiateMoMoPayment(paymentData, onSuccess) {
       }
     }, 2000);
     
-    // Dừng check sau 5 phút nếu tab không đóng
+    // Stop checking after 5 minutes if tab not closed
     setTimeout(() => clearInterval(checkInterval), 5 * 60 * 1000);
   } else {
     throw new Error(result.message);
@@ -96,7 +96,7 @@ export async function initiateMoMoPayment(paymentData, onSuccess) {
 }
 
 /**
- * Check payment status - gọi từ payment-success page
+ * Check payment status - called from payment-success page
  */
 export async function checkPaymentStatus(orderId) {
   try {

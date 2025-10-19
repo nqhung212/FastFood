@@ -19,7 +19,11 @@ export default function Header() {
   const { user, logout } = useAuth()
   const { searchTerm, setSearchTerm, handleSearch, handleKeyPress } = useSearch()
   const [showCategoryDropdown, setShowCategoryDropdown] = useState(false)
+  const [showHeaderTop, setShowHeaderTop] = useState(true)
   const menuRef = useRef(null)
+  const hideTimeoutRef = useRef(null)
+  const lastScrollRef = useRef(0)
+  const HIDE_DELAY = 100 // ms
 
   const handleAvatarClick = () => {
     navigate('/account')
@@ -36,7 +40,7 @@ export default function Header() {
 
   // Close dropdown when clicking outside (chỉ khi không ở /menu)
   useEffect(() => {
-    if (isMenuPage) return // Không đóng dropdown khi ở /menu
+    if (isMenuPage) return // Do not close dropdown when on /menu
 
     const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
@@ -48,19 +52,44 @@ export default function Header() {
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [isMenuPage])
 
+  // clear any pending hide timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (hideTimeoutRef.current) {
+        clearTimeout(hideTimeoutRef.current)
+        hideTimeoutRef.current = null
+      }
+    }
+  }, [])
+
+  // Handle scroll to hide/show header-top
+  useEffect(() => {
+    const handleScroll = () => {
+      // Hide header-top when scrollY > 0, show only when at top (scrollY === 0)
+      if (window.scrollY > 0) {
+        setShowHeaderTop(false)
+      } else {
+        setShowHeaderTop(true)
+      }
+    }
+
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
   return (
     <header className="header-banner">
       {/* Top Bar */}
-      <div className="header-top">
+      <div className={`header-top ${!showHeaderTop ? 'header-top-hidden' : ''}`}>
         <div className="header-top-container">
           <div className="header-top-left">
             <span className="language-selector">EN | VN</span>
-            <span className="location">HỒ CHÍ MINH</span>
+            <span className="location">HO CHI MINH</span>
           </div>
           <div className="header-top-right">
             <span className="phone">1900-1533</span>
             <button className="btn-pickup">PICK UP</button>
-            <button className="btn-delivery">GIAO HÀNG TẬN NƠI</button>
+            <button className="btn-delivery">DELIVERY</button>
           </div>
         </div>
       </div>
@@ -71,7 +100,7 @@ export default function Header() {
           <div className="header-left">
             <div className="header-logo">
               <Link to="/" aria-label="Homepage">
-                <img src="/images/Mercedes-Logo.svg.png" alt="FastFood Logo" />
+                <img src="/images/logo.png" alt="FastFood Logo" />
               </Link>
             </div>
           </div>
@@ -83,11 +112,11 @@ export default function Header() {
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 onKeyPress={handleKeyPress}
-                placeholder="Tìm kiếm sản phẩm, danh mục..."
+                placeholder="Search products, categories..."
                 aria-label="Search"
               />
               <button type="button" className="search-button" onClick={handleSearch}>
-                Tìm
+                Search
               </button>
             </div>
           </div>
@@ -101,23 +130,23 @@ export default function Header() {
                     alt="User Avatar"
                     className="user-avatar"
                     onClick={handleAvatarClick}
-                    title="Tài khoản của bạn"
+                    title="Your account"
                   />
                   <span className="user-name">{user.name}</span>
                   <button className="btn-logout" onClick={logout}>
-                    Đăng xuất
+                    Logout
                   </button>
                 </div>
               ) : (
                 <div className="header-auth">
                   <Link to="/login">
                     <button type="button" className="btn-auth">
-                      Đăng nhập
+                      Login
                     </button>
                   </Link>
                   <Link to="/register">
                     <button type="button" className="btn-auth">
-                      Đăng ký
+                      Register
                     </button>
                   </Link>
                 </div>
@@ -127,7 +156,7 @@ export default function Header() {
             <div className="header-cart">
               <Link to="/cart">
                 <button type="button" className="btn-cart">
-                  🛒 Giỏ hàng <span className="cart-count">({cartItems.length})</span>
+                  🛒 Cart <span className="cart-count">({cartItems.length})</span>
                 </button>
               </Link>
             </div>
@@ -145,17 +174,44 @@ export default function Header() {
             ref={menuRef}
             className={`nav-item menu-item ${isMenuPage ? 'active' : ''}`}
             onMouseEnter={() => {
+              // clear any pending hide timeout and show dropdown
+              if (hideTimeoutRef.current) {
+                clearTimeout(hideTimeoutRef.current)
+                hideTimeoutRef.current = null
+              }
               if (!isMenuPage) setShowCategoryDropdown(true)
             }}
             onMouseLeave={() => {
-              if (!isMenuPage) setShowCategoryDropdown(false)
+              // delay hiding so user can move into the dropdown without it disappearing
+              if (isMenuPage) return
+              if (hideTimeoutRef.current) clearTimeout(hideTimeoutRef.current)
+              hideTimeoutRef.current = setTimeout(() => {
+                setShowCategoryDropdown(false)
+                hideTimeoutRef.current = null
+              }, HIDE_DELAY)
             }}
           >
             <button type="button" onClick={() => navigate('/menu')}>
               MENU
             </button>
             {showCategoryDropdown && !isMenuPage && (
-              <div className="category-dropdown">
+              <div
+                className="category-dropdown"
+                onMouseEnter={() => {
+                  if (hideTimeoutRef.current) {
+                    clearTimeout(hideTimeoutRef.current)
+                    hideTimeoutRef.current = null
+                  }
+                }}
+                onMouseLeave={() => {
+                  if (isMenuPage) return
+                  if (hideTimeoutRef.current) clearTimeout(hideTimeoutRef.current)
+                  hideTimeoutRef.current = setTimeout(() => {
+                    setShowCategoryDropdown(false)
+                    hideTimeoutRef.current = null
+                  }, HIDE_DELAY)
+                }}
+              >
                 {categories.map((cat) => (
                   <button
                     key={cat.name}

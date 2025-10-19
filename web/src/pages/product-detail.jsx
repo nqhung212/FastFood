@@ -2,13 +2,14 @@
 import { useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import MainLayout from '../layouts/home-layout.jsx'
-import '../assets/styles/home-layout.css'
+import '../assets/styles/product-detail.css'
 import { useCart } from '../context/cart-context.jsx'
 import { API_BASE_URL } from '../constants/index.js'
 
 export default function ProductDetail() {
   const { slug } = useParams()
   const [product, setProduct] = useState(null)
+  const [quantity, setQuantity] = useState(1)
   const { addToCart } = useCart()
 
   useEffect(() => {
@@ -18,13 +19,26 @@ export default function ProductDetail() {
         const found = data.find((p) => p.slug === slug)
         setProduct(found)
       })
-      .catch((err) => console.error('Lỗi khi tải sản phẩm:', err))
+      .catch((err) => console.error('Error loading product:', err))
   }, [slug])
+
+  const handleAddToCart = () => {
+    if (product && quantity > 0) {
+      addToCart(
+        {
+          ...product,
+          image: `/images/${product.image}`,
+        },
+        quantity
+      )
+      setQuantity(1)
+    }
+  }
 
   if (!product)
     return (
       <MainLayout>
-        <p>Đang tải...</p>
+        <p>Loading...</p>
       </MainLayout>
     )
 
@@ -32,20 +46,40 @@ export default function ProductDetail() {
     <MainLayout>
       <div className="product-detail">
         <h2>{product.name}</h2>
-        <img src={`/images/${product.image}`} alt={product.name} width={150} />
-        <p>{product.description}</p>
-        <p>Giá: {product.price.toLocaleString()}₫</p>
-
-        <button
-          onClick={() =>
-            addToCart({
-              ...product,
-              image: `/images/${product.image}`,
-            })
-          }
-        >
-          Thêm vào giỏ
-        </button>
+        <div className="product-image-container">
+          <img src={`/images/${product.image}`} alt={product.name} />
+        </div>
+        <div className="product-info">
+          <div className="product-description">
+            <p>{product.description}</p>
+          </div>
+          <div className="product-price">
+            <span className="product-price-label">Price:</span>
+            <span className="product-price-value">{product.price.toLocaleString()}₫</span>
+          </div>
+          <div className="product-quantity-control">
+            <label className="qty-label">Quantity:</label>
+            <div className="qty-selector">
+              <button
+                className="qty-btn-small"
+                onClick={() => setQuantity(Math.max(1, quantity - 1))}
+              >
+                −
+              </button>
+              <input
+                type="number"
+                min="1"
+                value={quantity}
+                onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
+                className="qty-input"
+              />
+              <button className="qty-btn-small" onClick={() => setQuantity(quantity + 1)}>
+                +
+              </button>
+            </div>
+          </div>
+          <button onClick={handleAddToCart}>Add to cart</button>
+        </div>
       </div>
     </MainLayout>
   )
