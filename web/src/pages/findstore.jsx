@@ -7,20 +7,20 @@ export default function FindStore() {
   const [district, setDistrict] = useState('')
 
   const provinces = [
-    'Hà Nội',
-    'Hồ Chí Minh',
-    'Đà Nẵng',
-    'Hải Phòng',
-    'Cần Thơ',
-    'Bình Dương',
-    'Đồng Nai',
-    'Khánh Hòa',
+    'Hanoi',
+    'Ho Chi Minh City',
+    'Da Nang',
+    'Hai Phong',
+    'Can Tho',
+    'Binh Duong',
+    'Dong Nai',
+    'Khanh Hoa',
   ]
 
   const districts = {
-    'Hà Nội': ['Hoàn Kiếm', 'Ba Đình', 'Đống Đa', 'Hai Bà Trưng', 'Cầu Giấy'],
-    'Hồ Chí Minh': ['Quận 1', 'Quận 2', 'Quận 3', 'Quận 4', 'Quận 5'],
-    'Đà Nẵng': ['Hải Châu', 'Thanh Khê', 'Sơn Trà', 'Ngũ Hành Sơn'],
+    Hanoi: ['Hoan Kiem', 'Ba Dinh', 'Dong Da', 'Hai Ba Trung', 'Cau Giay'],
+    'Ho Chi Minh City': ['District 1', 'District 2', 'District 3', 'District 4', 'District 5'],
+    'Da Nang': ['Hai Chau', 'Thanh Khe', 'Son Tra', 'Ngu Hanh Son'],
   }
 
   const handleSearch = () => {

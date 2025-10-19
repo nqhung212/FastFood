@@ -130,7 +130,7 @@ export default function Header() {
                     alt="User Avatar"
                     className="user-avatar"
                     onClick={handleAvatarClick}
-                    title="Tài khoản của bạn"
+                    title="Your account"
                   />
                   <span className="user-name">{user.name}</span>
                   <button className="btn-logout" onClick={logout}>

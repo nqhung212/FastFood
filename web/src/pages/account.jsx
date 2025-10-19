@@ -9,9 +9,9 @@ export default function AccountPage() {
   const [addresses, setAddresses] = useState([
     {
       id: 1,
-      name: 'Nhà riêng',
+      name: 'Home',
       phone: '0123456789',
-      address: '123 Đường ABC, Quận 1, TP.HCM',
+      address: '123 ABC Street, District 1, Ho Chi Minh City',
       isDefault: true,
     },
   ])
@@ -31,7 +31,7 @@ export default function AccountPage() {
   const handleAddAddress = () => {
     const newAddress = {
       id: Date.now(),
-      name: 'Địa chỉ mới',
+      name: 'New address',
       phone: '',
       address: '',
       isDefault: false,

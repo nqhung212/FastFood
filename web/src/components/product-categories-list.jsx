@@ -1,24 +1,22 @@
 // src/components/product-categories-list.jsx
-import { useMemo, useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useMemo, useEffect, useState } from 'react'
+import { Link, useParams } from 'react-router-dom'
 
 export default function ProductCategoriesList({ category: propCategory }) {
-  const { category: paramCategory } = useParams();
-  const category = propCategory || paramCategory;
-  const [products, setProducts] = useState([]);
+  const { category: paramCategory } = useParams()
+  const category = propCategory || paramCategory
+  const [products, setProducts] = useState([])
 
   useEffect(() => {
-    fetch("http://localhost:3001/products")
+    fetch('http://localhost:3001/products')
       .then((res) => res.json())
       .then((data) => setProducts(data))
-      .catch((err) => console.error("Lỗi khi gọi API:", err));
-  }, []);
+      .catch((err) => console.error('Error calling API:', err))
+  }, [])
 
   const filteredProducts = useMemo(() => {
-    return products.filter(
-      (p) => p.categories.toLowerCase() === category?.toLowerCase()
-    );
-  }, [products, category]);
+    return products.filter((p) => p.categories.toLowerCase() === category?.toLowerCase())
+  }, [products, category])
 
   return (
     <div className="categories-container">
@@ -38,5 +36,5 @@ export default function ProductCategoriesList({ category: propCategory }) {
         ))}
       </div>
     </div>
-  );
+  )
 }

@@ -24,7 +24,7 @@ export default function Menu() {
         )}
         {error && (
           <div className="error-state">
-            <p>❌ Lỗi tải dữ liệu: {error}</p>
+            <p>❌ Data load error: {error}</p>
           </div>
         )}
 
