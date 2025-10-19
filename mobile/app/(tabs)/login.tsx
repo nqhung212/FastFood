@@ -3,7 +3,6 @@ import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
 import { styles } from '../../assets/css/login.style';
-import { useColorScheme } from 'react-native';
 
 export default function LoginScreen() {
     const [email, setEmail] = useState("");
@@ -14,7 +13,7 @@ export default function LoginScreen() {
         if (email === "Admin@gmail.com" && password === "123456"){
             await AsyncStorage.setItem("userToken", "LoggedIn");
             Alert.alert("Login Successful");
-            router.replace("/(tabs)/home");
+            router.replace("./index");
         } else {
             Alert.alert("Invalid email or password");
         }
