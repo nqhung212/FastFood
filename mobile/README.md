@@ -48,3 +48,18 @@ Join our community of developers creating universal apps.
 
 - [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
 - [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+
+## Supabase setup
+
+- Config is stored in `app.json` under `expo.extra`:
+   - `supabaseUrl`
+   - `supabaseAnonKey`
+- Client initialization lives in `service/supabaseClient.js` and uses AsyncStorage for auth session persistence.
+- Required RN polyfills are included: `react-native-get-random-values` and `react-native-url-polyfill`.
+- Usage example:
+
+```ts
+import { getSupabase } from '@/service/supabaseClient'
+
+const { data, error } = await getSupabase().from('your_table').select('*')
+```
