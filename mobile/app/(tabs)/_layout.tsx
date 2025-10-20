@@ -16,13 +16,21 @@ export default function TabLayout() {
         headerShown: false,
         tabBarButton: HapticTab,
       }}>
-      <Tabs.Screen
+      {/* <Tabs.Screen
         name="index"
         options={{
           title: 'Home',
           tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
         }}
+      /> */}
+      <Tabs.Screen
+        name="homepage"
+        options={{
+          title: 'Home',
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+        }}
       />
+      
       <Tabs.Screen
         name="menu"
         options={{
@@ -31,17 +39,10 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="test"
+        name="login"
         options={{
-          title: 'Test',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="bolt.fill" color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="supabase"
-        options={{
-          title: 'Test DB',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="bolt.fill" color={color} />,
+          title: 'Login',
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="person.fill" color={color} />,
         }}
       />
     </Tabs>

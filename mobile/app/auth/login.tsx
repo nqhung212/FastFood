@@ -2,42 +2,74 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, Image } from 'react-native';
 import { useRouter } from 'expo-router';
 import { supabase } from '../../service/supabaseClient';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function LoginScreen() {
   const router = useRouter();
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
   const handleLogin = async () => {
-    if (!email || !password) {
-      Alert.alert('Thông báo', 'Vui lòng nhập đầy đủ email và mật khẩu');
+    if (!username || !password) {
+      Alert.alert("Thông báo", "Vui lòng nhập đủ thông tin!");
       return;
     }
 
     setLoading(true);
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
-    setLoading(false);
 
-    if (error) {
-      Alert.alert('Lỗi đăng nhập', error.message);
-    } else {
-      Alert.alert('Thành công', 'Đăng nhập thành công!');
-      router.replace('/(tabs)/menu'); // Điều hướng đến trang chính sau đăng nhập
+    try {
+      const { data, error } = await supabase
+        .from("users")
+        .select("id, username, fullname, phone, role, password")
+        .eq("username", username)
+        .maybeSingle();
+
+      if (error) {  
+        console.error(error);
+        Alert.alert("Lỗi Supabase", "Không thể truy cập dữ liệu người dùng!");
+        return;
+      }
+
+      if (!data) {
+        Alert.alert("Đăng nhập thất bại", "Tên đăng nhập không tồn tại!");
+        return;
+      }
+
+        if (String(data.password) != password) {
+        Alert.alert("Sai mật khẩu", "Vui lòng thử lại!");
+        return;
+        }
+
+
+      await AsyncStorage.setItem('user', JSON.stringify(data));
+
+      Alert.alert("Thành công", `Xin chào ${data.fullname}!`);
+      router.replace("/(tabs)/homepage");
+    } catch (err) {
+      console.error(err);
+      Alert.alert("Lỗi hệ thống", "Không thể đăng nhập!");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <View style={styles.container}>
-      <Image source={{ uri: 'https://uuxtbxkgnktfcbdevbmx.supabase.co/storage/v1/object/public/product-image/images.png' }} style={styles.logo} />
+      <Image
+        source={{
+          uri: 'https://uuxtbxkgnktfcbdevbmx.supabase.co/storage/v1/object/public/product-image/logo.png',
+        }}
+        style={styles.logo}
+      />
       <Text style={styles.title}>Đăng nhập</Text>
 
       <TextInput
         style={styles.input}
-        placeholder="Email"
-        keyboardType="email-address"
-        value={email}
-        onChangeText={setEmail}
+        placeholder="Tên đăng nhập"
+        keyboardType="default"
+        value={username}
+        onChangeText={setUsername}
         autoCapitalize="none"
       />
       <TextInput
@@ -108,7 +140,6 @@ const styles = StyleSheet.create({
   link: {
     color: '#FF6347',
     fontWeight: '600',
-    marginTop: 10,
   },
   row: {
     flexDirection: 'row',
