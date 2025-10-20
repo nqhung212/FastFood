@@ -2,7 +2,6 @@ import React, { useState, useRef } from 'react';
 import { View, Text, TouchableOpacity, Animated, PanResponder, Modal, FlatList, Image, Dimensions } from 'react-native';
 import { useCart } from './CartContext';
 import { Ionicons } from '@expo/vector-icons';
-import { IMAGES } from '../../constants/menuDATA';
 import { styles } from '../../assets/css/floatingcartbutton.style';
 import { useRouter } from 'expo-router';
 
@@ -38,8 +37,7 @@ export default function DraggableCartButton() {
 
     const renderCartItem = ({ item }: { item: any }) => (
         <View style={styles.itemContainer}>
-            <Image source={IMAGES[item.image]} style={styles.itemImage} />
-
+            <Image source={{ uri: item.image }} style={styles.itemImage} />
             <View style={styles.itemContent}>
                 <View style={styles.itemDetails}>
                     <Text style={styles.itemName}>{item.name}</Text>
