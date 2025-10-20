@@ -1,13 +1,15 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import MainLayout from '../layouts/home-layout.jsx'
-import { initiateMoMoPayment, savePaymentToSupabase } from '../api/momo-payment.js'
+import { initiateMoMoPayment, savePaymentToSupabase } from '../services/momo.js'
 import { useAuth } from '../context/auth-context'
+import { useUserData } from '../hooks/use-user-data.js'
 import { supabase } from '../lib/supabaseClient'
 
 export default function CheckoutPage() {
   const navigate = useNavigate()
   const { user } = useAuth()
+  const { userData } = useUserData(user?.id)
   const [checkoutData, setCheckoutData] = useState(null)
   const [selectedPayment, setSelectedPayment] = useState('momo')
   const [paymentInitiated, setPaymentInitiated] = useState(false)
@@ -50,6 +52,9 @@ export default function CheckoutPage() {
             user_id: user.id,
             total_amount: checkoutData.total,
             status: 'pending',
+            customer_name: userData?.fullname || userData?.username || null,
+            customer_phone: userData?.phone || null,
+            customer_address: userData?.address || null,
           },
         ])
 

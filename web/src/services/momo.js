@@ -3,15 +3,6 @@ import { supabase } from "../lib/supabaseClient";
 
 const PROXY_SERVER_URL = "http://localhost:4001";
 
-/**
- * Call MoMo Sandbox payment API
- * @param {Object} paymentData - Payment data
- * @param {number} paymentData.amount - Amount (VND)
- * @param {string} paymentData.orderId - Order ID
- * @param {string} paymentData.orderInfo - Order description
- * @param {Array} paymentData.items - Items list
- * @returns {Promise<Object>} { success, payUrl, message }
- */
 export async function processMoMoPayment(paymentData) {
   try {
     console.log("🔄 Processing MoMo payment for order:", paymentData.orderId);
@@ -19,7 +10,7 @@ export async function processMoMoPayment(paymentData) {
     const response = await axios.post(`${PROXY_SERVER_URL}/api/momo/checkout`, {
       amount: paymentData.amount,
       orderId: paymentData.orderId,
-  orderInfo: paymentData.orderInfo || "Payment for order",
+      orderInfo: paymentData.orderInfo || "Payment for order",
       items: paymentData.items || [],
     });
 
@@ -47,62 +38,40 @@ export async function processMoMoPayment(paymentData) {
   }
 }
 
-/**
- * Initiate MoMo payment - open new tab and monitor
- * @param {Object} paymentData - Payment data
- * @param {Function} onSuccess - Callback when payment succeeds
- */
 export async function initiateMoMoPayment(paymentData, onSuccess) {
   const result = await processMoMoPayment(paymentData);
 
   if (result.success && result.payUrl) {
     console.log("🔗 Opening MoMo payment page in new tab...");
-    
-    // Save orderId to sessionStorage for tracking
     sessionStorage.setItem("currentOrderId", paymentData.orderId);
-    
-    // Mở tab mới
     const momoWindow = window.open(result.payUrl, "_blank");
     const openTime = Date.now();
     let hasCalledCallback = false;
-    
-    // Monitor MoMo tab - check every 2 seconds
+
     const checkInterval = setInterval(async () => {
       try {
-        // Nếu tab MoMo đã đóng
         if (momoWindow && momoWindow.closed) {
           clearInterval(checkInterval);
-          
-          if (hasCalledCallback) return; // Prevent double callback
-          
+          if (hasCalledCallback) return;
           console.log("🔍 MoMo tab closed, checking payment status...");
-          
-          // Get time tab was opened
           const tabDurationMs = Date.now() - openTime;
           console.log(`⏱️ Tab was open for ${(tabDurationMs / 1000).toFixed(1)}s`);
-          
-          // If tab was open for more than 2 seconds, consider payment successful
           if (tabDurationMs > 2000) {
             console.log("✅ Tab was open long enough, treating as successful payment");
             hasCalledCallback = true;
             if (onSuccess) onSuccess(paymentData.orderId);
             return;
           }
-          
-          // Otherwise, check API for actual payment status
           try {
             const paymentStatus = await axios.get(
               `${PROXY_SERVER_URL}/api/payments/${paymentData.orderId}`
             );
-            
             if (paymentStatus.data) {
               console.log("✅ Payment status checked:", paymentStatus.data.status);
             }
           } catch (error) {
             console.log("ℹ️ Could not check payment status");
           }
-          
-          // Always redirect to payment-success page
           hasCalledCallback = true;
           if (onSuccess) onSuccess(paymentData.orderId);
         }
@@ -110,13 +79,11 @@ export async function initiateMoMoPayment(paymentData, onSuccess) {
         console.log("Checking payment status...");
       }
     }, 2000);
-    
-    // Stop checking after 10 seconds if tab not closed
+
     setTimeout(() => {
       clearInterval(checkInterval);
       if (momoWindow && !momoWindow.closed) {
         console.log("⚠️ Timeout: MoMo tab still open after 10s");
-        // User is still on MoMo page, don't force redirect yet
       }
     }, 10000);
   } else {
@@ -124,9 +91,6 @@ export async function initiateMoMoPayment(paymentData, onSuccess) {
   }
 }
 
-/**
- * Check payment status - called from payment-success page
- */
 export async function checkPaymentStatus(orderId) {
   try {
     const response = await axios.get(`${PROXY_SERVER_URL}/api/payments/${orderId}`);
@@ -137,9 +101,6 @@ export async function checkPaymentStatus(orderId) {
   }
 }
 
-/**
- * Save payment to Supabase
- */
 export async function savePaymentToSupabase(paymentData) {
   try {
     const { data, error } = await supabase.from('payments').insert([
@@ -161,13 +122,8 @@ export async function savePaymentToSupabase(paymentData) {
   }
 }
 
-/**
- * Save order to Supabase (called after payment success)
- * Checks if order exists first - if yes, updates status; if no, inserts new
- */
 export async function saveOrderToSupabase(orderData) {
   try {
-    // First check if order already exists using maybeSingle() instead of single()
     const { data: existingOrder, error: checkError } = await supabase
       .from('orders')
       .select('id')
@@ -177,7 +133,6 @@ export async function saveOrderToSupabase(orderData) {
     if (checkError) throw checkError
 
     if (existingOrder) {
-      // Order already exists, just update status to completed
       console.log('📝 Order already exists, updating status to completed...')
       const { error } = await supabase
         .from('orders')
@@ -186,9 +141,7 @@ export async function saveOrderToSupabase(orderData) {
       
       if (error) throw error
       console.log('✅ Order status updated to Supabase')
-      return { success: true }
     } else {
-      // Order doesn't exist, insert new one
       console.log('➕ Creating new order...')
       const { error } = await supabase.from('orders').insert([
         {
@@ -206,7 +159,6 @@ export async function saveOrderToSupabase(orderData) {
       console.log('✅ Order saved to Supabase')
     }
 
-    // Save order items
     if (orderData.items && orderData.items.length > 0) {
       console.log('📦 Saving order items...')
       const orderItems = orderData.items.map(item => ({
@@ -230,4 +182,3 @@ export async function saveOrderToSupabase(orderData) {
     throw error
   }
 }
-

@@ -2,12 +2,7 @@ import express from "express";
 import cors from "cors";
 import crypto from "crypto";
 import axios from "axios";
-import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+// Using in-memory map for payments (no file persistence)
 
 const app = express();
 const PORT = process.env.PORT || 4001;
@@ -26,25 +21,7 @@ const MOMO_CONFIG = {
 app.use(cors());
 app.use(express.json());
 
-const paymentsFile = path.join(__dirname, "payments.json");
-
-function ensurePaymentsFile() {
-  if (!fs.existsSync(paymentsFile)) {
-    fs.writeFileSync(paymentsFile, JSON.stringify([]));
-  }
-}
-
-function savePayment(paymentData) {
-  ensurePaymentsFile();
-  const payments = JSON.parse(fs.readFileSync(paymentsFile, "utf-8"));
-  payments.push(paymentData);
-  fs.writeFileSync(paymentsFile, JSON.stringify(payments, null, 2));
-}
-
-function getPayments() {
-  ensurePaymentsFile();
-  return JSON.parse(fs.readFileSync(paymentsFile, "utf-8"));
-}
+const paymentsMap = new Map();
 
 // Tạo HMAC SHA256 signature theo đúng format MoMo
 function generateSignature(data, secretKey) {
@@ -122,7 +99,8 @@ app.post("/api/momo/checkout", async (req, res) => {
       momoResultCode: momoResponse.data.resultCode,
     };
 
-    savePayment(paymentRecord);
+    // Save to in-memory store
+    paymentsMap.set(orderId, paymentRecord);
 
   // Check result
     if (momoResponse.data.resultCode === 0 && momoResponse.data.payUrl) {
@@ -161,16 +139,14 @@ app.post("/api/momo/ipn", (req, res) => {
     });
 
   // Update payment status
-    ensurePaymentsFile();
-    const payments = JSON.parse(fs.readFileSync(paymentsFile, "utf-8"));
-    const payment = payments.find((p) => p.orderId === orderId);
-
+    const payment = paymentsMap.get(orderId);
     if (payment) {
       payment.status = resultCode === 0 ? "success" : "failed";
       payment.resultCode = resultCode;
       payment.transId = transId;
       payment.ipnTimestamp = new Date().toISOString();
-      fs.writeFileSync(paymentsFile, JSON.stringify(payments, null, 2));
+      // update map entry
+      paymentsMap.set(orderId, payment);
     }
 
     res.json({ message: "Received" });
@@ -183,7 +159,7 @@ app.post("/api/momo/ipn", (req, res) => {
 // GET /api/payments - Get list of payments
 app.get("/api/payments", (req, res) => {
   try {
-    const payments = getPayments();
+    const payments = Array.from(paymentsMap.values());
     res.json(payments);
   } catch (error) {
     res.status(500).json({ error: "Error reading payments" });
@@ -193,8 +169,7 @@ app.get("/api/payments", (req, res) => {
 // GET /api/payments/:orderId - Get payment details by orderId
 app.get("/api/payments/:orderId", (req, res) => {
   try {
-    const payments = getPayments();
-    const payment = payments.find((p) => p.orderId === req.params.orderId);
+    const payment = paymentsMap.get(req.params.orderId);
     if (payment) {
       res.json(payment);
     } else {

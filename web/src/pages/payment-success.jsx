@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import MainLayout from '../layouts/home-layout.jsx'
 import { useCart } from '../context/cart-context.jsx'
 import { useAuth } from '../context/auth-context'
-import { checkPaymentStatus, saveOrderToSupabase } from '../api/momo-payment.js'
+import { checkPaymentStatus, saveOrderToSupabase } from '../services/momo.js'
 
 export default function PaymentSuccessPage() {
   const navigate = useNavigate()
@@ -64,6 +64,7 @@ export default function PaymentSuccessPage() {
             orderId: orderId,
             userId: user.id,
             amount: status?.amount || 0,
+            items: status?.items || [],
             customerName: user.username || '',
             customerPhone: '',
             customerAddress: '',
@@ -87,6 +88,7 @@ export default function PaymentSuccessPage() {
                 orderId: orderId,
                 userId: user.id,
                 amount: 0,
+                items: [],
                 customerName: user.username || '',
                 customerPhone: '',
                 customerAddress: '',
