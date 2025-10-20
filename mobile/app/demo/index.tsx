@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, Image } from 'react-native';
 import { useRouter } from 'expo-router';
 import { supabase } from '../../service/supabaseClient';
+import AsyncStorage from '@react-native-async-storage/async-storage'; // ✅ thêm dòng này
 
 export default function LoginScreen() {
   const router = useRouter();
@@ -9,52 +10,58 @@ export default function LoginScreen() {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
-    const handleLogin = async () => {
+  const handleLogin = async () => {
     if (!phone || !password) {
-        Alert.alert("Thông báo", "Vui lòng nhập đủ thông tin!");
-        return;
+      Alert.alert("Thông báo", "Vui lòng nhập đủ thông tin!");
+      return;
     }
 
     setLoading(true);
 
     try {
-        // ⚠️ Supabase không thích .single() nếu không có kết quả, nên dùng .maybeSingle()
-        const { data, error } = await supabase
+      const { data, error } = await supabase
         .from("users")
         .select("id, username, fullname, phone, role, password")
         .eq("phone", phone)
         .maybeSingle();
 
-        if (error) {
+      if (error) {
         console.error(error);
         Alert.alert("Lỗi Supabase", "Không thể truy cập dữ liệu người dùng!");
         return;
-        }
+      }
 
-        if (!data) {
+      if (!data) {
         Alert.alert("Đăng nhập thất bại", "Số điện thoại không tồn tại!");
         return;
-        }
+      }
 
-        if (data.password !== password) {
+      if (data.password !== password) {
         Alert.alert("Sai mật khẩu", "Vui lòng thử lại!");
         return;
-        }
+      }
 
-        Alert.alert("Thành công", `Xin chào ${data.fullname}!`);
-        router.replace("./menu");
+      // ✅ Lưu user vào AsyncStorage để dùng lại sau
+      await AsyncStorage.setItem('user', JSON.stringify(data));
+
+      Alert.alert("Thành công", `Xin chào ${data.fullname}!`);
+      router.replace("/homepage");
     } catch (err) {
-        console.error(err);
-        Alert.alert("Lỗi hệ thống", "Không thể đăng nhập!");
+      console.error(err);
+      Alert.alert("Lỗi hệ thống", "Không thể đăng nhập!");
     } finally {
-        setLoading(false);
+      setLoading(false);
     }
-    };
-
+  };
 
   return (
     <View style={styles.container}>
-      <Image source={{ uri: 'https://uuxtbxkgnktfcbdevbmx.supabase.co/storage/v1/object/public/product-image/images.png' }} style={styles.logo} />
+      <Image
+        source={{
+          uri: 'https://uuxtbxkgnktfcbdevbmx.supabase.co/storage/v1/object/public/product-image/images.png',
+        }}
+        style={styles.logo}
+      />
       <Text style={styles.title}>Đăng nhập</Text>
 
       <TextInput
