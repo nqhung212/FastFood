@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import MainLayout from '../layouts/home-layout.jsx'
 import '../assets/styles/product-detail.css'
 import { useCart } from '../context/cart-context.jsx'
-import { API_BASE_URL } from '../constants/index.js'
+import { supabase } from '../lib/supabaseClient'
 
 export default function ProductDetail() {
   const { slug } = useParams()
@@ -13,13 +13,21 @@ export default function ProductDetail() {
   const { addToCart } = useCart()
 
   useEffect(() => {
-    fetch(`${API_BASE_URL}/products`)
-      .then((res) => res.json())
-      .then((data) => {
-        const found = data.find((p) => p.slug === slug)
-        setProduct(found)
-      })
-      .catch((err) => console.error('Error loading product:', err))
+    const fetchProduct = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('products')
+          .select('*')
+          .eq('slug', slug)
+          .limit(1)
+        if (error) throw error
+        setProduct(data && data.length ? data[0] : null)
+      } catch (err) {
+        console.error('Error loading product:', err)
+      }
+    }
+
+    fetchProduct()
   }, [slug])
 
   const handleAddToCart = () => {

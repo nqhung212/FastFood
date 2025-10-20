@@ -3,39 +3,44 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import MainLayout from '../layouts/home-layout'
 import '../assets/styles/auth.css'
-import { useUsers } from '../hooks/use-users'
 import { useAuth } from '../context/auth-context'
-import { API_BASE_URL } from '../constants'
+import { supabase } from '../lib/supabaseClient'
 
 export default function Login() {
-  const { users, loading, error } = useUsers()
   const { login } = useAuth()
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [message, setMessage] = useState('')
+  const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
 
   const handleLogin = async (e) => {
     e.preventDefault()
-    if (loading || error) return
+    setLoading(true)
+    setMessage('')
 
     try {
-      const res = await fetch(`${API_BASE_URL}/users`)
-      const apiUsers = await res.json()
-      const localUsers = JSON.parse(sessionStorage.getItem('users')) || []
-      const allUsers = [...apiUsers, ...localUsers]
+      // Step 1: Query bảng users để tìm email theo username
+      const { data: userData, error: userError } = await supabase
+        .from('users')
+        .select('email')
+        .eq('username', username)
+        .single()
 
-      const user = allUsers.find((u) => u.username === username && u.password === password)
-
-      if (user) {
-        setTimeout(() => login(user), 800)
-        setMessage('Login successful!')
-        setTimeout(() => navigate('/'), 800)
-      } else {
-        setMessage('Incorrect username or password')
+      if (userError || !userData) {
+        throw new Error('Username not found')
       }
+
+      const email = userData.email
+
+      // Step 2: Login sử dụng Supabase Auth với email và password
+      await login({ email, password })
+      setMessage('✅ Login successful!')
+      setTimeout(() => navigate('/'), 1000)
     } catch (err) {
-      setMessage('Login error: ' + err.message)
+      console.error('Login error:', err)
+      setMessage(`❌ ${err.message}`)
+      setLoading(false)
     }
   }
 
@@ -43,9 +48,6 @@ export default function Login() {
     <MainLayout>
       <div className="login-page">
         <h2>Login</h2>
-
-        {loading && <p>Loading data...</p>}
-        {error && <p style={{ color: 'red' }}>Load error: {error}</p>}
 
         <form onSubmit={handleLogin} className="login-form">
           <div>
@@ -55,6 +57,7 @@ export default function Login() {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               required
+              disabled={loading}
             />
           </div>
 
@@ -65,13 +68,20 @@ export default function Login() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+              disabled={loading}
             />
           </div>
 
-          <button type="submit">Login</button>
+          <button type="submit" disabled={loading}>
+            {loading ? 'Logging in...' : 'Login'}
+          </button>
         </form>
 
-        {message && <p>{message}</p>}
+        {message && (
+          <p className={message.startsWith('❌') ? 'error-message' : 'success-message'}>
+            {message}
+          </p>
+        )}
       </div>
     </MainLayout>
   )
