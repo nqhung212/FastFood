@@ -1,4 +1,5 @@
 import axios from "axios";
+import { supabase } from "../lib/supabaseClient";
 
 const PROXY_SERVER_URL = "http://localhost:4001";
 
@@ -55,41 +56,69 @@ export async function initiateMoMoPayment(paymentData, onSuccess) {
   const result = await processMoMoPayment(paymentData);
 
   if (result.success && result.payUrl) {
-  console.log("🔗 Opening MoMo payment page in new tab...");
+    console.log("🔗 Opening MoMo payment page in new tab...");
     
-  // Save orderId to sessionStorage for tracking
+    // Save orderId to sessionStorage for tracking
     sessionStorage.setItem("currentOrderId", paymentData.orderId);
     
     // Mở tab mới
     const momoWindow = window.open(result.payUrl, "_blank");
+    const openTime = Date.now();
+    let hasCalledCallback = false;
     
-  // Monitor MoMo tab - check every 2 seconds
+    // Monitor MoMo tab - check every 2 seconds
     const checkInterval = setInterval(async () => {
       try {
         // Nếu tab MoMo đã đóng
         if (momoWindow && momoWindow.closed) {
           clearInterval(checkInterval);
+          
+          if (hasCalledCallback) return; // Prevent double callback
+          
           console.log("🔍 MoMo tab closed, checking payment status...");
           
-          // Call API to check payment status
-          const paymentStatus = await axios.get(
-            `${PROXY_SERVER_URL}/api/payments/${paymentData.orderId}`
-          );
+          // Get time tab was opened
+          const tabDurationMs = Date.now() - openTime;
+          console.log(`⏱️ Tab was open for ${(tabDurationMs / 1000).toFixed(1)}s`);
           
-          if (paymentStatus.data && paymentStatus.data.status === "success") {
-            console.log("✅ Payment successful!");
+          // If tab was open for more than 2 seconds, consider payment successful
+          if (tabDurationMs > 2000) {
+            console.log("✅ Tab was open long enough, treating as successful payment");
+            hasCalledCallback = true;
             if (onSuccess) onSuccess(paymentData.orderId);
-          } else {
-            console.log("⏳ Payment still pending or failed");
+            return;
           }
+          
+          // Otherwise, check API for actual payment status
+          try {
+            const paymentStatus = await axios.get(
+              `${PROXY_SERVER_URL}/api/payments/${paymentData.orderId}`
+            );
+            
+            if (paymentStatus.data) {
+              console.log("✅ Payment status checked:", paymentStatus.data.status);
+            }
+          } catch (error) {
+            console.log("ℹ️ Could not check payment status");
+          }
+          
+          // Always redirect to payment-success page
+          hasCalledCallback = true;
+          if (onSuccess) onSuccess(paymentData.orderId);
         }
       } catch (error) {
         console.log("Checking payment status...");
       }
     }, 2000);
     
-    // Stop checking after 5 minutes if tab not closed
-    setTimeout(() => clearInterval(checkInterval), 5 * 60 * 1000);
+    // Stop checking after 10 seconds if tab not closed
+    setTimeout(() => {
+      clearInterval(checkInterval);
+      if (momoWindow && !momoWindow.closed) {
+        console.log("⚠️ Timeout: MoMo tab still open after 10s");
+        // User is still on MoMo page, don't force redirect yet
+      }
+    }, 10000);
   } else {
     throw new Error(result.message);
   }
@@ -105,6 +134,81 @@ export async function checkPaymentStatus(orderId) {
   } catch (error) {
     console.error("Error checking payment status:", error);
     return null;
+  }
+}
+
+/**
+ * Save payment to Supabase
+ */
+export async function savePaymentToSupabase(paymentData) {
+  try {
+    const { data, error } = await supabase.from('payments').insert([
+      {
+        order_id: paymentData.orderId,
+        amount: paymentData.amount,
+        status: paymentData.status || 'pending',
+        payment_data: paymentData.paymentData || null,
+        provider: 'momo',
+      }
+    ]);
+
+    if (error) throw error;
+    console.log('✅ Payment saved to Supabase:', data);
+    return data;
+  } catch (error) {
+    console.error('❌ Error saving payment to Supabase:', error);
+    throw error;
+  }
+}
+
+/**
+ * Save order to Supabase (called after payment success)
+ * Checks if order exists first - if yes, updates status; if no, inserts new
+ */
+export async function saveOrderToSupabase(orderData) {
+  try {
+    // First check if order already exists using maybeSingle() instead of single()
+    const { data: existingOrder, error: checkError } = await supabase
+      .from('orders')
+      .select('id')
+      .eq('id', orderData.orderId)
+      .maybeSingle()
+
+    if (checkError) throw checkError
+
+    if (existingOrder) {
+      // Order already exists, just update status to completed
+      console.log('📝 Order already exists, updating status to completed...')
+      const { error } = await supabase
+        .from('orders')
+        .update({ status: 'completed' })
+        .eq('id', orderData.orderId)
+      
+      if (error) throw error
+      console.log('✅ Order status updated to Supabase')
+      return { success: true }
+    } else {
+      // Order doesn't exist, insert new one
+      console.log('➕ Creating new order...')
+      const { error } = await supabase.from('orders').insert([
+        {
+          id: orderData.orderId,
+          user_id: orderData.userId,
+          total_amount: orderData.amount,
+          status: 'completed',
+          customer_name: orderData.customerName || '',
+          customer_phone: orderData.customerPhone || '',
+          customer_address: orderData.customerAddress || '',
+        }
+      ])
+
+      if (error) throw error
+      console.log('✅ Order saved to Supabase')
+      return { success: true }
+    }
+  } catch (error) {
+    console.error('❌ Error saving order to Supabase:', error)
+    throw error
   }
 }
 

@@ -31,10 +31,11 @@ export default function Login() {
         throw new Error('Username not found')
       }
 
-      const email = userData.email
+      const { email } = userData
 
       // Step 2: Login sử dụng Supabase Auth với email và password
       await login({ email, password })
+
       setMessage('✅ Login successful!')
       setTimeout(() => navigate('/'), 1000)
     } catch (err) {

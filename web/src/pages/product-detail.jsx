@@ -1,16 +1,19 @@
 // src/pages/product-detail.jsx
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import MainLayout from '../layouts/home-layout.jsx'
 import '../assets/styles/product-detail.css'
 import { useCart } from '../context/cart-context.jsx'
+import { useAuth } from '../context/auth-context.jsx'
 import { supabase } from '../lib/supabaseClient'
 
 export default function ProductDetail() {
   const { slug } = useParams()
+  const navigate = useNavigate()
   const [product, setProduct] = useState(null)
   const [quantity, setQuantity] = useState(1)
   const { addToCart } = useCart()
+  const { user } = useAuth()
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -31,6 +34,12 @@ export default function ProductDetail() {
   }, [slug])
 
   const handleAddToCart = () => {
+    if (!user) {
+      // Redirect to login if user is not authenticated
+      navigate('/login')
+      return
+    }
+
     if (product && quantity > 0) {
       addToCart(
         {

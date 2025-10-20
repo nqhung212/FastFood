@@ -61,9 +61,12 @@ export default function Register() {
       }
       if (!authData.user) throw new Error('Sign up failed - no user returned')
 
+      const authUserId = authData.user.id
+
       // Step 2: Lưu thông tin user vào bảng users
       const { error: insertError } = await supabase.from('users').insert([
         {
+          id: authUserId,
           email: form.email,
           username: form.username,
           fullname: form.fullname,

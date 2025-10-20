@@ -1,7 +1,5 @@
 // src/layouts/footer.jsx
 import React, { useEffect, useRef, useState } from 'react'
-import TestSupabase from './../components/testsupabase.jsx'
-
 
 export default function Footer() {
   const phoneTopRef = useRef(null)
@@ -124,8 +122,6 @@ export default function Footer() {
       {/* Bottom Copyright */}
       <div className="footer-copyright">
         <p>© 2020 FastFood Viet Nam</p>
-        <TestSupabase />
-        
       </div>
     </footer>
   )

@@ -1,10 +1,13 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import MainLayout from '../layouts/home-layout.jsx'
-import { initiateMoMoPayment } from '../api/momo-payment.js'
+import { initiateMoMoPayment, savePaymentToSupabase } from '../api/momo-payment.js'
+import { useAuth } from '../context/auth-context'
+import { supabase } from '../lib/supabaseClient'
 
 export default function CheckoutPage() {
   const navigate = useNavigate()
+  const { user } = useAuth()
   const [checkoutData, setCheckoutData] = useState(null)
   const [selectedPayment, setSelectedPayment] = useState('momo')
   const [paymentInitiated, setPaymentInitiated] = useState(false)
@@ -20,19 +23,51 @@ export default function CheckoutPage() {
     setCheckoutData(JSON.parse(data))
   }, [navigate])
 
+  // Check if user is logged in, redirect to login if not
+  useEffect(() => {
+    if (!user && checkoutData) {
+      navigate('/login', { state: { from: '/checkout' } })
+    }
+  }, [user, checkoutData, navigate])
+
   const handlePayment = async () => {
-    if (!checkoutData) return
+    if (!checkoutData || !user) return
 
     if (selectedPayment === 'momo') {
       setLoading(true)
       setError(null)
       try {
-        const orderId = `ORDER_${Date.now()}`
+        // Generate UUID for orderId
+        const orderId = crypto.randomUUID()
         sessionStorage.setItem('currentOrderId', orderId)
         sessionStorage.setItem('checkoutData', JSON.stringify(checkoutData))
         setPaymentInitiated(true)
 
-        // Gọi hàm initiateMoMoPayment với callback
+        // Step 1: Create order first (required for FK constraint)
+        const { error: orderError } = await supabase.from('orders').insert([
+          {
+            id: orderId,
+            user_id: user.id,
+            total_amount: checkoutData.total,
+            status: 'pending',
+          },
+        ])
+
+        if (orderError) throw new Error(`Failed to create order: ${orderError.message}`)
+
+        // Step 2: Save payment to Supabase
+        await savePaymentToSupabase({
+          orderId: orderId,
+          amount: checkoutData.total,
+          orderInfo: 'Payment for FastFood order',
+          paymentData: {
+            items: checkoutData.items,
+            userId: user?.id,
+            timestamp: new Date().toISOString(),
+          },
+        })
+
+        // Step 3: Gọi hàm initiateMoMoPayment với callback
         await initiateMoMoPayment(
           {
             amount: checkoutData.total,
