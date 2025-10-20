@@ -4,6 +4,7 @@ import { useCart } from '../context/cart-context'
 import { useAuth } from '../context/auth-context'
 import { useSearch } from '../hooks/use-search'
 import { useState, useEffect, useRef } from 'react'
+import { useHeaderScroll } from '../hooks/use-header-scroll'
 import getImage from '../utils/import-image.js'
 
 const categories = [
@@ -31,16 +32,19 @@ export default function Header() {
 
   const isMenuPage = location.pathname.includes('/menu')
 
-  // Luôn mở dropdown khi ở /menu
+  // Use custom hook for header scroll behavior
+  useHeaderScroll(setShowHeaderTop)
+
+  // Always open dropdown when on /menu
   useEffect(() => {
     if (isMenuPage) {
       setShowCategoryDropdown(true)
     }
   }, [isMenuPage])
 
-  // Close dropdown when clicking outside (chỉ khi không ở /menu)
+  // Close dropdown when clicking outside (only when not on /menu)
   useEffect(() => {
-    if (isMenuPage) return // Do not close dropdown when on /menu
+    if (isMenuPage) return
 
     const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
@@ -52,7 +56,7 @@ export default function Header() {
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [isMenuPage])
 
-  // clear any pending hide timeout on unmount
+  // Clear any pending hide timeout on unmount
   useEffect(() => {
     return () => {
       if (hideTimeoutRef.current) {
@@ -60,21 +64,6 @@ export default function Header() {
         hideTimeoutRef.current = null
       }
     }
-  }, [])
-
-  // Handle scroll to hide/show header-top
-  useEffect(() => {
-    const handleScroll = () => {
-      // Hide header-top when scrollY > 0, show only when at top (scrollY === 0)
-      if (window.scrollY > 0) {
-        setShowHeaderTop(false)
-      } else {
-        setShowHeaderTop(true)
-      }
-    }
-
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
   return (

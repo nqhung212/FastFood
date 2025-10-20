@@ -1,21 +1,51 @@
 // src/context/cart-context.jsx
 import { createContext, useContext, useState, useEffect } from 'react'
-import { CART_KEY } from '../constants'
+import { supabase } from '../lib/supabaseClient'
+import { useAuthListener } from '../hooks/use-auth'
+import { useCartPersistence } from '../hooks/use-cart-persistence'
 
 const CartContext = createContext()
 
 export function CartProvider({ children }) {
   const [cartItems, setCartItems] = useState([])
   const [isCartOpen, setIsCartOpen] = useState(false)
+  const { user } = useAuthListener()
 
-  useEffect(() => {
-    const savedCart = localStorage.getItem(CART_KEY)
-    if (savedCart) setCartItems(JSON.parse(savedCart))
-  }, [])
+  // Load cart using custom hook
+  useCartPersistence(user, cartItems, setCartItems)
 
+  // Save cart to Supabase when items change (for logged-in users) or localStorage (for guests)
   useEffect(() => {
-    localStorage.setItem(CART_KEY, JSON.stringify(cartItems))
-  }, [cartItems])
+    if (!cartItems || cartItems.length === 0) return
+
+    if (user) {
+      // Save to Supabase - delete old items and insert new ones
+      const saveCart = async () => {
+        try {
+          // Delete existing cart items for this user
+          await supabase.from('carts').delete().eq('user_id', user.id)
+
+          // Insert new cart items
+          const itemsToInsert = cartItems.map((item) => ({
+            user_id: user.id,
+            product_id: item.id,
+            quantity: item.quantity,
+          }))
+
+          if (itemsToInsert.length > 0) {
+            const { error } = await supabase.from('carts').insert(itemsToInsert)
+            if (error) console.error('Error saving cart to Supabase', error)
+          }
+        } catch (err) {
+          console.error('Error syncing cart to Supabase', err)
+        }
+      }
+      saveCart()
+    } else {
+      // Save to localStorage for guests
+      localStorage.setItem('cart_data', JSON.stringify(cartItems))
+    }
+  }, [cartItems, user])
 
   const addToCart = (product, quantity = 1) => {
     setCartItems((prev) => {
@@ -67,7 +97,18 @@ export function CartProvider({ children }) {
 
   const clearCart = () => {
     setCartItems([])
-    localStorage.removeItem(CART_KEY)
+    localStorage.removeItem('cart_data')
+
+    // if user logged in, remove all cart items in Supabase
+    if (user) {
+      supabase
+        .from('carts')
+        .delete()
+        .eq('user_id', user.id)
+        .then(({ error }) => {
+          if (error) console.error('Error clearing cart in Supabase', error)
+        })
+    }
   }
 
   return (

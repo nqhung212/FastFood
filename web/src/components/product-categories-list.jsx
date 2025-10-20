@@ -1,6 +1,7 @@
 // src/components/product-categories-list.jsx
 import { useMemo, useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
+import { supabase } from '../lib/supabaseClient'
 
 export default function ProductCategoriesList({ category: propCategory }) {
   const { category: paramCategory } = useParams()
@@ -8,14 +9,27 @@ export default function ProductCategoriesList({ category: propCategory }) {
   const [products, setProducts] = useState([])
 
   useEffect(() => {
-    fetch('http://localhost:3001/products')
-      .then((res) => res.json())
-      .then((data) => setProducts(data))
-      .catch((err) => console.error('Error calling API:', err))
+    let mounted = true
+
+    const fetchProducts = async () => {
+      try {
+        const { data, error } = await supabase.from('products').select('*')
+        if (error) throw error
+        if (mounted) setProducts(data || [])
+      } catch (err) {
+        console.error('Error calling Supabase:', err)
+      }
+    }
+
+    fetchProducts()
+
+    return () => {
+      mounted = false
+    }
   }, [])
 
   const filteredProducts = useMemo(() => {
-    return products.filter((p) => p.categories.toLowerCase() === category?.toLowerCase())
+    return products.filter((p) => p.categories?.toLowerCase() === category?.toLowerCase())
   }, [products, category])
 
   return (

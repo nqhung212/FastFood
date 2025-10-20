@@ -1,12 +1,4 @@
 // src/constants/index.js
-export const API_BASE_URL = 'http://localhost:3001'
-
-// Key dùng cho lưu trữ local/session (để đồng bộ login, cart, v.v.)
-export const TOKEN_KEY = 'auth_token'
-export const USER_KEY = 'auth_user'
-export const CART_KEY = 'cart_data'
-export const AUTH_KEY = 'auth_user'
-export const USERS_KEY = "app_users";
 
 // Thông tin app (hiển thị trong title, footer,...)
 export const APP_NAME = 'FastFood'
@@ -18,12 +10,6 @@ export const USER_ROLES = {
   BUYER: 'buyer'
 }
 
-// Các endpoint chính (chỉ cần thay đổi ở đây nếu đổi API)
-export const ENDPOINTS = {
-  USERS: `${API_BASE_URL}/users`,
-  PRODUCTS: `${API_BASE_URL}/products`,
-  CATEGORIES: `${API_BASE_URL}/categories`,
-  ORDERS: `${API_BASE_URL}/orders`
-}
-
-export const DEFAULT_DELAY = 800
+// Supabase (config)
+export const SUPABASE_URL = 'https://uuxtbxkgnktfcbdevbmx.supabase.co'
+export const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV1eHRieGtnbmt0ZmNiZGV2Ym14Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA2MjY4NjcsImV4cCI6MjA3NjIwMjg2N30.GlnYAAiTLG4wJieUUt8retNEMW3MvSu7H9GeramkU74'

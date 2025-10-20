@@ -1,6 +1,6 @@
 // src/hooks/use-products.js
 import { useEffect, useState } from 'react'
-import { ENDPOINTS } from '../constants'
+import { supabase } from '../lib/supabaseClient'
 
 export function useProducts() {
   const [products, setProducts] = useState([])
@@ -8,14 +8,25 @@ export function useProducts() {
   const [error, setError] = useState(null)
 
   useEffect(() => {
-    fetch(ENDPOINTS.PRODUCTS)
-      .then((res) => {
-        if (!res.ok) throw new Error('Error loading products')
-        return res.json()
-      })
-      .then((data) => setProducts(data))
-      .catch((err) => setError(err.message))
-      .finally(() => setLoading(false))
+    let mounted = true
+
+    const fetchProducts = async () => {
+      try {
+        const { data, error } = await supabase.from('products').select('*')
+        if (error) throw error
+        if (mounted) setProducts(data || [])
+      } catch (err) {
+        setError(err.message || String(err))
+      } finally {
+        if (mounted) setLoading(false)
+      }
+    }
+
+    fetchProducts()
+
+    return () => {
+      mounted = false
+    }
   }, [])
 
   return { products, loading, error }
