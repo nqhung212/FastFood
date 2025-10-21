@@ -37,21 +37,29 @@ export default function MenuCategories() {
             </div>
           )}
 
-          {products.map((product, index) => (
-            <Link key={product.id} to={`/product/${product.slug}`} className="product-card">
-              <div className="product-image">
-                <img src={`/images/${product.image}`} alt={product.name} />
-              </div>
-              <div className="product-info">
-                <h3 className="product-name">{product.name}</h3>
-                <p className="product-description">{product.description}</p>
-                <div className="product-footer">
-                  <span className="product-price">{product.price.toLocaleString()}₫</span>
-                  <button className="btn-add-to-cart">ADD TO CART</button>
+          {products.map((product, index) => {
+            const imgSrc =
+              product?.image &&
+              (product.image.startsWith('http') || product.image.startsWith('https'))
+                ? product.image
+                : `/images/${product.image}`
+
+            return (
+              <Link key={product.id} to={`/product/${product.slug}`} className="product-card">
+                <div className="product-image">
+                  <img src={imgSrc} alt={product.name} />
                 </div>
-              </div>
-            </Link>
-          ))}
+                <div className="product-info">
+                  <h3 className="product-name">{product.name}</h3>
+                  <p className="product-description">{product.description}</p>
+                  <div className="product-footer">
+                    <span className="product-price">{product.price.toLocaleString()}₫</span>
+                    <button className="btn-add-to-cart">ADD TO CART</button>
+                  </div>
+                </div>
+              </Link>
+            )
+          })}
         </div>
       </div>
     </MenuLayout>

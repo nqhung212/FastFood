@@ -33,30 +33,37 @@ export default function CartPage() {
         ) : (
           <>
             <ul className="cart-list">
-              {cartItems.map((item) => (
-                <li key={item.id} className="cart-item">
-                  <img src={item.image} alt={item.name} />
-                  <div className="cart-info">
-                    <h3>{item.name}</h3>
-                    <p>{item.price.toLocaleString()}₫</p>
-                  </div>
-                  <div className="cart-quantity">
-                    <button onClick={() => decrementQuantity(item.id)} className="qty-btn">
-                      −
+              {cartItems.map((item) => {
+                const imgSrc =
+                  item?.image && (item.image.startsWith('http') || item.image.startsWith('https'))
+                    ? item.image
+                    : `/images/${item.image}`
+
+                return (
+                  <li key={item.id} className="cart-item">
+                    <img src={imgSrc} alt={item.name} />
+                    <div className="cart-info">
+                      <h3>{item.name}</h3>
+                      <p>{item.price.toLocaleString()}₫</p>
+                    </div>
+                    <div className="cart-quantity">
+                      <button onClick={() => decrementQuantity(item.id)} className="qty-btn">
+                        −
+                      </button>
+                      <span className="qty-value">{item.quantity || 1}</span>
+                      <button onClick={() => incrementQuantity(item.id)} className="qty-btn">
+                        +
+                      </button>
+                    </div>
+                    <div className="cart-subtotal">
+                      <p>{(item.price * (item.quantity || 1)).toLocaleString()}₫</p>
+                    </div>
+                    <button onClick={() => removeFromCart(item.id)} className="btn-remove">
+                      Remove
                     </button>
-                    <span className="qty-value">{item.quantity || 1}</span>
-                    <button onClick={() => incrementQuantity(item.id)} className="qty-btn">
-                      +
-                    </button>
-                  </div>
-                  <div className="cart-subtotal">
-                    <p>{(item.price * (item.quantity || 1)).toLocaleString()}₫</p>
-                  </div>
-                  <button onClick={() => removeFromCart(item.id)} className="btn-remove">
-                    Remove
-                  </button>
-                </li>
-              ))}
+                  </li>
+                )
+              })}
             </ul>
             <div className="cart-summary">
               <h3>Total: {totalPrice.toLocaleString()}₫</h3>
