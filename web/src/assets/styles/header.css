@@ -361,6 +361,7 @@
   padding: 0 !important;
   display: flex;
   align-items: center;
+  border-left-width: 0px !important;
 }
 
 .menu-item > button {

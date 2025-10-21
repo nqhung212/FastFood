@@ -4,6 +4,14 @@ import MenuLayout from '../layouts/menu-layout.jsx'
 import { useProducts } from '../hooks/use-products.js'
 import '../assets/styles/menu-categories.css'
 
+const getImageUrl = (imageField) => {
+  if (!imageField) return '/images/placeholder.png'
+  if (imageField.startsWith('http://') || imageField.startsWith('https://')) {
+    return imageField
+  }
+  return `/images/${imageField}`
+}
+
 export default function Menu() {
   const { products = [], loading, error } = useProducts()
 
@@ -39,7 +47,7 @@ export default function Menu() {
           {products.map((product) => (
             <Link key={product.id} to={`/product/${product.slug}`} className="product-card">
               <div className="product-image">
-                <img src={`/images/${product.image}`} alt={product.name} />
+                <img src={getImageUrl(product.image)} alt={product.name} />
               </div>
               <div className="product-info">
                 <h3 className="product-name">{product.name}</h3>

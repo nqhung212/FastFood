@@ -1,43 +1,9 @@
-import axios from "axios";
+import { processMoMoPayment } from "../api/momo-payment.js";
 import { supabase } from "../lib/supabaseClient";
 
-const PROXY_SERVER_URL = "http://localhost:4001";
-
-export async function processMoMoPayment(paymentData) {
-  try {
-    console.log("🔄 Processing MoMo payment for order:", paymentData.orderId);
-
-    const response = await axios.post(`${PROXY_SERVER_URL}/api/momo/checkout`, {
-      amount: paymentData.amount,
-      orderId: paymentData.orderId,
-      orderInfo: paymentData.orderInfo || "Payment for order",
-      items: paymentData.items || [],
-    });
-
-    if (response.data.success && response.data.payUrl) {
-      console.log("✅ MoMo checkout request created successfully");
-      return {
-        success: true,
-        orderId: response.data.orderId,
-        payUrl: response.data.payUrl,
-        message: response.data.message,
-      };
-    } else {
-      console.error("❌ MoMo response error:", response.data);
-      return {
-        success: false,
-        message: response.data.message || "Unable to create payment request",
-      };
-    }
-  } catch (error) {
-    console.error("❌ Payment error:", error.response?.data || error.message);
-    return {
-      success: false,
-      message: error.response?.data?.message || "Connection error to payment service",
-    };
-  }
-}
-
+/**
+ * High-level service: initiate payment flow by opening MoMo checkout and monitoring the tab
+ */
 export async function initiateMoMoPayment(paymentData, onSuccess) {
   const result = await processMoMoPayment(paymentData);
 
@@ -63,12 +29,10 @@ export async function initiateMoMoPayment(paymentData, onSuccess) {
             return;
           }
           try {
-            const paymentStatus = await axios.get(
-              `${PROXY_SERVER_URL}/api/payments/${paymentData.orderId}`
-            );
-            if (paymentStatus.data) {
-              console.log("✅ Payment status checked:", paymentStatus.data.status);
-            }
+            // Try to get final status from proxy
+            const paymentStatus = await fetch(`${process.env.REACT_APP_PROXY_URL || 'http://localhost:4001'}/api/payments/${paymentData.orderId}`);
+            const json = await paymentStatus.json();
+            if (json) console.log("✅ Payment status checked:", json.status);
           } catch (error) {
             console.log("ℹ️ Could not check payment status");
           }
@@ -88,16 +52,6 @@ export async function initiateMoMoPayment(paymentData, onSuccess) {
     }, 10000);
   } else {
     throw new Error(result.message);
-  }
-}
-
-export async function checkPaymentStatus(orderId) {
-  try {
-    const response = await axios.get(`${PROXY_SERVER_URL}/api/payments/${orderId}`);
-    return response.data;
-  } catch (error) {
-    console.error("Error checking payment status:", error);
-    return null;
   }
 }
 
@@ -141,6 +95,7 @@ export async function saveOrderToSupabase(orderData) {
       
       if (error) throw error
       console.log('✅ Order status updated to Supabase')
+      return { success: true }
     } else {
       console.log('➕ Creating new order...')
       const { error } = await supabase.from('orders').insert([

@@ -3,6 +3,14 @@ import MainLayout from '../layouts/home-layout.jsx'
 import { useCart } from '../context/cart-context.jsx'
 import '../assets/styles/cart.css'
 
+const getImageUrl = (imageField) => {
+  if (!imageField) return '/images/placeholder.png'
+  if (imageField.startsWith('http://') || imageField.startsWith('https://')) {
+    return imageField
+  }
+  return `/images/${imageField}`
+}
+
 export default function CartPage() {
   const { cartItems, removeFromCart, incrementQuantity, decrementQuantity } = useCart()
   const navigate = useNavigate()
@@ -34,10 +42,7 @@ export default function CartPage() {
           <>
             <ul className="cart-list">
               {cartItems.map((item) => {
-                const imgSrc =
-                  item?.image && (item.image.startsWith('http') || item.image.startsWith('https'))
-                    ? item.image
-                    : `/images/${item.image}`
+                const imgSrc = getImageUrl(item.image)
 
                 return (
                   <li key={item.id} className="cart-item">

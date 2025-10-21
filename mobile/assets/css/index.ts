@@ -49,5 +49,5 @@ export const styles = StyleSheet.create({
   },
   productImage: { width: 100, height: 100, borderRadius: 10, backgroundColor: '#f0f0f0' },
   productName: { marginTop: 8, fontWeight: '600', textAlign: 'center', color: '#000' },
-  productPrice: { color: '#FF6347', fontWeight: '700', marginTop: 5 },
+  productPrice: { color: 'black', fontWeight: '700', marginTop: 5 },
 });

@@ -44,7 +44,7 @@ export default function ProductDetail() {
       addToCart(
         {
           ...product,
-          image: `/images/${product.image}`,
+          image: getImageUrl(product.image),
         },
         quantity
       )
@@ -59,12 +59,20 @@ export default function ProductDetail() {
       </MainLayout>
     )
 
+  const getImageUrl = (imageField) => {
+    if (!imageField) return '/images/placeholder.png'
+    if (imageField.startsWith('http://') || imageField.startsWith('https://')) {
+      return imageField
+    }
+    return `/images/${imageField}`
+  }
+
   return (
     <MainLayout>
       <div className="product-detail">
         <h2>{product.name}</h2>
         <div className="product-image-container">
-          <img src={`/images/${product.image}`} alt={product.name} />
+          <img src={getImageUrl(product.image)} alt={product.name} />
         </div>
         <div className="product-info">
           <div className="product-description">
