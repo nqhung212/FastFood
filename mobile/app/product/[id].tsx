@@ -1,21 +1,31 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Image, ScrollView, TouchableOpacity, StatusBar, ActivityIndicator, Alert } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  ScrollView,
+  TouchableOpacity,
+  StatusBar,
+  ActivityIndicator,
+  Alert,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
-import { useCart } from "../cart/CartContext";
 import { styles } from "../../assets/css/product_id.style";
 import { fetchProductById } from "@/service/productService";
+import { useAddToCart } from "@/hooks/use-addtocart";
 
 export default function ProductDetailScreen() {
   const { id } = useLocalSearchParams();
   const router = useRouter();
-  const { addToCart } = useCart();
+  const { handleAddToCart } = useAddToCart(); // ✅ Dùng hook này
 
   const [product, setProduct] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
 
+  // 🔹 Lấy sản phẩm theo ID từ Supabase
   useEffect(() => {
     const pid = Number(id);
     if (Number.isNaN(pid)) return;
@@ -42,14 +52,12 @@ export default function ProductDetailScreen() {
     loadProduct();
   }, [id]);
 
-  const increaseQuantity = () => setQuantity(quantity + 1);
-  const decreaseQuantity = () => quantity > 1 && setQuantity(quantity - 1);
+  const increaseQuantity = () => setQuantity((q) => q + 1);
+  const decreaseQuantity = () => setQuantity((q) => (q > 1 ? q - 1 : 1));
 
-  const handleAddToCart = () => {
-    if (product) {
-      addToCart(product, quantity);
-      Alert.alert("Thành công", "Đã thêm sản phẩm vào giỏ hàng!");
-    }
+  // ✅ Gọi đúng hàm từ hook useAddToCart
+  const handleAddToCartPress = () => {
+    if (product) handleAddToCart(product, quantity);
   };
 
   if (loading) {
@@ -91,11 +99,17 @@ export default function ProductDetailScreen() {
         </View>
 
         <View style={styles.quantityContainer}>
-          <TouchableOpacity onPress={decreaseQuantity} style={styles.quantityButton}>
+          <TouchableOpacity
+            onPress={decreaseQuantity}
+            style={styles.quantityButton}
+          >
             <Text style={styles.quantityButtonText}>-</Text>
           </TouchableOpacity>
           <Text style={styles.quantityText}>{quantity}</Text>
-          <TouchableOpacity onPress={increaseQuantity} style={styles.quantityButton}>
+          <TouchableOpacity
+            onPress={increaseQuantity}
+            style={styles.quantityButton}
+          >
             <Text style={styles.quantityButtonText}>+</Text>
           </TouchableOpacity>
         </View>
@@ -109,12 +123,26 @@ export default function ProductDetailScreen() {
           </Text>
         </View>
         <View style={styles.actionButtons}>
-          <TouchableOpacity style={styles.addToCartButton} onPress={handleAddToCart}>
+          <TouchableOpacity
+            style={styles.addToCartButton}
+            onPress={handleAddToCartPress}
+          >
             <Text style={styles.buttonText}>Thêm vào giỏ</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.addToCartButton, styles.buyNowButton]}
-            onPress={() => router.push("/cart/checkout")}
+            onPress={() =>
+              router.push({
+                pathname: "/payment/checkout",
+                params: {
+                  id: product.id.toString(),
+                  name: product.name,
+                  price: product.price.toString(),
+                  quantity: quantity.toString(),
+                  image: product.image,
+                },
+              })
+            }
           >
             <Text style={styles.buttonText}>Thanh Toán Ngay</Text>
           </TouchableOpacity>

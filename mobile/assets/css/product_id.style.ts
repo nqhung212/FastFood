@@ -1,8 +1,17 @@
 import { StyleSheet } from "react-native";
 export const styles = StyleSheet.create({
-    safeArea: { flex: 1, backgroundColor: '#fff' },
-    container: { paddingBottom: 150 },
-    imageHeader: { width: '100%', height: 300, resizeMode: 'cover' },
+    safeArea: {
+        flex: 1,
+        backgroundColor: '#fff'
+    },
+    container: {
+        paddingBottom: 150
+    },
+    imageHeader: {
+        width: '100%',
+        height: 300,
+        resizeMode: 'cover'
+    },
     backButton: {
         position: 'absolute',
         top: 50,
@@ -34,7 +43,11 @@ export const styles = StyleSheet.create({
         alignItems: 'center',
     },
     quantityButtonText: { fontSize: 24, color: '#333' },
-    quantityText: { fontSize: 22, fontWeight: 'bold', marginHorizontal: 20 },
+    quantityText: {
+        fontSize: 22,
+        fontWeight: 'bold',
+        marginHorizontal: 20
+    },
     footer: {
         position: 'absolute',
         bottom: 0,
@@ -50,9 +63,19 @@ export const styles = StyleSheet.create({
         justifyContent: 'space-between',
         marginBottom: 15,
     },
-    totalLabel: { fontSize: 18, color: '#666' },
-    totalPrice: { fontSize: 20, fontWeight: 'bold', color: '#D70F17' },
-    actionButtons: { flexDirection: 'row', justifyContent: 'space-between' },
+    totalLabel: {
+        fontSize: 18,
+        color: '#666'
+    },
+    totalPrice: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        color: '#D70F17'
+    },
+    actionButtons: {
+        flexDirection: 'row',
+        justifyContent: 'space-between'
+    },
     addToCartButton: {
         backgroundColor: '#FFC72C',
         paddingVertical: 15,

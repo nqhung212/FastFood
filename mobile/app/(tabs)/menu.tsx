@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { View, Text, FlatList, ActivityIndicator } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import CategoryList from "@/components/CategoryList";
@@ -6,9 +6,7 @@ import ProductCard from "@/components/ProductCard";
 import { useMenu } from "@/hooks/use-menu";
 import { styles } from "@/assets/css/menu.style";
 import { useLocalSearchParams } from "expo-router";
-
-
-
+import { useAddToCart } from "@/hooks/use-addtocart";
 
 export default function MenuScreen() {
   const {
@@ -21,14 +19,15 @@ export default function MenuScreen() {
     error,
   } = useMenu();
 
-    const { category } = useLocalSearchParams();
-    const categoryId = category ? Number(category) : "all";
+  const { category } = useLocalSearchParams();
+  const categoryId = category ? Number(category) : "all";
+  const { handleAddToCart } = useAddToCart(); // 👈 Dùng hook
 
-    useEffect(() => {
+  useEffect(() => {
     if (categoryId !== "all") {
-        setSelectedCategory(categoryId);
+      setSelectedCategory(categoryId);
     }
-    }, [categoryId]);
+  }, [categoryId]);
 
   if (loading || loadingCategories) {
     return (
@@ -56,17 +55,17 @@ export default function MenuScreen() {
         <Text style={styles.headerText}>Chọn món</Text>
       </View>
 
-    <CategoryList
-      categories={[{ id: 0, name: "Tất cả" }, ...categories]}
-      selectedCategory={selectedCategory === "all" ? 0 : selectedCategory}
-      onSelectCategory={(id) => setSelectedCategory(id === 0 ? "all" : Number(id))}
-    />
+      <CategoryList
+        categories={[{ id: 0, name: "Tất cả" }, ...categories]}
+        selectedCategory={selectedCategory === "all" ? 0 : selectedCategory}
+        onSelectCategory={(id) => setSelectedCategory(id === 0 ? "all" : Number(id))}
+      />
 
       <Text style={styles.sectionHeader}>Món Ngon Phải Thử</Text>
 
       {filteredProducts.length === 0 ? (
         <View style={{ paddingHorizontal: 16, paddingVertical: 8 }}>
-          <Text style={{ color: '#fff' }}>Không có sản phẩm trong danh mục này.</Text>
+          <Text style={{ color: "#fff" }}>Không có sản phẩm trong danh mục này.</Text>
         </View>
       ) : (
         <FlatList
@@ -74,7 +73,12 @@ export default function MenuScreen() {
           keyExtractor={(item) => item.id.toString()}
           numColumns={2}
           showsVerticalScrollIndicator={false}
-          renderItem={({ item }) => <ProductCard item={item} />}
+          renderItem={({ item }) => (
+            <ProductCard
+              item={item}
+              onAddToCart={() => handleAddToCart(item)}
+            />
+          )}
           contentContainerStyle={{ paddingHorizontal: 4 }}
         />
       )}

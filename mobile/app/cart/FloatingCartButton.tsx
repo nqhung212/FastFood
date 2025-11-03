@@ -106,7 +106,10 @@ export default function DraggableCartButton() {
                                 <TouchableOpacity style={styles.addMoreButton} onPress={handleAddMoreItems}>
                                     <Text style={styles.buttonText}>Thêm Món</Text>
                                 </TouchableOpacity>
-                                <TouchableOpacity style={styles.checkoutBtn}>
+                                <TouchableOpacity style={styles.checkoutBtn} onPress={() => {
+                                    setModalVisible(false);
+                                    router.push('/payment/checkout');
+                                }}>
                                     <Text style={[styles.buttonText, { color: 'white' }]}>Thanh Toán</Text>
                                 </TouchableOpacity>
                             </View>

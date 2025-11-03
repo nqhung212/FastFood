@@ -1,0 +1,96 @@
+import { StyleSheet } from "react-native";
+export const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: "#fff8f5",
+    },
+    centerContainer: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "#fff",
+    },
+    headerContainer: {
+        backgroundColor: "#ff7b5f",
+        paddingVertical: 18,
+        paddingHorizontal: 20,
+        borderBottomLeftRadius: 20,
+        borderBottomRightRadius: 20,
+        shadowColor: "#000",
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        elevation: 3,
+    },
+    headerText: {
+        color: "#fff",
+        fontSize: 20,
+        fontWeight: "700",
+        textAlign: "center",
+        letterSpacing: 0.5,
+    },
+    orderCard: {
+        backgroundColor: "#fff",
+        borderRadius: 12,
+        padding: 16,
+        marginBottom: 14,
+        shadowColor: "#000",
+        shadowOpacity: 0.06,
+        shadowRadius: 3,
+        elevation: 2,
+        borderWidth: 1,
+        borderColor: "#ffe0d6",
+    },
+    orderHeader: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        marginBottom: 6,
+    },
+    orderCode: {
+        fontSize: 16,
+        fontWeight: "600",
+        color: "#333",
+    },
+    statusBadge: {
+        borderRadius: 20,
+        paddingVertical: 4,
+        paddingHorizontal: 10,
+    },
+    statusText: {
+        color: "#fff",
+        fontWeight: "600",
+        fontSize: 13,
+    },
+    orderDate: {
+        color: "#777",
+        fontSize: 14,
+        marginTop: 2,
+    },
+    orderTotal: {
+        color: "#444",
+        marginTop: 5,
+        fontSize: 15,
+    },
+    text: {
+        fontSize: 16,
+        color: "#555",
+        textAlign: "center",
+        marginBottom: 10,
+    },
+    emptyText: {
+        textAlign: "center",
+        color: "#aaa",
+        marginTop: 30,
+        fontSize: 15,
+    },
+    button: {
+        backgroundColor: "#ff7b5f",
+        paddingHorizontal: 20,
+        paddingVertical: 12,
+        borderRadius: 10,
+    },
+    buttonText: {
+        color: "#fff",
+        fontWeight: "600",
+        fontSize: 15,
+    },
+});

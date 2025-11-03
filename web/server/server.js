@@ -21,6 +21,18 @@ const MOMO_CONFIG = {
 app.use(cors());
 app.use(express.json());
 
+// Health check endpoint
+app.get('/health', (req, res) => {
+  console.log('Health check requested');
+  res.json({ status: 'ok', message: 'Server is running' });
+});
+
+// Log all requests
+app.use((req, res, next) => {
+  console.log(`${req.method} ${req.url}`);
+  next();
+});
+
 const paymentsMap = new Map();
 
 // Tạo HMAC SHA256 signature theo đúng format MoMo
@@ -180,8 +192,8 @@ app.get("/api/payments/:orderId", (req, res) => {
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`\n🚀 Payment server running on http://localhost:${PORT}`);
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`\n🚀 Payment server running on http://0.0.0.0:${PORT}`);
   console.log(`📌 MoMo Sandbox Mode`);
   console.log(`🔗 MoMo API: ${MOMO_CONFIG.endpoint}\n`);
 });

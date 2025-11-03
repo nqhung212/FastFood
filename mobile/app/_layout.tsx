@@ -13,7 +13,12 @@ export const unstable_settings = {
 export default function RootLayout() {
   const colorScheme = useColorScheme();
   const pathname = usePathname();
-  const hideCartButton = Boolean(pathname && (pathname.startsWith('/auth') || pathname.endsWith('/login')));
+  const hideCartButton = Boolean(pathname && (
+    pathname.startsWith('/auth') || 
+    pathname.endsWith('/login') || 
+    pathname.includes('/checkout') ||
+    pathname.includes('/payment')
+  ));
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>

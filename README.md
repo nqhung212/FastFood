@@ -1,4 +1,5 @@
 # FASTFOOD README
+
 ---
 
 ## Cách chạy
@@ -12,16 +13,24 @@
   ```
 
 - Mobile (thư mục `mobile`):
-
+  ````Cài đặt ngrok
+  chạy file index.js: cd mobile/service
+                      node index.js
+  chạy ngrok(server riêng): ngrok http 4001
+  lấy địa chỉ IP của ngrok gán vào .env
+  REDIRECT_URL=https://ingenuous-absolutely-cletus.ngrok-free.dev/api/momo/callback
+  IPN_URL=https://ingenuous-absolutely-cletus.ngrok-free.dev/api/momo/callback
+  dán IP vào địa biến(checkoutService):
+               const MOMO_SERVER_URL = "https://ingenuous-absolutely-cletus.ngrok-free.dev";
   ```powershell
   cd mobile
   npm install (lần đầu clone)
   npm start
-  ```
+  ````
 
 ---
 
-## API 
+## API
 
 chạy json-server
 
@@ -32,9 +41,6 @@ npm start
 
 ---
 
-## Git 
+## Git
 
 - KHÔNG push `node_modules/`.
-
-
-

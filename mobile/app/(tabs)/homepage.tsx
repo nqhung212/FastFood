@@ -1,27 +1,40 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, Image, ScrollView, TextInput, FlatList, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
-import { fetchCategories } from '@/service/categoryService';
-import { fetchProducts } from '@/service/productService';
-import { Category } from '@/type/category';
-import { Product } from '@/type/product'; 
-import { styles } from '@/assets/css/index';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, { useEffect, useState, useContext } from "react";
+import {
+  View,
+  Text,
+  Image,
+  ScrollView,
+  TextInput,
+  FlatList,
+  TouchableOpacity,
+  ActivityIndicator,
+  Alert,
+} from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
+import { fetchCategories } from "@/service/categoryService";
+import { fetchProducts } from "@/service/productService";
+import { Category } from "@/type/category";
+import { Product } from "@/type/product";
+import { styles } from "@/assets/css/homepage.style";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { CartContext } from "../cart/CartContext";
 
 export default function HomeScreen() {
   const router = useRouter();
-  const [search, setSearch] = useState('');
-  const [user, setUser] = useState<any>(null); 
+  const [search, setSearch] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
+  const [user, setUser] = useState<any>(null);
+  const cartCtx = useContext(CartContext);
   const [categories, setCategories] = useState<Category[]>([]);
-  const [products, setProducts] = useState<Product[]>([]); 
+  const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   // ✅ Lấy user từ AsyncStorage
   useEffect(() => {
     const loadUser = async () => {
-      const savedUser = await AsyncStorage.getItem('user');
+      const savedUser = await AsyncStorage.getItem("user");
       if (savedUser) setUser(JSON.parse(savedUser));
     };
     loadUser();
@@ -50,10 +63,26 @@ export default function HomeScreen() {
 
   // ✅ Đăng xuất
   const handleLogout = async () => {
-    await AsyncStorage.removeItem('user');
-    Alert.alert("Đã đăng xuất", "Bạn đã đăng xuất thành công!");
-    setUser(null);
+    try {
+      await AsyncStorage.removeItem("user");
+      if (cartCtx?.refreshCartForUser) {
+        await cartCtx.refreshCartForUser();
+      }
+      setUser(null);
+      Alert.alert("Đã đăng xuất", "Bạn đã đăng xuất thành công!");
+    } catch (err) {
+      console.error("Logout error", err);
+      Alert.alert("Lỗi", "Không thể đăng xuất. Vui lòng thử lại.");
+    }
   };
+
+  // ✅ Lọc sản phẩm theo từ khóa + danh mục
+  const filteredProducts = products.filter((p) => {
+    const matchSearch = p.name.toLowerCase().includes(search.toLowerCase());
+    const matchCategory =
+      !selectedCategory || p.category_id === selectedCategory;
+    return matchSearch && matchCategory;
+  });
 
   if (loading) {
     return (
@@ -66,7 +95,7 @@ export default function HomeScreen() {
   if (error) {
     return (
       <View style={[styles.container, styles.center]}>
-        <Text style={{ color: '#000' }}>{error}</Text>
+        <Text style={{ color: "#000" }}>{error}</Text>
       </View>
     );
   }
@@ -76,13 +105,21 @@ export default function HomeScreen() {
       {/* Header */}
       <View style={styles.header}>
         <Image
-          source={{ uri: 'https://uuxtbxkgnktfcbdevbmx.supabase.co/storage/v1/object/public/product-image/logo.png' }}
+          source={{
+            uri: "https://uuxtbxkgnktfcbdevbmx.supabase.co/storage/v1/object/public/product-image/logo.png",
+          }}
           style={styles.logo}
         />
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%' }}>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            width: "100%",
+          }}
+        >
           <View>
             <Text style={styles.welcome}>
-              Xin chào {user ? user.fullname || user.username || user.phone : '👋'}
+              Xin chào {user ? user.fullname || user.username || user.phone : "👋"}
             </Text>
             <Text style={styles.subText}>Hôm nay bạn muốn ăn gì?</Text>
           </View>
@@ -91,16 +128,26 @@ export default function HomeScreen() {
           {user ? (
             <TouchableOpacity
               onPress={handleLogout}
-              style={{ backgroundColor: '#FF6347', padding: 8, borderRadius: 8, height: 35 }}
+              style={{
+                backgroundColor: "#FF6347",
+                padding: 8,
+                borderRadius: 8,
+                height: 35,
+              }}
             >
-              <Text style={{ color: '#fff', fontWeight: 'bold' }}>Đăng xuất</Text>
+              <Text style={{ color: "#fff", fontWeight: "bold" }}>Đăng xuất</Text>
             </TouchableOpacity>
           ) : (
             <TouchableOpacity
-              onPress={() => router.push('auth/login')}
-              style={{ backgroundColor: '#FF6347', padding: 8, borderRadius: 8, height: 35 }}
+              onPress={() => router.push("auth/login")}
+              style={{
+                backgroundColor: "#FF6347",
+                padding: 8,
+                borderRadius: 8,
+                height: 35,
+              }}
             >
-              <Text style={{ color: '#fff', fontWeight: 'bold' }}>Đăng nhập</Text>
+              <Text style={{ color: "#fff", fontWeight: "bold" }}>Đăng nhập</Text>
             </TouchableOpacity>
           )}
         </View>
@@ -118,13 +165,21 @@ export default function HomeScreen() {
       </View>
 
       {/* Banner */}
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.bannerContainer}>
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        style={styles.bannerContainer}
+      >
         <Image
-          source={{ uri: 'https://uuxtbxkgnktfcbdevbmx.supabase.co/storage/v1/object/public/product-image/logo.png' }}
+          source={{
+            uri: "https://uuxtbxkgnktfcbdevbmx.supabase.co/storage/v1/object/public/product-image/logo.png",
+          }}
           style={styles.banner}
         />
         <Image
-          source={{ uri: 'https://uuxtbxkgnktfcbdevbmx.supabase.co/storage/v1/object/public/product-image/pizza%20(1).jpg' }}
+          source={{
+            uri: "https://uuxtbxkgnktfcbdevbmx.supabase.co/storage/v1/object/public/product-image/pizza%20(1).jpg",
+          }}
           style={styles.banner}
         />
       </ScrollView>
@@ -138,11 +193,23 @@ export default function HomeScreen() {
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
           <TouchableOpacity
-            style={styles.categoryCard}
-            onPress={() => router.push(`/menu?category=${item.id}`)}
+            style={[
+              styles.categoryCard,
+              selectedCategory === item.id && {
+                borderColor: "#FF6347",
+                borderWidth: 2,
+              },
+            ]}
+            onPress={() =>
+              setSelectedCategory(
+                selectedCategory === item.id ? null : item.id
+              )
+            }
           >
             <Image
-              source={{ uri: 'https://uuxtbxkgnktfcbdevbmx.supabase.co/storage/v1/object/public/product-image/burger.jpg' }}
+              source={{
+                uri: "https://uuxtbxkgnktfcbdevbmx.supabase.co/storage/v1/object/public/product-image/burger.jpg",
+              }}
               style={styles.categoryImage}
             />
             <Text style={styles.categoryText}>{item.name}</Text>
@@ -152,19 +219,52 @@ export default function HomeScreen() {
 
       {/* Món nổi bật */}
       <Text style={styles.sectionTitle}>Món nổi bật</Text>
-      <View style={styles.productContainer}>
-        {products.map((p) => (
-          <TouchableOpacity
-            key={p.id}
-            style={styles.productCard}
-            onPress={() => router.push(`/product/${p.id}`)}
-          >
-            <Image source={{ uri: p.image }} style={styles.productImage} />
-            <Text style={styles.productName}>{p.name}</Text>
-            <Text style={styles.productPrice}>{p.price.toLocaleString()}₫</Text>
-          </TouchableOpacity>
-        ))}
-      </View>
+
+      {filteredProducts.length === 0 ? (
+        <Text
+          style={{
+            textAlign: "center",
+            color: "#888",
+            marginTop: 10,
+            marginBottom: 30,
+          }}
+        >
+          Không tìm thấy món ăn phù hợp 😢
+        </Text>
+      ) : (
+        <View style={styles.productContainer}>
+          {filteredProducts.map((p) => (
+            <View key={p.id} style={styles.productCard}>
+              <TouchableOpacity onPress={() => router.push(`/product/${p.id}`)}>
+                <Image source={{ uri: p.image }} style={styles.productImage} />
+                <Text style={styles.productName}>{p.name}</Text>
+                <Text style={styles.productPrice}>
+                  {p.price.toLocaleString()}₫
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={{
+                  marginTop: 8,
+                  backgroundColor: "#FF6347",
+                  paddingVertical: 6,
+                  borderRadius: 8,
+                  alignItems: "center",
+                }}
+                onPress={() => {
+                  if (!cartCtx) return;
+                  cartCtx.addToCart(p, 1);
+                  Alert.alert("🛒 Đã thêm", `${p.name} đã được thêm vào giỏ hàng`);
+                }}
+              >
+                <Text style={{ color: "#fff", fontWeight: "bold" }}>
+                  Thêm vào giỏ
+                </Text>
+              </TouchableOpacity>
+            </View>
+          ))}
+        </View>
+      )}
     </ScrollView>
   );
 }

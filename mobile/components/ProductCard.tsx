@@ -8,6 +8,7 @@ const CARD_WIDTH = width / 2 - 20;
 
 type ProductCardProps = {
   item: Product;
+  onAddToCart?: (item: Product) => void;
 };
 
 const ProductCard = ({ item }: ProductCardProps) => {
