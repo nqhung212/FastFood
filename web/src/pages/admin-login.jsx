@@ -16,7 +16,7 @@ export default function AdminLogin() {
     setMessage('')
 
     try {
-      // Query users table để check username + password
+      // Query users table to check username + password
       const { data: userData, error: userError } = await supabase
         .from('users')
         .select('id, username, role')
@@ -33,7 +33,7 @@ export default function AdminLogin() {
         throw new Error('Only admin users can access this page')
       }
 
-      // Lưu admin session vào localStorage
+      // Save admin session to localStorage
       localStorage.setItem(
         'adminSession',
         JSON.stringify({
@@ -44,11 +44,11 @@ export default function AdminLogin() {
         })
       )
 
-      setMessage('✅ Login successful!')
+      setMessage('Login successful!')
       setTimeout(() => navigate('/admin'), 1000)
     } catch (err) {
       console.error('Admin login error:', err)
-      setMessage(`❌ ${err.message}`)
+      setMessage(`${err.message}`)
       setLoading(false)
     }
   }
@@ -60,7 +60,7 @@ export default function AdminLogin() {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        background: 'linear-gradient(135deg, #e31837 0%, #b91430 100%)',
       }}
     >
       <div
@@ -73,7 +73,7 @@ export default function AdminLogin() {
           maxWidth: '400px',
         }}
       >
-        <h2 style={{ textAlign: 'center', color: '#333', marginBottom: '30px' }}>🔧 Admin Login</h2>
+        <h2 style={{ textAlign: 'center', color: '#333', marginBottom: '30px' }}>Admin Login</h2>
 
         <form onSubmit={handleLogin}>
           <div style={{ marginBottom: '15px' }}>
@@ -128,7 +128,7 @@ export default function AdminLogin() {
             style={{
               width: '100%',
               padding: '12px',
-              background: loading ? '#ccc' : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+              background: loading ? '#ccc' : 'linear-gradient(135deg, #e31837 0%, #b91430 100%)',
               color: 'white',
               border: 'none',
               borderRadius: '4px',
@@ -148,28 +148,14 @@ export default function AdminLogin() {
               padding: '10px',
               borderRadius: '4px',
               textAlign: 'center',
-              background: message.startsWith('❌') ? '#fee' : '#efe',
-              color: message.startsWith('❌') ? '#c33' : '#3c3',
+              background: message.includes('Invalid') || message.includes('Only') ? '#fee' : '#efe',
+              color: message.includes('Invalid') || message.includes('Only') ? '#c33' : '#3c3',
               fontSize: '14px',
             }}
           >
             {message}
           </p>
         )}
-
-        <div
-          style={{
-            marginTop: '20px',
-            paddingTop: '20px',
-            borderTop: '1px solid #eee',
-            textAlign: 'center',
-          }}
-        >
-          <p style={{ margin: '0 0 10px 0', color: '#666', fontSize: '14px' }}>Not an admin?</p>
-          <a href="/login" style={{ color: '#667eea', textDecoration: 'none', fontWeight: '500' }}>
-            Go to user login →
-          </a>
-        </div>
       </div>
     </div>
   )

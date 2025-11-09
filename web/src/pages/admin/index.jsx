@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import AdminLayout from '../../layouts/admin-layout'
 import { useAdminGuard } from '../../hooks/use-admin-guard'
 import { supabase } from '../../lib/supabaseClient'
 
 export default function AdminDashboard() {
   const { isAdmin, isLoading } = useAdminGuard()
+  const navigate = useNavigate()
   const [stats, setStats] = useState({
     totalOrders: 0,
     totalUsers: 0,
@@ -54,7 +56,7 @@ export default function AdminDashboard() {
     return (
       <AdminLayout>
         <div style={{ padding: '20px', textAlign: 'center' }}>
-          <p>Đang tải...</p>
+          <p>Loading...</p>
         </div>
       </AdminLayout>
     )
@@ -66,60 +68,53 @@ export default function AdminDashboard() {
 
   return (
     <AdminLayout>
-      <div className="dashboard-welcome">
-        <h1>👋 Chào mừng đến Admin Dashboard</h1>
-        <p>Quản lý toàn bộ hệ thống bán hàng tại đây</p>
-      </div>
-
-      {statsLoading ? (
-        <div style={{ textAlign: 'center', padding: '20px' }}>
-          <p>Đang tải thống kê...</p>
+      <div className="admin-page">
+        <div className="page-header">
+          <h1>Overview</h1>
         </div>
-      ) : (
-        <div className="dashboard-grid">
-          <div className="dashboard-card">
-            <div className="dashboard-card-icon">📦</div>
-            <div className="dashboard-card-label">Tổng Đơn Hàng</div>
-            <div className="dashboard-card-value">{stats.totalOrders}</div>
+        {statsLoading ? (
+          <div style={{ textAlign: 'center', padding: '20px' }}>
+            <p>Loading statistics...</p>
           </div>
+        ) : (
+          <div className="dashboard-grid">
+            <div
+              className="dashboard-card"
+              onClick={() => navigate('/admin/orders')}
+              style={{ cursor: 'pointer' }}
+            >
+              <div className="dashboard-card-label">Total Orders</div>
+              <div className="dashboard-card-value">{stats.totalOrders}</div>
+            </div>
 
-          <div className="dashboard-card">
-            <div className="dashboard-card-icon">👥</div>
-            <div className="dashboard-card-label">Tổng Người Dùng</div>
-            <div className="dashboard-card-value">{stats.totalUsers}</div>
+            <div
+              className="dashboard-card"
+              onClick={() => navigate('/admin/users')}
+              style={{ cursor: 'pointer' }}
+            >
+              <div className="dashboard-card-label">Total Users</div>
+              <div className="dashboard-card-value">{stats.totalUsers}</div>
+            </div>
+
+            <div
+              className="dashboard-card"
+              onClick={() => navigate('/admin/products')}
+              style={{ cursor: 'pointer' }}
+            >
+              <div className="dashboard-card-label">Total Products</div>
+              <div className="dashboard-card-value">{stats.totalProducts}</div>
+            </div>
+
+            <div
+              className="dashboard-card"
+              onClick={() => navigate('/admin/categories')}
+              style={{ cursor: 'pointer' }}
+            >
+              <div className="dashboard-card-label">Total Categories</div>
+              <div className="dashboard-card-value">{stats.totalCategories}</div>
+            </div>
           </div>
-
-          <div className="dashboard-card">
-            <div className="dashboard-card-icon">🍔</div>
-            <div className="dashboard-card-label">Tổng Sản Phẩm</div>
-            <div className="dashboard-card-value">{stats.totalProducts}</div>
-          </div>
-
-          <div className="dashboard-card">
-            <div className="dashboard-card-icon">📂</div>
-            <div className="dashboard-card-label">Tổng Danh Mục</div>
-            <div className="dashboard-card-value">{stats.totalCategories}</div>
-          </div>
-        </div>
-      )}
-
-      <div style={{ marginTop: '30px', padding: '20px', background: 'white', borderRadius: '8px' }}>
-        <h3>📝 Hướng dẫn nhanh</h3>
-        <ul style={{ lineHeight: '1.8', color: '#666' }}>
-          <li>Sử dụng menu bên trái để điều hướng đến các trang quản lý</li>
-          <li>
-            📦 <strong>Đơn hàng:</strong> Xem và quản lý các đơn hàng từ khách hàng
-          </li>
-          <li>
-            👥 <strong>Người dùng:</strong> Quản lý tài khoản người dùng
-          </li>
-          <li>
-            🍔 <strong>Sản phẩm:</strong> Thêm, sửa, xóa sản phẩm (sắp có)
-          </li>
-          <li>
-            📂 <strong>Danh mục:</strong> Quản lý các danh mục sản phẩm (sắp có)
-          </li>
-        </ul>
+        )}
       </div>
     </AdminLayout>
   )

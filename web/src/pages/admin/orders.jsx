@@ -8,6 +8,7 @@ export default function AdminOrders() {
   const { isAdmin, isLoading } = useAdminGuard()
   const [orders, setOrders] = useState([])
   const [tableLoading, setTableLoading] = useState(true)
+  const [sortConfig, setSortConfig] = useState({ column: 'created_at', ascending: false })
 
   useEffect(() => {
     if (!isAdmin) return
@@ -17,7 +18,7 @@ export default function AdminOrders() {
         const { data, error } = await supabase
           .from('orders')
           .select('id, user_id, total_amount, status, created_at')
-          .order('created_at', { ascending: false })
+          .order(sortConfig.column, { ascending: sortConfig.ascending })
 
         if (error) throw error
         setOrders(data || [])
@@ -29,13 +30,25 @@ export default function AdminOrders() {
     }
 
     fetchOrders()
-  }, [isAdmin])
+  }, [isAdmin, sortConfig])
+
+  const handleSort = (column) => {
+    setSortConfig((prev) => ({
+      column,
+      ascending: prev.column === column ? !prev.ascending : true,
+    }))
+  }
+
+  const getSortIcon = (column) => {
+    if (sortConfig.column !== column) return '⇅'
+    return sortConfig.ascending ? '↑' : '↓'
+  }
 
   if (isLoading) {
     return (
       <AdminLayout>
         <div style={{ padding: '20px', textAlign: 'center' }}>
-          <p>Đang tải...</p>
+          <p>Loading...</p>
         </div>
       </AdminLayout>
     )
@@ -49,24 +62,34 @@ export default function AdminOrders() {
     <AdminLayout>
       <div className="admin-page">
         <div className="page-header">
-          <h1>📦 Quản lý Đơn Hàng</h1>
-          <button className="btn btn-primary">➕ Thêm Đơn Hàng</button>
+          <h1>Manage Orders</h1>
+          <button className="btn btn-primary">Add Order</button>
         </div>
 
         {tableLoading ? (
           <div style={{ textAlign: 'center', padding: '20px' }}>
-            <p>Đang tải dữ liệu...</p>
+            <p>Loading data...</p>
           </div>
         ) : (
           <table className="admin-table">
             <thead>
               <tr>
-                <th>ID Đơn Hàng</th>
-                <th>User ID</th>
-                <th>Tổng Tiền</th>
-                <th>Trạng Thái</th>
-                <th>Ngày Tạo</th>
-                <th>Hành Động</th>
+                <th onClick={() => handleSort('id')} className="sortable">
+                  Order ID {getSortIcon('id')}
+                </th>
+                <th onClick={() => handleSort('user_id')} className="sortable">
+                  User ID {getSortIcon('user_id')}
+                </th>
+                <th onClick={() => handleSort('total_amount')} className="sortable">
+                  Total Amount {getSortIcon('total_amount')}
+                </th>
+                <th onClick={() => handleSort('status')} className="sortable">
+                  Status {getSortIcon('status')}
+                </th>
+                <th onClick={() => handleSort('created_at')} className="sortable">
+                  Created Date {getSortIcon('created_at')}
+                </th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -75,22 +98,20 @@ export default function AdminOrders() {
                   <tr key={order.id}>
                     <td>{order.id.slice(0, 8)}...</td>
                     <td>{order.user_id.slice(0, 8)}...</td>
-                    <td>{order.total_amount.toLocaleString('vi-VN')}₫</td>
+                    <td>${order.total_amount.toLocaleString('en-US')}</td>
                     <td>
                       <span className={`status status-${order.status}`}>{order.status}</span>
                     </td>
-                    <td>{new Date(order.created_at).toLocaleDateString('vi-VN')}</td>
+                    <td>{new Date(order.created_at).toLocaleDateString('en-US')}</td>
                     <td className="actions">
-                      <button className="btn-small btn-view">👁️ Xem</button>
-                      <button className="btn-small btn-edit">✏️ Sửa</button>
-                      <button className="btn-small btn-delete">🗑️ Xóa</button>
+                      <button className="btn-small btn-edit">Edit</button>
                     </td>
                   </tr>
                 ))
               ) : (
                 <tr>
                   <td colSpan="6" style={{ textAlign: 'center', padding: '20px' }}>
-                    Không có đơn hàng nào
+                    No orders found
                   </td>
                 </tr>
               )}

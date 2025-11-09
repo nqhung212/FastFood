@@ -34,13 +34,13 @@
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #e31837 0%, #b91430 100%);
   color: white;
 }
 
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 4px 12px rgba(227, 24, 55, 0.4);
 }
 
 .btn-small {
@@ -100,6 +100,16 @@
   font-size: 14px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+}
+
+.admin-table th.sortable {
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.2s;
+}
+
+.admin-table th.sortable:hover {
+  background: #eeeeee;
 }
 
 .admin-table td {

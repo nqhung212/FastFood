@@ -8,13 +8,17 @@ export default function AdminCategories() {
   const { isAdmin, isLoading } = useAdminGuard()
   const [categories, setCategories] = useState([])
   const [tableLoading, setTableLoading] = useState(true)
+  const [sortConfig, setSortConfig] = useState({ column: 'name', ascending: true })
 
   useEffect(() => {
     if (!isAdmin) return
 
     const fetchCategories = async () => {
       try {
-        const { data, error } = await supabase.from('categories').select('id, name').order('name')
+        const { data, error } = await supabase
+          .from('categories')
+          .select('id, name')
+          .order(sortConfig.column, { ascending: sortConfig.ascending })
 
         if (error) throw error
         setCategories(data || [])
@@ -26,13 +30,25 @@ export default function AdminCategories() {
     }
 
     fetchCategories()
-  }, [isAdmin])
+  }, [isAdmin, sortConfig])
+
+  const handleSort = (column) => {
+    setSortConfig((prev) => ({
+      column,
+      ascending: prev.column === column ? !prev.ascending : true,
+    }))
+  }
+
+  const getSortIcon = (column) => {
+    if (sortConfig.column !== column) return '⇅'
+    return sortConfig.ascending ? '↑' : '↓'
+  }
 
   if (isLoading) {
     return (
       <AdminLayout>
         <div style={{ padding: '20px', textAlign: 'center' }}>
-          <p>Đang tải...</p>
+          <p>Loading...</p>
         </div>
       </AdminLayout>
     )
@@ -46,21 +62,25 @@ export default function AdminCategories() {
     <AdminLayout>
       <div className="admin-page">
         <div className="page-header">
-          <h1>📂 Quản lý Danh Mục</h1>
-          <button className="btn btn-primary">➕ Thêm Danh Mục</button>
+          <h1>Manage Categories</h1>
+          <button className="btn btn-primary">Add Category</button>
         </div>
 
         {tableLoading ? (
           <div style={{ textAlign: 'center', padding: '20px' }}>
-            <p>Đang tải dữ liệu...</p>
+            <p>Loading data...</p>
           </div>
         ) : (
           <table className="admin-table">
             <thead>
               <tr>
-                <th>ID</th>
-                <th>Tên Danh Mục</th>
-                <th>Hành Động</th>
+                <th onClick={() => handleSort('id')} className="sortable">
+                  ID {getSortIcon('id')}
+                </th>
+                <th onClick={() => handleSort('name')} className="sortable">
+                  Category Name {getSortIcon('name')}
+                </th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -70,16 +90,14 @@ export default function AdminCategories() {
                     <td>{category.id}</td>
                     <td>{category.name}</td>
                     <td className="actions">
-                      <button className="btn-small btn-view">👁️ Xem</button>
-                      <button className="btn-small btn-edit">✏️ Sửa</button>
-                      <button className="btn-small btn-delete">🗑️ Xóa</button>
+                      <button className="btn-small btn-edit">Edit</button>
                     </td>
                   </tr>
                 ))
               ) : (
                 <tr>
                   <td colSpan="3" style={{ textAlign: 'center', padding: '20px' }}>
-                    Không có danh mục nào
+                    No categories found
                   </td>
                 </tr>
               )}

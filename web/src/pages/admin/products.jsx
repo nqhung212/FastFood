@@ -8,6 +8,7 @@ export default function AdminProducts() {
   const { isAdmin, isLoading } = useAdminGuard()
   const [products, setProducts] = useState([])
   const [tableLoading, setTableLoading] = useState(true)
+  const [sortConfig, setSortConfig] = useState({ column: 'name', ascending: true })
 
   useEffect(() => {
     if (!isAdmin) return
@@ -17,7 +18,7 @@ export default function AdminProducts() {
         const { data, error } = await supabase
           .from('products')
           .select('id, name, price, category_id')
-          .order('name')
+          .order(sortConfig.column, { ascending: sortConfig.ascending })
 
         if (error) throw error
         setProducts(data || [])
@@ -29,13 +30,25 @@ export default function AdminProducts() {
     }
 
     fetchProducts()
-  }, [isAdmin])
+  }, [isAdmin, sortConfig])
+
+  const handleSort = (column) => {
+    setSortConfig((prev) => ({
+      column,
+      ascending: prev.column === column ? !prev.ascending : true,
+    }))
+  }
+
+  const getSortIcon = (column) => {
+    if (sortConfig.column !== column) return '⇅'
+    return sortConfig.ascending ? '↑' : '↓'
+  }
 
   if (isLoading) {
     return (
       <AdminLayout>
         <div style={{ padding: '20px', textAlign: 'center' }}>
-          <p>Đang tải...</p>
+          <p>Loading...</p>
         </div>
       </AdminLayout>
     )
@@ -49,22 +62,28 @@ export default function AdminProducts() {
     <AdminLayout>
       <div className="admin-page">
         <div className="page-header">
-          <h1>🍔 Quản lý Sản Phẩm</h1>
-          <button className="btn btn-primary">➕ Thêm Sản Phẩm</button>
+          <h1>Manage Products</h1>
+          <button className="btn btn-primary">Add Product</button>
         </div>
 
         {tableLoading ? (
           <div style={{ textAlign: 'center', padding: '20px' }}>
-            <p>Đang tải dữ liệu...</p>
+            <p>Loading data...</p>
           </div>
         ) : (
           <table className="admin-table">
             <thead>
               <tr>
-                <th>Tên Sản Phẩm</th>
-                <th>Giá</th>
-                <th>Danh Mục</th>
-                <th>Hành Động</th>
+                <th onClick={() => handleSort('name')} className="sortable">
+                  Product Name {getSortIcon('name')}
+                </th>
+                <th onClick={() => handleSort('price')} className="sortable">
+                  Price {getSortIcon('price')}
+                </th>
+                <th onClick={() => handleSort('category_id')} className="sortable">
+                  Category {getSortIcon('category_id')}
+                </th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -72,19 +91,17 @@ export default function AdminProducts() {
                 products.map((product) => (
                   <tr key={product.id}>
                     <td>{product.name}</td>
-                    <td>{product.price.toLocaleString('vi-VN')}₫</td>
+                    <td>${product.price.toLocaleString('en-US')}</td>
                     <td>{product.category_id}</td>
                     <td className="actions">
-                      <button className="btn-small btn-view">👁️ Xem</button>
-                      <button className="btn-small btn-edit">✏️ Sửa</button>
-                      <button className="btn-small btn-delete">🗑️ Xóa</button>
+                      <button className="btn-small btn-edit">Edit</button>
                     </td>
                   </tr>
                 ))
               ) : (
                 <tr>
                   <td colSpan="4" style={{ textAlign: 'center', padding: '20px' }}>
-                    Không có sản phẩm nào
+                    No products found
                   </td>
                 </tr>
               )}

@@ -8,6 +8,7 @@ export default function AdminUsers() {
   const { isAdmin, isLoading } = useAdminGuard()
   const [users, setUsers] = useState([])
   const [tableLoading, setTableLoading] = useState(true)
+  const [sortConfig, setSortConfig] = useState({ column: 'username', ascending: true })
 
   useEffect(() => {
     if (!isAdmin) return
@@ -17,7 +18,7 @@ export default function AdminUsers() {
         const { data, error } = await supabase
           .from('users')
           .select('id, username, email, fullname, role, phone')
-          .order('username')
+          .order(sortConfig.column, { ascending: sortConfig.ascending })
 
         if (error) throw error
         setUsers(data || [])
@@ -29,13 +30,25 @@ export default function AdminUsers() {
     }
 
     fetchUsers()
-  }, [isAdmin])
+  }, [isAdmin, sortConfig])
+
+  const handleSort = (column) => {
+    setSortConfig((prev) => ({
+      column,
+      ascending: prev.column === column ? !prev.ascending : true,
+    }))
+  }
+
+  const getSortIcon = (column) => {
+    if (sortConfig.column !== column) return '⇅'
+    return sortConfig.ascending ? '↑' : '↓'
+  }
 
   if (isLoading) {
     return (
       <AdminLayout>
         <div style={{ padding: '20px', textAlign: 'center' }}>
-          <p>Đang tải...</p>
+          <p>Loading...</p>
         </div>
       </AdminLayout>
     )
@@ -49,24 +62,34 @@ export default function AdminUsers() {
     <AdminLayout>
       <div className="admin-page">
         <div className="page-header">
-          <h1>👥 Quản lý Người Dùng</h1>
-          <button className="btn btn-primary">➕ Thêm Người Dùng</button>
+          <h1>Manage Users</h1>
+          <button className="btn btn-primary">Add User</button>
         </div>
 
         {tableLoading ? (
           <div style={{ textAlign: 'center', padding: '20px' }}>
-            <p>Đang tải dữ liệu...</p>
+            <p>Loading data...</p>
           </div>
         ) : (
           <table className="admin-table">
             <thead>
               <tr>
-                <th>Username</th>
-                <th>Email</th>
-                <th>Tên</th>
-                <th>Vai Trò</th>
-                <th>Số Điện Thoại</th>
-                <th>Hành Động</th>
+                <th onClick={() => handleSort('username')} className="sortable">
+                  Username {getSortIcon('username')}
+                </th>
+                <th onClick={() => handleSort('email')} className="sortable">
+                  Email {getSortIcon('email')}
+                </th>
+                <th onClick={() => handleSort('fullname')} className="sortable">
+                  Full Name {getSortIcon('fullname')}
+                </th>
+                <th onClick={() => handleSort('role')} className="sortable">
+                  Role {getSortIcon('role')}
+                </th>
+                <th onClick={() => handleSort('phone')} className="sortable">
+                  Phone {getSortIcon('phone')}
+                </th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -81,16 +104,14 @@ export default function AdminUsers() {
                     </td>
                     <td>{user.phone || '-'}</td>
                     <td className="actions">
-                      <button className="btn-small btn-view">👁️ Xem</button>
-                      <button className="btn-small btn-edit">✏️ Sửa</button>
-                      <button className="btn-small btn-delete">🗑️ Xóa</button>
+                      <button className="btn-small btn-edit">Edit</button>
                     </td>
                   </tr>
                 ))
               ) : (
                 <tr>
                   <td colSpan="6" style={{ textAlign: 'center', padding: '20px' }}>
-                    Không có người dùng nào
+                    No users found
                   </td>
                 </tr>
               )}
