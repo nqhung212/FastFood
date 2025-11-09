@@ -11,6 +11,14 @@ import Login from '../pages/login'
 import Register from '../pages/register'
 import Search from '../pages/search'
 import PaymentRollbackPage from '../pages/payment-rollback'
+import AdminLogin from '../pages/admin-login'
+
+// Admin pages
+import AdminDashboard from '../pages/admin/index'
+import AdminOrders from '../pages/admin/orders'
+import AdminUsers from '../pages/admin/users'
+import AdminProducts from '../pages/admin/products'
+import AdminCategories from '../pages/admin/categories'
 
 export const publicRoutes = [
   { path: '/', element: Web },
@@ -26,6 +34,15 @@ export const publicRoutes = [
   { path: '/register', element: Register },
   { path: '/menu/search/:searchTerm', element: Search },
   { path: '/payment-rollback', element: PaymentRollbackPage },
+  { path: '/admin/login', element: AdminLogin },
+]
+
+export const adminRoutes = [
+  { path: '/admin', element: AdminDashboard },
+  { path: '/admin/orders', element: AdminOrders },
+  { path: '/admin/users', element: AdminUsers },
+  { path: '/admin/products', element: AdminProducts },
+  { path: '/admin/categories', element: AdminCategories },
 ]
 
 export const privateRoutes = []
