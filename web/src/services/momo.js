@@ -30,7 +30,7 @@ export async function initiateMoMoPayment(paymentData, onSuccess) {
           }
           try {
             // Try to get final status from proxy
-            const paymentStatus = await fetch(`${process.env.REACT_APP_PROXY_URL || 'http://localhost:4001'}/api/payments/${paymentData.orderId}`);
+            const paymentStatus = await fetch(`${process.env.REACT_APP_PROXY_URL || 'http://localhost:5001'}/api/payments/${paymentData.orderId}`);
             const json = await paymentStatus.json();
             if (json) console.log("✅ Payment status checked:", json.status);
           } catch (error) {

@@ -16,8 +16,8 @@ export default function PaymentRollbackPage() {
 
       const timer = setTimeout(async () => {
         try {
-          // Kiểm tra trạng thái thanh toán từ MoMo callback
-          const response = await axios.get(`http://localhost:4001/api/payments/${state.orderId}`)
+          // Check payment status from MoMo callback
+          const response = await axios.get(`http://localhost:5001/api/payments/${state.orderId}`)
 
           if (response.data && response.data.status === 'success') {
             setStatus('success')

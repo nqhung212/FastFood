@@ -5,7 +5,7 @@ import axios from "axios";
 // Using in-memory map for payments (no file persistence)
 
 const app = express();
-const PORT = process.env.PORT || 4001;
+const PORT = process.env.PORT || 5001;
 
 // MoMo Sandbox Configuration - per official guide
 const MOMO_CONFIG = {

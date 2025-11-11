@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const PROXY_SERVER_URL = "http://localhost:4001";
+const PROXY_SERVER_URL = "http://localhost:5001";
 
 /**
  * Call MoMo Sandbox payment API (low-level API call)
