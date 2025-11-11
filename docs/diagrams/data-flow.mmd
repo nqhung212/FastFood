@@ -1,0 +1,80 @@
+%% Data Flow Diagram for FastFood Application
+%% Render with Mermaid preview or mermaid-cli
+
+sequenceDiagram
+    participant U as User
+    participant MA as Mobile App
+    participant WA as Web App
+    participant SB as Supabase
+    participant PS as Payment Server
+    participant MM as MoMo API
+
+    %% Authentication Flow
+    rect rgb(230, 245, 255)
+        Note over U,MM: Authentication Flow
+        U->>+MA: Open App
+        MA->>+SB: Check Auth Status
+        SB-->>-MA: Auth Response
+        alt Not Authenticated
+            MA->>+U: Show Login
+            U->>+MA: Enter Credentials
+            MA->>+SB: Login Request
+            SB-->>-MA: JWT Token
+            MA->>MA: Store Token (AsyncStorage)
+        end
+    end
+
+    %% Menu & Product Flow
+    rect rgb(245, 255, 245)
+        Note over U,MM: Menu & Product Flow
+        U->>+MA: Browse Menu
+        MA->>+SB: Fetch Categories
+        SB-->>-MA: Categories Data
+        MA->>+SB: Fetch Products
+        SB-->>-SB: Query Products by Category
+        SB-->>-MA: Products Data
+        MA->>-U: Display Menu
+    end
+
+    %% Cart & Order Flow
+    rect rgb(255, 245, 230)
+        Note over U,MM: Cart & Order Management
+        U->>+MA: Add to Cart
+        MA->>MA: Update Cart Context
+        MA->>MA: Save to AsyncStorage
+        
+        U->>+MA: Proceed to Checkout
+        MA->>+SB: Create Order
+        SB->>SB: Insert Order Record
+        SB-->>-MA: Order ID
+    end
+
+    %% Payment Flow
+    rect rgb(255, 230, 230)
+        Note over U,MM: Payment Processing
+        MA->>+PS: Initiate Payment
+        PS->>+MM: Create Payment Request
+        MM-->>-PS: Payment URL
+        PS-->>-MA: Redirect URL
+        
+        MA->>+MM: Redirect to MoMo
+        U->>+MM: Complete Payment
+        MM->>+PS: Payment Callback (IPN)
+        PS->>+SB: Update Order Status
+        SB-->>-PS: Confirmation
+        PS-->>-MM: Callback Response
+        MM-->>-U: Payment Result
+        
+        MM->>MA: Return to App
+        MA->>+SB: Verify Payment Status
+        SB-->>-MA: Updated Order
+        MA->>-U: Show Order Confirmation
+    end
+
+    %% Real-time Updates
+    rect rgb(245, 245, 255)
+        Note over U,MM: Real-time Features
+        SB->>MA: Real-time Order Updates (WebSocket)
+        SB->>WA: Real-time Order Updates (WebSocket)
+        MA->>U: Push Notification (Order Status)
+    end

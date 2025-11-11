@@ -1,0 +1,91 @@
+%% Component Architecture Diagram for FastFood Application
+%% Render with Mermaid preview or mermaid-cli
+
+graph TB
+  subgraph Client["Client Applications"]
+    subgraph Mobile["Mobile App (React Native + Expo) - Port: 8081"]
+      MobileUI["UI Components<br/>• @expo/vector-icons<br/>• expo-image<br/>• react-native-reanimated"]
+      MobileAuth["Auth Module<br/>• @supabase/supabase-js<br/>• AsyncStorage"]
+      MobileCart["Cart Context<br/>• React Context API<br/>• AsyncStorage"]
+      MobilePayment["Payment Flow<br/>• crypto<br/>• expo-linking"]
+      MobileNavigation["Navigation (Expo Router)<br/>• expo-router<br/>• @react-navigation/native"]
+      MobileStorage["AsyncStorage<br/>• @react-native-async-storage/async-storage"]
+    end
+    
+    subgraph Web["Web App (React + Vite) - Port: 5173"]
+      WebUI["UI Components<br/>• React 19.1.1<br/>• CSS Modules"]
+      WebAuth["Auth Module<br/>• @supabase/supabase-js<br/>• react-router-dom"]
+      WebCart["Cart Context<br/>• React Context API<br/>• LocalStorage"]
+      WebPayment["Payment Flow<br/>• axios<br/>• crypto-js"]
+      WebRouter["React Router<br/>• react-router-dom ^7.9.4"]
+      WebStorage["LocalStorage<br/>• Browser native API"]
+    end
+  end
+
+  subgraph Backend["Backend Services"]
+    subgraph Supabase["Supabase Platform - uuxtbxkgnktfcbdevbmx.supabase.co"]
+      Database["PostgreSQL Database<br/>• Port: 5432<br/>• Connection pooling<br/>• Row Level Security"]
+      Auth["Authentication Service<br/>• JWT tokens<br/>• OAuth providers<br/>• Email/Password"]
+      Realtime["Realtime Subscriptions<br/>• WebSocket (WSS)<br/>• Database changes<br/>• Presence"]
+      Storage["File Storage<br/>• Images/Assets<br/>• CDN integration"]
+      API["REST API<br/>• Port: 443 (HTTPS)<br/>• Auto-generated<br/>• PostgREST"]
+    end
+    
+    subgraph PaymentGateway["Payment Gateway - Port: 3000"]
+      MoMoAPI["MoMo Payment API<br/>• HTTPS endpoints<br/>• Webhook callbacks<br/>• IPN notifications"]
+      PaymentServer["Payment Processing Server<br/>• Express.js<br/>• Node.js<br/>• crypto library"]
+    end
+  end
+
+  subgraph DataLayer["Data Management"]
+    subgraph Entities["Core Entities"]
+      Users["Users"]
+      Products["Products"]
+      Categories["Categories"]
+      Orders["Orders"]
+      Payments["Payment Records"]
+    end
+  end
+
+  %% Mobile App Connections with Protocols
+  MobileUI -->|"State Management"| MobileCart
+  MobileUI -->|"Auth State"| MobileAuth
+  MobileAuth -->|"HTTPS + JWT<br/>Port: 443"| Auth
+  MobileCart -->|"REST API<br/>HTTPS/443"| API
+  MobilePayment -->|"HTTPS POST<br/>Port: 3000"| PaymentServer
+  MobileNavigation -->|"Route Props"| MobileUI
+  MobileStorage -->|"Persist Data"| MobileCart
+
+  %% Web App Connections with Protocols  
+  WebUI -->|"Context Provider"| WebCart
+  WebUI -->|"Auth Context"| WebAuth
+  WebAuth -->|"HTTPS + JWT<br/>Port: 443"| Auth
+  WebCart -->|"REST API<br/>HTTPS/443"| API
+  WebPayment -->|"Axios HTTP<br/>Port: 3000"| PaymentServer
+  WebRouter -->|"Route Components"| WebUI
+  WebStorage -->|"Browser API"| WebCart
+
+  %% Backend Connections with Protocols
+  API -->|"SQL Queries<br/>Port: 5432"| Database
+  Auth -->|"User Validation"| Users
+  PaymentServer -->|"HTTPS API<br/>Webhook"| MoMoAPI
+  PaymentServer -->|"DB Insert<br/>Port: 5432"| Payments
+  Realtime -->|"WebSocket<br/>Change Events"| Database
+
+  %% Data Flow with Relationships
+  Database -->|"SELECT queries"| Users
+  Database -->|"SELECT queries"| Products
+  Database -->|"SELECT queries"| Categories
+  Database -->|"INSERT/UPDATE"| Orders
+  Database -->|"INSERT/UPDATE"| Payments
+
+  %% Styling
+  classDef mobile fill:#e1f5fe,stroke:#0277bd,stroke-width:2px
+  classDef web fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+  classDef backend fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
+  classDef data fill:#fff3e0,stroke:#ef6c00,stroke-width:2px
+
+  class Mobile,MobileUI,MobileAuth,MobileCart,MobilePayment,MobileNavigation,MobileStorage mobile
+  class Web,WebUI,WebAuth,WebCart,WebPayment,WebRouter,WebStorage web
+  class Backend,Supabase,Database,Auth,Realtime,Storage,API,PaymentGateway,MoMoAPI,PaymentServer backend
+  class DataLayer,Entities,Users,Products,Categories,Orders,Payments data

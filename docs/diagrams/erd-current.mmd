@@ -1,0 +1,88 @@
+%% ERD (Entity Relationship Diagram) - Current Implementation
+%% Based on existing data.sql and code analysis
+
+erDiagram
+    USERS {
+        int id PK
+        varchar username UK
+        varchar password
+        varchar fullname
+        varchar phone
+        varchar email UK
+        text address
+        varchar role
+    }
+
+    CATEGORIES {
+        int id PK
+        varchar name UK
+    }
+
+    PRODUCTS {
+        int id PK
+        varchar name
+        varchar slug UK
+        text description
+        decimal price
+        varchar image
+        int category_id FK
+    }
+
+    CARTS {
+        int id PK
+        int user_id FK
+        int product_id FK
+        int quantity
+        timestamp created_at
+    }
+
+    ORDERS {
+        varchar id PK "UUID from code"
+        int user_id FK
+        decimal total_amount
+        varchar status
+        varchar customer_name "From checkout form"
+        varchar customer_phone "From checkout form"  
+        varchar customer_address "From checkout form"
+        timestamp created_at
+    }
+
+    ORDER_ITEMS {
+        int id PK
+        varchar order_id FK "References orders.id"
+        int product_id FK
+        int quantity
+        decimal price "Unit price at order time"
+    }
+
+    PAYMENTS {
+        int id PK
+        varchar order_id FK
+        varchar payment_id "MoMo transaction ID"
+        varchar provider "Always 'momo'"
+        decimal amount
+        varchar status
+        text payment_data "JSON response from MoMo"
+        timestamp created_at
+    }
+
+    %% Current Relationships
+    USERS ||--o{ ORDERS : "places"
+    USERS ||--o{ CARTS : "has"
+    
+    CATEGORIES ||--o{ PRODUCTS : "contains"
+    
+    PRODUCTS ||--o{ ORDER_ITEMS : "included_in"
+    PRODUCTS ||--o{ CARTS : "added_to"
+    
+    ORDERS ||--o{ ORDER_ITEMS : "contains"
+    ORDERS ||--o{ PAYMENTS : "has"
+
+    %% Styling
+    classDef primaryEntity fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
+    classDef catalogEntity fill:#e8f5e8,stroke:#388e3c,stroke-width:2px
+    classDef transactionEntity fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+
+    class USERS,ORDERS primaryEntity
+    class CATEGORIES,PRODUCTS catalogEntity
+    class CARTS,ORDER_ITEMS,PAYMENTS transactionEntity

@@ -1,0 +1,41 @@
+%% Sequence diagram: Checkout (detailed)
+
+sequenceDiagram
+    actor User
+    participant CartScreen
+    participant CheckoutService
+    participant OrderService
+    participant PaymentService
+    participant MoMoGateway
+    participant SupabaseDB
+    participant NotificationService
+
+    User->>CartScreen: Click "Checkout"
+    CartScreen->>CheckoutService: initializeCheckout(cart)
+    CheckoutService->>OrderService: createOrder(cart)
+    OrderService->>SupabaseDB: saveOrder(orderData)
+    SupabaseDB-->>OrderService: orderId
+    CheckoutService->>PaymentService: processPayment(orderId, amount)
+    PaymentService->>MoMoGateway: createPayment(orderData)
+
+    alt payment initialized
+      MoMoGateway-->>PaymentService: paymentURL
+      PaymentService-->>CheckoutService: paymentURL
+      CheckoutService-->>User: redirect to paymentURL
+
+      %% callback from MoMo
+      MoMoGateway->>PaymentService: paymentCallback(status)
+      alt success
+        PaymentService->>OrderService: updateOrderStatus(PAID)
+        OrderService->>SupabaseDB: updateOrder
+        OrderService->>NotificationService: sendConfirmation()
+        NotificationService-->>User: notify success
+      else failed
+        PaymentService->>OrderService: updateOrderStatus(FAILED)
+        OrderService->>SupabaseDB: updateOrder
+        NotificationService-->>User: notify failure
+      end
+    else init failed
+      PaymentService-->>CheckoutService: error
+      CheckoutService-->>User: show error
+    end

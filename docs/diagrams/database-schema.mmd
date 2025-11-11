@@ -1,0 +1,90 @@
+%% Database Schema Diagram for FastFood Application
+%% Render with Mermaid preview or mermaid-cli
+
+erDiagram
+    USERS {
+        int id PK
+        varchar username UK
+        varchar password
+        varchar fullname
+        varchar phone
+        varchar email UK
+        text address
+        varchar role
+    }
+
+    CATEGORIES {
+        int id PK
+        varchar name UK
+    }
+
+    PRODUCTS {
+        int id PK
+        varchar name
+        varchar slug UK
+        text description
+        decimal price
+        varchar image
+        int category_id FK
+    }
+
+    ORDERS {
+        int id PK
+        int user_id FK
+        decimal total_amount
+        varchar status
+        timestamp created_at
+        text delivery_address
+        varchar payment_method
+        varchar payment_status
+    }
+
+    ORDER_ITEMS {
+        int id PK
+        int order_id FK
+        int product_id FK
+        int quantity
+        decimal unit_price
+        decimal total_price
+    }
+
+    CARTS {
+        int id PK
+        int user_id FK
+        int product_id FK
+        int quantity
+        timestamp created_at
+    }
+
+    PAYMENTS {
+        int id PK
+        int order_id FK
+        varchar payment_method
+        varchar transaction_id
+        decimal amount
+        varchar status
+        text momo_response
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    %% Relationships
+    USERS ||--o{ ORDERS : "places"
+    USERS ||--o{ CARTS : "has"
+    
+    CATEGORIES ||--o{ PRODUCTS : "contains"
+    
+    PRODUCTS ||--o{ ORDER_ITEMS : "included_in"
+    PRODUCTS ||--o{ CARTS : "added_to"
+    
+    ORDERS ||--o{ ORDER_ITEMS : "contains"
+    ORDERS ||--o{ PAYMENTS : "has"
+
+    %% Styling
+    classDef primaryEntity fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
+    classDef transactionEntity fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    classDef catalogEntity fill:#e8f5e8,stroke:#388e3c,stroke-width:2px
+
+    class USERS,ORDERS primaryEntity
+    class PAYMENTS,ORDER_ITEMS,CARTS transactionEntity
+    class PRODUCTS,CATEGORIES catalogEntity
