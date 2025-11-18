@@ -14,7 +14,7 @@
 
 - Mobile (thư mục `mobile`):
   ````Cài đặt ngrok
-  chạy file index.js: cd mobile/service
+  chạy file index.js: cd mobile/server
                       node index.js
   chạy ngrok(server riêng): ngrok http 4001
   lấy địa chỉ IP của ngrok gán vào .env
