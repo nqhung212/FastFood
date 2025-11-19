@@ -93,7 +93,7 @@ export default function DraggableCartButton() {
                         <FlatList
                             data={cart}
                             renderItem={renderCartItem}
-                            keyExtractor={(item) => item.id.toString()}
+                            keyExtractor={(item) => String(item.id)}
                             ListEmptyComponent={<Text style={styles.emptyText}>Giỏ hàng của bạn đang trống</Text>}
                         />
                         

@@ -23,7 +23,7 @@ import { CartContext } from "../cart/CartContext";
 export default function HomeScreen() {
   const router = useRouter();
   const [search, setSearch] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [user, setUser] = useState<any>(null);
   const cartCtx = useContext(CartContext);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -79,8 +79,7 @@ export default function HomeScreen() {
   // ✅ Lọc sản phẩm theo từ khóa + danh mục
   const filteredProducts = products.filter((p) => {
     const matchSearch = p.name.toLowerCase().includes(search.toLowerCase());
-    const matchCategory =
-      !selectedCategory || p.category_id === selectedCategory;
+    const matchCategory = !selectedCategory || p.category_id === selectedCategory;
     return matchSearch && matchCategory;
   });
 
@@ -190,7 +189,7 @@ export default function HomeScreen() {
         horizontal
         showsHorizontalScrollIndicator={false}
         data={categories}
-        keyExtractor={(item) => item.id.toString()}
+        keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <TouchableOpacity
             style={[
@@ -201,9 +200,7 @@ export default function HomeScreen() {
               },
             ]}
             onPress={() =>
-              setSelectedCategory(
-                selectedCategory === item.id ? null : item.id
-              )
+              setSelectedCategory(selectedCategory === item.id ? null : item.id)
             }
           >
             <Image

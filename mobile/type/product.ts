@@ -1,10 +1,10 @@
 export type Product = {
-  id: number;
+  id: string; // UUID (product_id)
   name: string;
-  description: string;
+  description?: string;
   price: number;
-  image: string;
-  category_id: number;
+  image?: string; // maps to image_url
+  category_id?: string; // UUID
+  restaurant_id?: string; // UUID
   categories?: string;
-
 };

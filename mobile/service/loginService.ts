@@ -6,11 +6,12 @@ export const legacyLogin = async (
     username: string,
     password: string
     ): Promise<SafeUser> => {
-    const { data, error } = await supabase
-    .from("users")
-    .select("id, username, fullname, phone, role, password")
-    .eq("username", username)
-    .limit(1);
+        // New schema: user_account with user_id and password_hash
+        const { data, error } = await supabase
+            .from('user_account')
+            .select('user_id,email,full_name,phone,role,password_hash')
+            .eq('email', username)
+            .limit(1);
 
     if (error) {
         console.error(error);
@@ -23,12 +24,19 @@ export const legacyLogin = async (
 
     const user = data[0];
 
-    if (String(user.password) !== password) {
+    if (String(user.password_hash) !== password) {
         throw new Error("Sai mật khẩu, vui lòng thử lại!");
     }
 
-    // Không lưu password khi trả về
-    const { password: _, ...safeUser } = user;
+    // Map to SafeUser shape
+    const safeUser = {
+      id: user.user_id,
+      username: user.email,
+      fullname: user.full_name,
+      phone: user.phone,
+      role: user.role,
+      email: user.email,
+    } as SafeUser;
     return safeUser;
 };
 
@@ -42,10 +50,10 @@ export const legacyLogin = async (
     /**
      * Gộp giỏ hàng guest và user
      */
-    export const mergeCarts = async (userId: number) => {
+    export const mergeCarts = async (userId: string) => {
     try {
-        const guestKey = 'cart_guest';
-        const userKey = `cart_${userId}`;
+            const guestKey = 'cart_guest';
+            const userKey = `cart_${userId}`;
 
         const [guestRaw, userRaw] = await Promise.all([
         AsyncStorage.getItem(guestKey),

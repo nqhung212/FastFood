@@ -17,10 +17,11 @@ export const getStoredUser = async () => {
 
 export const updateUserProfile = async (userId: string, user: any, details: { name: string, phone: string, address: string }) => {
     const { name: fullname, phone, address } = details;
+    // new schema: user_account table with user_id and full_name
     const { error: updateErr } = await supabase
-        .from("users")
-        .update({ fullname, phone, address })
-        .eq("id", userId);
+        .from("user_account")
+        .update({ full_name: fullname, phone })
+        .eq("user_id", userId);
     
     if (updateErr) throw updateErr;
 
@@ -34,36 +35,39 @@ export const updateUserProfile = async (userId: string, user: any, details: { na
 // --- Order Service (Tạo đơn hàng) ---
 
 const createOrderInSupabase = async (orderId: string, orderData: any) => {
-    const { userId, totalPrice, fullname, phone, address, checkoutItems } = orderData;
-    
-    // 1. Tạo đơn hàng
-    const { error: orderError } = await supabase
-        .from("orders")
-        .insert([
-            {
-                id: orderId, // Dùng ID đã tạo
-                user_id: userId,
-                total_amount: totalPrice,
-                status: "pending",
-                customer_name: fullname,
-                customer_phone: phone,
-                customer_address: address,
-            },
-        ]);
-    if (orderError) throw orderError;
+        const { userId, totalPrice, fullname, phone, address, checkoutItems, restaurantId } = orderData;
 
-    // 2. Lưu sản phẩm
-    const orderItems = checkoutItems.map((item: any) => ({
-        order_id: orderId,
-        product_id: item.id,
-        quantity: item.quantity,
-        price: item.price,
-    }));
+        // Determine restaurant: prefer explicit restaurantId, otherwise infer from first item
+        const rId = restaurantId ?? (checkoutItems?.[0]?.restaurant_id ?? null);
 
-    const { error: itemsError } = await supabase
-        .from("order_item")
-        .insert(orderItems);
-    if (itemsError) throw itemsError;
+        // 1. Create order in new schema: table is named "order"
+        const { error: orderError } = await supabase
+            .from('"order"')
+            .insert([
+                {
+                    order_id: orderId,
+                    customer_id: userId,
+                    restaurant_id: rId,
+                    total_price: totalPrice,
+                    payment_status: 'pending',
+                    order_status: 'pending',
+                    shipping_name: fullname,
+                    shipping_address: address,
+                    shipping_phone: phone,
+                },
+            ]);
+        if (orderError) throw orderError;
+
+        // 2. Save order items (order_item table)
+        const orderItems = checkoutItems.map((item: any) => ({
+            order_id: orderId,
+            product_id: item.id,
+            quantity: item.quantity,
+            price: item.price,
+        }));
+
+        const { error: itemsError } = await supabase.from('order_item').insert(orderItems);
+        if (itemsError) throw itemsError;
 };
 
 // --- Payment Service (Thanh toán) ---

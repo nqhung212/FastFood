@@ -41,7 +41,7 @@ export default function CheckoutScreen() {
                     {/* Hiển thị sản phẩm */}
                     <View>
                         {checkoutItems.map((item: any) => (
-                            <View key={item.id.toString()} style={styles.cartItem}>
+                            <View key={String(item.id)} style={styles.cartItem}>
                                 <Text style={styles.itemName}>{item.name}</Text>
                                 <Text style={styles.itemPrice}>
                                     {item.quantity} x {item.price.toLocaleString()}đ

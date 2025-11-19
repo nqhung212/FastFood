@@ -31,10 +31,10 @@ export default function OrderHistoryScreen() {
         setUser(parsed);
 
         const { data, error } = await supabase
-            .from("orders")
-            .select("*")
-            .eq("user_id", parsed.id)
-            .order("created_at", { ascending: false });
+            .from('"order"')
+            .select('*')
+            .eq('customer_id', parsed.id)
+            .order('created_at', { ascending: false });
 
         if (error) console.error("Lỗi tải đơn hàng:", error.message);
         else setOrders(data || []);
@@ -80,29 +80,29 @@ export default function OrderHistoryScreen() {
             ) : (
             orders.map((order) => (
                 <TouchableOpacity
-                key={order.id}
+                key={order.order_id}
                 style={styles.orderCard}
                 activeOpacity={0.85}
                 >
                 <View style={styles.orderHeader}>
-                    <Text style={styles.orderCode}>Mã đơn: #{order.id.slice(0, 8)}</Text>
+                    <Text style={styles.orderCode}>Mã đơn: #{order.order_id?.slice(0, 8)}</Text>
                     <View
                     style={[
                         styles.statusBadge,
                         {
                         backgroundColor:
-                            order.status === "completed"
+                            order.order_status === "completed"
                             ? "#2ecc71"
-                            : order.status === "pending"
+                            : order.order_status === "pending"
                             ? "#f39c12"
                             : "#e74c3c",
                         },
                     ]}
                     >
                     <Text style={styles.statusText}>
-                        {order.status === "completed"
+                        {order.order_status === "completed"
                         ? "Hoàn thành"
-                        : order.status === "pending"
+                        : order.order_status === "pending"
                         ? "Đang xử lý"
                         : "Xác nhận"}
                     </Text>
@@ -116,7 +116,7 @@ export default function OrderHistoryScreen() {
                 <Text style={styles.orderTotal}>
                     Tổng tiền:{" "}
                     <Text style={{ fontWeight: "600" }}>
-                    {order.total_amount?.toLocaleString("vi-VN")}₫
+                    {order.total_price?.toLocaleString("vi-VN")}₫
                     </Text>
                 </Text>
                 </TouchableOpacity>

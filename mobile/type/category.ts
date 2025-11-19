@@ -1,4 +1,5 @@
 export type Category = {
-  id: number;
+  id: string; // UUID (category_id)
   name: string;
+  restaurant_id?: string;
 };

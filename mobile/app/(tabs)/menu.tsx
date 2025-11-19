@@ -20,7 +20,7 @@ export default function MenuScreen() {
   } = useMenu();
 
   const { category } = useLocalSearchParams();
-  const categoryId = category ? Number(category) : "all";
+  const categoryId = category ? String(category) : "all";
   const { handleAddToCart } = useAddToCart(); // 👈 Dùng hook
 
   useEffect(() => {
@@ -56,9 +56,9 @@ export default function MenuScreen() {
       </View>
 
       <CategoryList
-        categories={[{ id: 0, name: "Tất cả" }, ...categories]}
-        selectedCategory={selectedCategory === "all" ? 0 : selectedCategory}
-        onSelectCategory={(id) => setSelectedCategory(id === 0 ? "all" : Number(id))}
+        categories={[{ id: 'all', name: "Tất cả" }, ...categories]}
+        selectedCategory={selectedCategory === "all" ? 'all' : selectedCategory}
+        onSelectCategory={(id) => setSelectedCategory(id === 'all' ? "all" : String(id))}
       />
 
       <Text style={styles.sectionHeader}>Món Ngon Phải Thử</Text>
@@ -70,7 +70,7 @@ export default function MenuScreen() {
       ) : (
         <FlatList
           data={filteredProducts}
-          keyExtractor={(item) => item.id.toString()}
+    keyExtractor={(item) => String(item.id)}
           numColumns={2}
           showsVerticalScrollIndicator={false}
           renderItem={({ item }) => (

@@ -7,7 +7,7 @@ export default function TestSupabase() {
 
   useEffect(() => {
     const test = async () => {
-      const { data, error } = await supabase.from('products').select('*')
+      const { data, error } = await supabase.from('product').select('*')
       if (error) setMessage('Lỗi: ' + error.message)
       else setMessage(`Kết nối thành công! Có ${data.length} sản phẩm.`)
     }

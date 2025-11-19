@@ -6,7 +6,7 @@ import { Product } from "@/type/product";
 
 export const useMenu = () => {
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<number | "all">("all");
+  const [selectedCategory, setSelectedCategory] = useState<string | "all">("all");
   const [loading, setLoading] = useState(true); // 🔹 thêm lại dòng này
   const [error, setError] = useState<string | null>(null);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -18,8 +18,8 @@ export const useMenu = () => {
     async function load() {
       setLoading(true)
       try {
-        const categoryId = selectedCategory === 'all' ? undefined : Number(selectedCategory)
-        const products = await fetchProductsByCategory(categoryId)
+  const categoryId = selectedCategory === 'all' ? undefined : String(selectedCategory)
+  const products = await fetchProductsByCategory(categoryId)
         if (!cancelled) setFilteredProducts(products)
       } catch (err: any) {
         console.error('Lỗi Supabase:', err)

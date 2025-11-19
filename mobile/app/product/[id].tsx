@@ -25,10 +25,10 @@ export default function ProductDetailScreen() {
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
 
-  // 🔹 Lấy sản phẩm theo ID từ Supabase
+  // 🔹 Lấy sản phẩm theo ID từ Supabase (id là UUID string)
   useEffect(() => {
-    const pid = Number(id);
-    if (Number.isNaN(pid)) return;
+    const pid = String(id);
+    if (!pid) return;
 
     const loadProduct = async () => {
       try {
@@ -131,18 +131,18 @@ export default function ProductDetailScreen() {
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.addToCartButton, styles.buyNowButton]}
-            onPress={() =>
-              router.push({
-                pathname: "/payment/checkout",
-                params: {
-                  id: product.id.toString(),
-                  name: product.name,
-                  price: product.price.toString(),
-                  quantity: quantity.toString(),
-                  image: product.image,
-                },
-              })
-            }
+                onPress={() =>
+                  router.push({
+                    pathname: "/payment/checkout",
+                    params: {
+                      id: String(product.id),
+                      name: product.name,
+                      price: product.price.toString(),
+                      quantity: quantity.toString(),
+                      image: product.image,
+                    },
+                  })
+                }
           >
             <Text style={styles.buttonText}>Thanh Toán Ngay</Text>
           </TouchableOpacity>

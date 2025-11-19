@@ -17,8 +17,6 @@ import { useRouter, useLocalSearchParams, Stack } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { supabase } from "@/service/supabaseClient";
 import * as Linking from "expo-linking";
-import * as WebBrowser from "expo-web-browser";
-
 
 export default function CheckoutScreen() {
     const { cart, total, clearCart } = useCart();
@@ -49,7 +47,6 @@ export default function CheckoutScreen() {
 
     useEffect(() => {
         if (!params?.id && cart && cart.length > 0) {
-            // chỉ cập nhật nếu khác giá trị cũ
             const isDifferent =
                 checkoutItems.length !== cart.length ||
                 JSON.stringify(checkoutItems) !== JSON.stringify(cart);
@@ -61,7 +58,6 @@ export default function CheckoutScreen() {
         }
     }, [cart?.length, total]);
 
-    // 🔹 Load user info
     useEffect(() => {
         const fetchUser = async () => {
             try {
@@ -80,7 +76,6 @@ export default function CheckoutScreen() {
         fetchUser();
     }, []);
 
-    // 🔹 Đặt hàng (không MoMo)
     const handlePlaceOrder = async () => {
         if (!name || !phone || !address) {
             Alert.alert("Thiếu thông tin", "Vui lòng nhập đầy đủ thông tin giao hàng!");
@@ -96,12 +91,11 @@ export default function CheckoutScreen() {
         try {
             const userId = user?.id || null;
 
-            // Cập nhật thông tin người dùng
             if (userId) {
                 const { error: updateErr } = await supabase
-                    .from("users")
-                    .update({ fullname: name, phone, address })
-                    .eq("id", userId);
+                    .from("user_account")
+                    .update({ full_name: name, phone })
+                    .eq("user_id", userId);
                 if (updateErr) throw updateErr;
 
                 await AsyncStorage.setItem(
@@ -110,36 +104,33 @@ export default function CheckoutScreen() {
                 );
             }
 
-            // Tạo đơn hàng
             const { data: orderData, error: orderError } = await supabase
-                .from("orders")
+                .from('"order"')
                 .insert([
                     {
-                        user_id: userId,
-                        total_amount: totalPrice,
-                        status: "pending",
-                        customer_name: name,
-                        customer_phone: phone,
-                        customer_address: address,
+                        customer_id: userId,
+                        total_price: totalPrice,
+                        payment_status: "pending",
+                        order_status: "pending",
+                        shipping_name: name,
+                        shipping_phone: phone,
+                        shipping_address: address,
                     },
                 ])
-                .select("id")
+                .select("order_id")
                 .single();
 
             if (orderError) throw orderError;
-            const orderId = orderData.id;
+            const orderId = orderData.order_id;
 
-            // Lưu sản phẩm
-            const orderItems = checkoutItems.map((item) => ({
+            const orderItems = checkoutItems.map((item: any) => ({
                 order_id: orderId,
                 product_id: item.id,
                 quantity: item.quantity,
                 price: item.price,
             }));
 
-            const { error: itemsError } = await supabase
-                .from("order_item")
-                .insert(orderItems);
+            const { error: itemsError } = await supabase.from("order_item").insert(orderItems);
             if (itemsError) throw itemsError;
 
             if (!params?.id) clearCart();
@@ -155,7 +146,6 @@ export default function CheckoutScreen() {
         }
     };
 
-    // ✅ Thanh toán MoMo Sandbox (qua server Node)
     const handleMoMoPayment = async () => {
         if (!name || !phone || !address) {
             Alert.alert("Thiếu thông tin", "Vui lòng nhập đầy đủ thông tin giao hàng!");
@@ -172,20 +162,20 @@ export default function CheckoutScreen() {
             const orderId = uuidv4();
             const userId = user?.id || null;
 
-            await supabase.from("orders").insert([
+            await supabase.from('"order"').insert([
                 {
-                    id: orderId,
-                    user_id: userId,
-                    total_amount: totalPrice,
-                    status: "pending",
-                    customer_name: name,
-                    customer_phone: phone,
-                    customer_address: address,
+                    order_id: orderId,
+                    customer_id: userId,
+                    total_price: totalPrice,
+                    payment_status: "pending",
+                    order_status: "pending",
+                    shipping_name: name,
+                    shipping_phone: phone,
+                    shipping_address: address,
                 },
             ]);
 
-            // 🔹 Ghi chi tiết sản phẩm
-            const orderItems = checkoutItems.map((item) => ({
+            const orderItems = checkoutItems.map((item: any) => ({
                 order_id: orderId,
                 product_id: item.id,
                 quantity: item.quantity,
@@ -193,10 +183,8 @@ export default function CheckoutScreen() {
             }));
             await supabase.from("order_item").insert(orderItems);
 
-            // 🔹 Gọi server Node để tạo link thanh toán
             const serverUrl = "https://ingenuous-absolutely-cletus.ngrok-free.dev";
 
-            // Kiểm tra server hoạt động
             try {
                 const healthCheck = await fetch(`${serverUrl}/health`);
                 const health = await healthCheck.json();
@@ -206,7 +194,6 @@ export default function CheckoutScreen() {
                 throw new Error("Không thể kết nối đến server thanh toán. Vui lòng thử lại sau.");
             }
 
-            // Tạo link thanh toán MoMo
             const resp = await fetch(`${serverUrl}/api/momo/checkout`, {
                 method: "POST",
                 headers: {
@@ -229,13 +216,9 @@ export default function CheckoutScreen() {
             console.log("MoMo response:", data);
 
             if (data?.success && data?.payUrl) {
-                console.log("🔗 Opening MoMo Sandbox payment page:", data.payUrl);
-
-                // ✅ Dùng expo-web-browser để mở trang (ổn định hơn Linking.openURL)
                 try {
                     const WebBrowser = await import("expo-web-browser");
-                    const result = await WebBrowser.openBrowserAsync(data.payUrl);
-                    console.log("WebBrowser result:", result);
+                    await WebBrowser.openBrowserAsync(data.payUrl);
                 } catch (err) {
                     console.warn("WebBrowser failed, fallback to Linking.openURL", err);
                     const can = await Linking.canOpenURL(data.payUrl);
@@ -260,30 +243,29 @@ export default function CheckoutScreen() {
                 throw new Error(data?.message || "Không lấy được link thanh toán MoMo!");
             }
         } catch (err) {
-            console.error("MoMo Payment Error:", err);
-            Alert.alert("Lỗi", "Không thể kết nối đến server MoMo!");
+            console.error(err);
+            Alert.alert("Lỗi", "Không thể tạo link thanh toán. Vui lòng thử lại sau.");
         } finally {
             setLoading(false);
         }
     };
 
-
     return (
         <>
-        <Stack.Screen options={{ headerShown: false }} />
+            <Stack.Screen options={{ headerShown: false }} />
             <SafeAreaView style={styles.safeArea}>
                 <ScrollView contentContainerStyle={styles.container}>
                     <Image
                         source={{
-                        uri: 'https://uuxtbxkgnktfcbdevbmx.supabase.co/storage/v1/object/public/product-image/logo.png',
+                            uri: 'https://uuxtbxkgnktfcbdevbmx.supabase.co/storage/v1/object/public/product-image/logo.png',
                         }}
                         style={styles.logo}
                     />
-                    <Text style={styles.header}>Xác nhận thanh toán</Text>
+                    <Text style={styles.header}>Xác nhận thanh toán (TEST)</Text>
 
                     <View>
-                        {checkoutItems.map((item) => (
-                            <View key={item.id.toString()} style={styles.cartItem}>
+                        {checkoutItems.map((item: any) => (
+                            <View key={String(item.id)} style={styles.cartItem}>
                                 <Text style={styles.itemName}>{item.name}</Text>
                                 <Text style={styles.itemPrice}>
                                     {item.quantity} x {item.price.toLocaleString()}đ
@@ -294,63 +276,26 @@ export default function CheckoutScreen() {
 
                     <View style={styles.totalContainer}>
                         <Text style={styles.totalLabel}>Tổng cộng:</Text>
-                        <Text style={styles.totalPrice}>
-                            {totalPrice.toLocaleString()}đ
-                        </Text>
+                        <Text style={styles.totalPrice}>{totalPrice.toLocaleString()}đ</Text>
                     </View>
 
                     <View style={styles.section}>
                         <Text style={styles.sectionTitle}>Thông tin giao hàng</Text>
-
-                        <TextInput
-                            style={styles.input}
-                            placeholder="Họ và tên"
-                            value={name}
-                            onChangeText={setName}
-                        />
-                        <TextInput
-                            style={styles.input}
-                            placeholder="Số điện thoại"
-                            value={phone}
-                            keyboardType="phone-pad"
-                            onChangeText={setPhone}
-                        />
-                        <TextInput
-                            style={[styles.input, { height: 80 }]}
-                            placeholder="Địa chỉ giao hàng"
-                            value={address}
-                            multiline
-                            onChangeText={setAddress}
-                        />
+                        <TextInput style={styles.input} placeholder="Họ và tên" value={name} onChangeText={setName} />
+                        <TextInput style={styles.input} placeholder="Số điện thoại" value={phone} onChangeText={setPhone} keyboardType="phone-pad" />
+                        <TextInput style={[styles.input, { height: 80 }]} placeholder="Địa chỉ" value={address} onChangeText={setAddress} multiline />
                     </View>
 
-                    {/* Nút đặt hàng */}
-                    <TouchableOpacity
-                        style={[styles.orderButton, loading && { opacity: 0.6 }]}
-                        onPress={handlePlaceOrder}
-                        disabled={loading}
-                    >
-                        <Text style={styles.orderText}>
-                            {loading ? "Đang xử lý..." : "Đặt Hàng"}
-                        </Text>
+                    <TouchableOpacity style={styles.orderButton} onPress={handlePlaceOrder} disabled={loading}>
+                        <Text style={styles.orderText}>{loading ? 'Đang xử lý...' : 'Đặt hàng (TEST)'}</Text>
                     </TouchableOpacity>
 
-                    {/* Nút thanh toán MoMo */}
-                    <TouchableOpacity
-                        style={[
-                            styles.orderButton,
-                            { backgroundColor: "#a50064", marginTop: 12 },
-                            loading && { opacity: 0.6 },
-                        ]}
-                        onPress={handleMoMoPayment}
-                        disabled={loading}
-                    >
-                        <Text style={[styles.orderText, { color: "white" }]}>
-                            Thanh toán bằng MoMo
-                        </Text>
+                    <TouchableOpacity style={[styles.orderButton, { backgroundColor: '#a50064', marginTop: 12 }]} onPress={handleMoMoPayment} disabled={loading}>
+                        <Text style={[styles.orderText, { color: 'white' }]}>{loading ? 'Đang chuyển...' : 'Thanh toán bằng MoMo (TEST)'}</Text>
                     </TouchableOpacity>
                 </ScrollView>
             </SafeAreaView>
         </>
     );
 }
+

@@ -62,17 +62,18 @@ export default function EditProfileScreen() {
         return;
         }
 
-        const { error } = await supabase
-        .from("users")
-        .update({ fullname, phone, address })
-        .eq("id", user.id);
+    // Update user_account in new schema
+    const { error } = await supabase
+    .from("user_account")
+    .update({ full_name: fullname, phone })
+    .eq("user_id", user.id);
 
         if (error) {
         Alert.alert("Lỗi", "Không thể cập nhật thông tin: " + error.message);
         return;
         }
 
-        const updatedUser = { ...user, fullname, phone, address };
+    const updatedUser = { ...user, fullname, phone, address };
         await AsyncStorage.setItem("user", JSON.stringify(updatedUser));
 
         Alert.alert("🎉 Thành công", "Cập nhật thông tin thành công!");

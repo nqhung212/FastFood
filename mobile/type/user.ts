@@ -1,10 +1,10 @@
 export interface User {
-    id: number;
-    username: string;
-    fullname: string;
-    phone: string;
-    role: string;
-    password: string;
+    id?: string; // UUID user_id
+    username?: string;
+    fullname?: string;
+    phone?: string;
+    role?: string;
+    password?: string;
     email?: string;
     address?: string;
 }

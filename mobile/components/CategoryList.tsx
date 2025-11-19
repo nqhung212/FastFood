@@ -4,8 +4,8 @@ import { Category } from "@/type/category";
 
 type CategoryListProps = {
   categories: Category[];
-  selectedCategory: number;
-  onSelectCategory: (id: number) => void;
+  selectedCategory: string | number;
+  onSelectCategory: (id: string | number) => void;
 };
 
 const CategoryList = ({ categories, selectedCategory, onSelectCategory }: CategoryListProps) => {
@@ -28,7 +28,7 @@ const CategoryList = ({ categories, selectedCategory, onSelectCategory }: Catego
       <FlatList
         data={categories}
         renderItem={renderItem}
-        keyExtractor={(item) => item.id.toString()}
+        keyExtractor={(item) => String(item.id)}
         horizontal
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.categoryContainer}

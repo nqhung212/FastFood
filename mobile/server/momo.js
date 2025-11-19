@@ -29,13 +29,13 @@ router.post("/checkout", async (req, res) => {
     const orderId = clientOrderId || crypto.randomUUID();
     const requestId = orderId;
 
-    // 🧾 Đảm bảo có order trong bảng (tránh lỗi foreign key)
+    // 🧾 Ensure order exists in new schema (quoted table name "order") to avoid FK issues
     const { error: insertOrderError } = await supabase
-      .from("orders")
-      .insert([{ id: orderId, status: "pending", total_amount: amount }])
-      .select("id");
+      .from('"order"')
+      .insert([{ order_id: orderId, total_price: amount, order_status: 'pending', payment_status: 'pending' }])
+      .select('order_id');
     if (insertOrderError)
-      console.warn("⚠️ Có thể order đã tồn tại:", insertOrderError.message);
+      console.warn('⚠️ Có thể order đã tồn tại:', insertOrderError.message);
 
     // ✅ Tạo chữ ký MoMo
     const rawSignature = `accessKey=${MOMO_ACCESS_KEY}&amount=${amount}&extraData=&ipnUrl=${IPN_URL}&orderId=${orderId}&orderInfo=${orderInfo}&partnerCode=${MOMO_PARTNER_CODE}&redirectUrl=${REDIRECT_URL}&requestId=${requestId}&requestType=captureWallet`;
@@ -127,40 +127,38 @@ router.post("/callback", async (req, res) => {
     if (resultCode === 0) {
       console.log(`✅ Thanh toán thành công cho đơn hàng ${orderId}`);
 
-      // ✅ Cập nhật trạng thái đơn hàng
+      // ✅ Update order payment status and order status
       const { error: updateErr } = await supabase
-        .from("orders")
-        .update({ status: "paid" })
-        .eq("id", orderId);
-      if (updateErr) console.error("⚠️ Lỗi cập nhật orders:", updateErr);
+        .from('"order"')
+        .update({ payment_status: 'paid', order_status: 'confirmed' })
+        .eq('order_id', orderId);
+      if (updateErr) console.error('⚠️ Lỗi cập nhật orders:', updateErr);
 
-      // ✅ Thêm bản ghi payment
+      // ✅ Insert payment record into `payment` table
       const now = new Date().toISOString();
-      const { error: payErr } = await supabase.from("payments").insert([
+      const { error: payErr } = await supabase.from('payment').insert([
         {
           order_id: orderId,
-          payment_id: transId?.toString() || "unknown",
-          provider: "momo",
+          momo_transaction_id: transId?.toString() || 'unknown',
+          provider: 'momo',
           amount: parseInt(amount),
-          status: "success",
-          payment_data: JSON.stringify(data),
+          status: 'success',
           created_at: now,
         },
       ]);
-      if (payErr) console.error("❌ Lỗi thêm payments:", payErr);
+      if (payErr) console.error('❌ Lỗi thêm payments:', payErr);
     } else {
       console.warn(`⚠️ Thanh toán thất bại cho đơn ${orderId}`);
 
-      await supabase.from("orders").update({ status: "failed" }).eq("id", orderId);
+      await supabase.from('"order"').update({ payment_status: 'failed', order_status: 'cancelled' }).eq('order_id', orderId);
 
-      await supabase.from("payments").insert([
+      await supabase.from('payment').insert([
         {
           order_id: orderId,
-          payment_id: transId?.toString() || "unknown",
-          provider: "momo",
+          momo_transaction_id: transId?.toString() || 'unknown',
+          provider: 'momo',
           amount: parseInt(amount),
-          status: "failed",
-          payment_data: JSON.stringify(data),
+          status: 'failed',
           created_at: new Date().toISOString(),
         },
       ]);
