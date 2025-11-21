@@ -18,7 +18,7 @@ export async function processMoMoPayment(paymentData) {
     });
 
     if (response.data.success && response.data.payUrl) {
-      console.log("✅ MoMo checkout request created successfully");
+      console.log(" MoMo checkout request created successfully");
       return {
         success: true,
         orderId: response.data.orderId,
@@ -27,10 +27,10 @@ export async function processMoMoPayment(paymentData) {
       };
     }
 
-    console.error("❌ MoMo response error:", response.data);
+    console.error(" MoMo response error:", response.data);
     return { success: false, message: response.data.message || "Unable to create payment request" };
   } catch (error) {
-    console.error("❌ Payment error:", error.response?.data || error.message);
+    console.error(" Payment error:", error.response?.data || error.message);
     return { success: false, message: error.response?.data?.message || "Connection error to payment service" };
   }
 }
