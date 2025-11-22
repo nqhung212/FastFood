@@ -20,15 +20,15 @@ export default function Login() {
     setMessage('')
 
     try {
-      // Step 1: Query bảng users để tìm email theo username
+      // Step 1: Query bảng user_account để tìm email theo email hoặc tìm user đã tồn tại
       const { data: userData, error: userError } = await supabase
-        .from('users')
+        .from('user_account')
         .select('email')
-        .eq('username', username)
+        .eq('email', username)
         .single()
 
       if (userError || !userData) {
-        throw new Error('Username not found')
+        throw new Error('User not found')
       }
 
       const { email } = userData

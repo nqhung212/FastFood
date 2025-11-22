@@ -5,11 +5,13 @@ import { createRoot } from 'react-dom/client'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { AuthProvider } from './context/auth-context.jsx'
 import { CartProvider } from './context/cart-context.jsx'
+import ScrollToTop from './components/scroll-to-top.jsx'
 import { publicRoutes, adminRoutes } from './routes'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
+      <ScrollToTop />
       <AuthProvider>
         <CartProvider>
           <Routes>

@@ -23,9 +23,9 @@ export function useCartPersistence(user, cartItems, setCartItems) {
       try {
         // Fetch cart items with product details
         const { data, error } = await supabase
-          .from('carts')
-          .select('id, product_id, quantity, products(id, name, price, image, description, slug)')
-          .eq('user_id', user.id)
+          .from('cart')
+          .select('product_id, quantity, price, products(id, name, price, image_url, description)')
+          .eq('customer_id', user.id)
         
         if (error) throw error
         
@@ -33,7 +33,7 @@ export function useCartPersistence(user, cartItems, setCartItems) {
         const cartMap = new Map()
         
         data?.forEach((cartItem) => {
-          const productId = cartItem.products.id
+          const productId = cartItem.product_id
           
           if (cartMap.has(productId)) {
             // If product already exists, merge quantities
@@ -42,12 +42,11 @@ export function useCartPersistence(user, cartItems, setCartItems) {
           } else {
             // Add new product to map
             cartMap.set(productId, {
-              id: cartItem.products.id,
+              id: cartItem.product_id,
               name: cartItem.products.name,
               price: cartItem.products.price,
-              image: cartItem.products.image,
+              image: cartItem.products.image_url,
               description: cartItem.products.description,
-              slug: cartItem.products.slug,
               quantity: cartItem.quantity,
             })
           }

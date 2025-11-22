@@ -18,11 +18,7 @@ export default function ProductDetail() {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const { data, error } = await supabase
-          .from('products')
-          .select('*')
-          .eq('slug', slug)
-          .limit(1)
+        const { data, error } = await supabase.from('product').select('*').eq('slug', slug).limit(1)
         if (error) throw error
         setProduct(data && data.length ? data[0] : null)
       } catch (err) {

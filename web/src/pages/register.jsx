@@ -63,23 +63,36 @@ export default function Register() {
 
       const authUserId = authData.user.id
 
-      // Step 2: Lưu thông tin user vào bảng users
-      const { error: insertError } = await supabase.from('users').insert([
+      // Step 2: Lưu thông tin user vào bảng user_account
+      const { error: insertError } = await supabase.from('user_account').insert([
         {
-          id: authUserId,
+          user_id: authUserId,
           email: form.email,
-          username: form.username,
-          fullname: form.fullname,
+          password_hash: form.password,
+          full_name: form.fullname,
           phone: form.phone,
-          address: form.address,
-          role: 'buyer',
-          password: form.password,
+          role: 'customer',
+          status: true,
         },
       ])
 
       if (insertError) {
         console.error('Insert error:', insertError)
         throw insertError
+      }
+
+      // Step 3: Lưu thông tin customer
+      const { error: customerError } = await supabase.from('customer').insert([
+        {
+          customer_id: authUserId,
+          default_address: form.address,
+          phone: form.phone,
+        },
+      ])
+
+      if (customerError) {
+        console.error('Customer insert error:', customerError)
+        throw customerError
       }
 
       setMessage('✅ Registration successful! Redirecting to login...')

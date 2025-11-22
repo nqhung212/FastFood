@@ -15,13 +15,25 @@ export function useUserData(userId) {
     const fetchUserData = async () => {
       try {
         const { data, error: err } = await supabase
-          .from('users')
-          .select('fullname, phone, address, username, email')
-          .eq('id', userId)
+          .from('user_account')
+          .select('email, full_name, phone')
+          .eq('user_id', userId)
           .single()
 
         if (err) throw err
-        setUserData(data)
+        
+        // Get customer default address if exists
+        const { data: customerData } = await supabase
+          .from('customer')
+          .select('default_address')
+          .eq('customer_id', userId)
+          .single()
+
+        setUserData({
+          ...data,
+          fullname: data.full_name,
+          address: customerData?.default_address || '',
+        })
       } catch (err) {
         console.error('Error fetching user data:', err)
         setError(err)

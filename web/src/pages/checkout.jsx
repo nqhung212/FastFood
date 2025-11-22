@@ -46,15 +46,16 @@ export default function CheckoutPage() {
         setPaymentInitiated(true)
 
         // Step 1: Create order first (required for FK constraint)
-        const { error: orderError } = await supabase.from('orders').insert([
+        const { error: orderError } = await supabase.from('order').insert([
           {
-            id: orderId,
-            user_id: user.id,
-            total_amount: checkoutData.total,
-            status: 'pending',
-            customer_name: userData?.fullname || userData?.username || null,
-            customer_phone: userData?.phone || null,
-            customer_address: userData?.address || null,
+            order_id: orderId,
+            customer_id: user.id,
+            total_price: checkoutData.total,
+            order_status: 'pending',
+            payment_status: 'pending',
+            shipping_name: userData?.fullname || 'Customer',
+            shipping_phone: userData?.phone || '',
+            shipping_address: userData?.address || '',
           },
         ])
 

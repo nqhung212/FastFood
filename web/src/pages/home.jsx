@@ -1,7 +1,7 @@
 // src/pages/home.jsx
 import '../assets/styles/home.css'
 import { Link } from 'react-router-dom'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import MainLayout from '../layouts/home-layout.jsx'
 import getImage from '../utils/import-image.js'
 import Banner from './banner.jsx'
@@ -9,13 +9,11 @@ import Services from './services.jsx'
 import Order from './order.jsx'
 import FindStore from './findstore.jsx'
 import News from './news.jsx'
+import { useCategories } from '../hooks/use-categories'
 
-const categories = [
-  { name: 'Burger', image: '/images/burger.jpg' },
-  { name: 'Chicken', image: '/images/pizza.jpg' },
-  { name: 'Fries', image: '/images/cola.jpg' },
-]
 function Web() {
+  const { categories, loading } = useCategories()
+
   return (
     <MainLayout>
       {/* Body Home */}
@@ -23,14 +21,22 @@ function Web() {
         <Banner />
       </div>
       <div className="body-home-main">
-        {}
+        <div className="home-header">
+          <h2 className="home-heading">There's something for everyone!</h2>
+        </div>
         <section className="home-categories">
-          {categories.map((cat) => (
-            <Link to={`/menu/${cat.name}`} key={cat.name} className="category-card">
-              <img src={getImage(cat.image)} alt={cat.name} className="category-image" />
-              <h3 className="category-title">{cat.name}</h3>
-            </Link>
-          ))}
+          {loading ? (
+            <p>Loading categories...</p>
+          ) : (
+            categories.map((cat) => (
+              <Link to={`/category/${cat.name}`} key={cat.category_id} className="category-card">
+                {cat.icon_url && (
+                  <img src={cat.icon_url} alt={cat.name} className="category-image" />
+                )}
+                <h3 className="category-title">{cat.name}</h3>
+              </Link>
+            ))
+          )}
         </section>
       </div>
       <div className="body-home-services">

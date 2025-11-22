@@ -16,29 +16,25 @@ export default function AdminLogin() {
     setMessage('')
 
     try {
-      // Query users table to check username + password
+      // Query user_account table to check email + password and verify admin role
       const { data: userData, error: userError } = await supabase
-        .from('users')
-        .select('id, username, role')
-        .eq('username', username)
-        .eq('password', password)
+        .from('user_account')
+        .select('user_id, email, role')
+        .eq('email', username)
+        .eq('password_hash', password)
+        .eq('role', 'admin')
         .single()
 
       if (userError || !userData) {
-        throw new Error('Invalid username or password')
-      }
-
-      // Check role
-      if (userData.role !== 'admin') {
-        throw new Error('Only admin users can access this page')
+        throw new Error('Invalid username or password, or not an admin user')
       }
 
       // Save admin session to localStorage
       localStorage.setItem(
         'adminSession',
         JSON.stringify({
-          id: userData.id,
-          username: userData.username,
+          id: userData.user_id,
+          email: userData.email,
           role: userData.role,
           loginTime: new Date().toISOString(),
         })

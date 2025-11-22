@@ -16,8 +16,8 @@ export default function AdminUsers() {
     const fetchUsers = async () => {
       try {
         const { data, error } = await supabase
-          .from('users')
-          .select('id, username, email, fullname, role, phone')
+          .from('user_account')
+          .select('user_id, email, full_name, role, phone')
           .order(sortConfig.column, { ascending: sortConfig.ascending })
 
         if (error) throw error
@@ -74,14 +74,11 @@ export default function AdminUsers() {
           <table className="admin-table">
             <thead>
               <tr>
-                <th onClick={() => handleSort('username')} className="sortable">
-                  Username {getSortIcon('username')}
-                </th>
                 <th onClick={() => handleSort('email')} className="sortable">
                   Email {getSortIcon('email')}
                 </th>
-                <th onClick={() => handleSort('fullname')} className="sortable">
-                  Full Name {getSortIcon('fullname')}
+                <th onClick={() => handleSort('full_name')} className="sortable">
+                  Full Name {getSortIcon('full_name')}
                 </th>
                 <th onClick={() => handleSort('role')} className="sortable">
                   Role {getSortIcon('role')}
@@ -95,10 +92,9 @@ export default function AdminUsers() {
             <tbody>
               {users.length > 0 ? (
                 users.map((user) => (
-                  <tr key={user.id}>
-                    <td>{user.username}</td>
+                  <tr key={user.user_id}>
                     <td>{user.email}</td>
-                    <td>{user.fullname}</td>
+                    <td>{user.full_name}</td>
                     <td>
                       <span className={`role role-${user.role}`}>{user.role}</span>
                     </td>
@@ -110,7 +106,7 @@ export default function AdminUsers() {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="6" style={{ textAlign: 'center', padding: '20px' }}>
+                  <td colSpan="5" style={{ textAlign: 'center', padding: '20px' }}>
                     No users found
                   </td>
                 </tr>

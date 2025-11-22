@@ -1,6 +1,8 @@
 import Web from '../pages/home'
 import Menu from '../pages/menu'
 import MenuCategories from '../pages/menu-categories'
+import CategoryRestaurants from '../pages/category-restaurants'
+import RestaurantProducts from '../pages/restaurant-products'
 import ProductDetail from '../pages/product-detail'
 import CartPage from '../pages/cart'
 import CheckoutPage from '../pages/checkout'
@@ -24,6 +26,8 @@ export const publicRoutes = [
   { path: '/', element: Web },
   { path: '/menu', element: Menu },
   { path: '/menu/:category', element: MenuCategories },
+  { path: '/category/:categoryName', element: CategoryRestaurants },
+  { path: '/restaurant/:restaurantId/:categoryName', element: RestaurantProducts },
   { path: '/product/:slug', element: ProductDetail },
   { path: '/cart', element: CartPage },
   { path: '/checkout', element: CheckoutPage },
