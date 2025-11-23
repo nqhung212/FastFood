@@ -7,12 +7,19 @@ import { useAuth } from '../../context/auth-context'
 import { supabase } from '../../lib/supabaseClient'
 
 export default function Login() {
-  const { login } = useAuth()
+  const { login, user } = useAuth()
+  const navigate = useNavigate()
+
+  // Redirect to home if already logged in
+  if (user) {
+    navigate('/')
+    return null
+  }
+
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [message, setMessage] = useState('')
   const [loading, setLoading] = useState(false)
-  const navigate = useNavigate()
 
   const handleLogin = async (e) => {
     e.preventDefault()

@@ -8,7 +8,7 @@ export default function AdminUsers() {
   const { isAdmin, isLoading } = useAdminGuard()
   const [users, setUsers] = useState([])
   const [tableLoading, setTableLoading] = useState(true)
-  const [sortConfig, setSortConfig] = useState({ column: 'username', ascending: true })
+  const [sortConfig, setSortConfig] = useState({ column: 'email', ascending: true })
 
   useEffect(() => {
     if (!isAdmin) return

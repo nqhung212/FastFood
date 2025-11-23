@@ -9,6 +9,7 @@ import CheckoutPage from '../pages/customer/checkout'
 import PaymentSuccessPage from '../pages/customer/payment-success'
 import PaymentCancelPage from '../pages/customer/payment-cancel'
 import AccountPage from '../pages/customer/account'
+import OrderDetail from '../pages/customer/order-detail'
 import Login from '../pages/customer/login'
 import Register from '../pages/customer/register'
 import Search from '../pages/customer/search'
@@ -43,6 +44,7 @@ export const publicRoutes = [
   { path: '/payment-success', element: PaymentSuccessPage },
   { path: '/payment-cancel', element: PaymentCancelPage },
   { path: '/account', element: AccountPage },
+  { path: '/order-detail/:orderId', element: OrderDetail },
   { path: '/login', element: Login },
   { path: '/register', element: Register },
   { path: '/menu/search/:searchTerm', element: Search },

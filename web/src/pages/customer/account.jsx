@@ -1,10 +1,13 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useAuth } from '../../context/auth-context'
+import { useNavigate } from 'react-router-dom'
+import { supabase } from '../../lib/supabaseClient'
 import MainLayout from '../../layouts/home-layout.jsx'
 import '../../assets/styles/account.css'
 
 export default function AccountPage() {
   const { user } = useAuth()
+  const navigate = useNavigate()
   const [activeTab, setActiveTab] = useState('account-management')
   const [addresses, setAddresses] = useState([
     {
@@ -16,12 +19,38 @@ export default function AccountPage() {
     },
   ])
   const [orders, setOrders] = useState([])
+  const [ordersLoading, setOrdersLoading] = useState(false)
   const [editingContact, setEditingContact] = useState(false)
   const [contactForm, setContactForm] = useState({
     name: user?.name || '',
     email: user?.email || '',
     phone: user?.phone || '',
   })
+
+  // Fetch user's orders from Supabase
+  useEffect(() => {
+    if (!user) return
+
+    const fetchOrders = async () => {
+      try {
+        setOrdersLoading(true)
+        const { data, error } = await supabase
+          .from('order')
+          .select('*')
+          .eq('customer_id', user.id)
+          .order('created_at', { ascending: false })
+
+        if (error) throw error
+        setOrders(data || [])
+      } catch (err) {
+        console.error('Error fetching orders:', err)
+      } finally {
+        setOrdersLoading(false)
+      }
+    }
+
+    fetchOrders()
+  }, [user])
 
   const handleContactSave = () => {
     console.log('Saving contact:', contactForm)
@@ -223,7 +252,11 @@ export default function AccountPage() {
         return (
           <div className="account-content">
             <h2>MY ORDERS</h2>
-            {orders.length === 0 ? (
+            {ordersLoading ? (
+              <div className="no-data-message">
+                <p>Loading orders...</p>
+              </div>
+            ) : orders.length === 0 ? (
               <div className="no-data-message">
                 <span>⚠️</span>
                 <p>You have placed no orders.</p>
@@ -231,9 +264,39 @@ export default function AccountPage() {
             ) : (
               <div className="orders-list">
                 {orders.map((order) => (
-                  <div key={order.id} className="order-item">
-                    <p>Order #{order.id}</p>
-                    <p>Total: {order.total}</p>
+                  <div key={order.order_id} className="order-item">
+                    <div className="order-header">
+                      <div>
+                        <p>
+                          <strong>Order #{order.order_id.slice(0, 8)}</strong>
+                        </p>
+                        <p className="order-date">
+                          {new Date(order.created_at).toLocaleDateString()}
+                        </p>
+                      </div>
+                      <div className="order-info">
+                        <p>
+                          <strong>{parseFloat(order.total_price).toLocaleString()}₫</strong>
+                        </p>
+                        <span className={`order-status ${order.order_status}`}>
+                          {order.order_status}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="order-details">
+                      <p>
+                        <strong>Status:</strong> {order.order_status}
+                      </p>
+                      <p>
+                        <strong>Payment:</strong> {order.payment_status}
+                      </p>
+                    </div>
+                    <button
+                      className="btn-view-detail"
+                      onClick={() => navigate(`/order-detail/${order.order_id}`)}
+                    >
+                      View Details
+                    </button>
                   </div>
                 ))}
               </div>

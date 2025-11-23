@@ -1,12 +1,20 @@
 // src/pages/customer/register.jsx
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../../context/auth-context'
 import MainLayout from '../../layouts/home-layout'
 import { supabase } from '../../lib/supabaseClient'
 import '../../assets/styles/auth.css'
 
 export default function Register() {
   const navigate = useNavigate()
+  const { user } = useAuth()
+
+  // Redirect to home if already logged in
+  if (user) {
+    navigate('/')
+    return null
+  }
   const [form, setForm] = useState({
     email: '',
     password: '',
@@ -82,8 +90,8 @@ export default function Register() {
         // Don't throw here, user is already created
       }
 
-      setMessage('✅ Registration successful! Please login with your email and password.')
-      setTimeout(() => navigate('/login'), 2000)
+      setMessage('✅ Registration successful! Redirecting to home...')
+      setTimeout(() => navigate('/'), 2000)
     } catch (err) {
       console.error('Registration error:', err)
       setMessage(`❌ ${err.message}`)
