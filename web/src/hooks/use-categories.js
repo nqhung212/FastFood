@@ -17,7 +17,22 @@ export function useCategories() {
           console.error('Categories fetch error:', error)
           throw error
         }
-        if (mounted) setCategories(data || [])
+        
+        // Remove duplicate categories by name (keep first occurrence)
+        const uniqueCategories = []
+        const seenNames = new Set()
+        
+        if (data) {
+          data.forEach((cat) => {
+            const categoryName = cat.name?.toLowerCase()
+            if (categoryName && !seenNames.has(categoryName)) {
+              seenNames.add(categoryName)
+              uniqueCategories.push(cat)
+            }
+          })
+        }
+        
+        if (mounted) setCategories(uniqueCategories)
       } catch (err) {
         console.error('Categories error:', err)
         setError(err.message || String(err))
