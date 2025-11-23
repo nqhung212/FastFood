@@ -155,8 +155,7 @@ export default function OrderDetail() {
             <h3>📍 Delivery Tracking</h3>
             <div className="tracking-info">
               <p>
-                <strong>Estimated Time:</strong> {deliveryTracking.estimated_time_minutes}{' '}
-                minutes
+                <strong>Estimated Time:</strong> {deliveryTracking.estimated_time_minutes} minutes
               </p>
               <p>
                 <strong>Status:</strong>{' '}
@@ -200,8 +199,7 @@ export default function OrderDetail() {
                   <span
                     className="status-badge"
                     style={{
-                      backgroundColor:
-                        order.payment_status === 'paid' ? '#28a745' : '#ffc107',
+                      backgroundColor: order.payment_status === 'paid' ? '#28a745' : '#ffc107',
                     }}
                   >
                     {order.payment_status}
