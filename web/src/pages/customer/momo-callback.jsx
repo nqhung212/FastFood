@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import MainLayout from '../layouts/home-layout.jsx'
+import MainLayout from '../../layouts/home-layout.jsx'
 
 export default function MoMoCallbackPage() {
   const navigate = useNavigate()

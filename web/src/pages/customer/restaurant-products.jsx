@@ -1,10 +1,10 @@
 import { useParams, useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
-import MainLayout from '../layouts/home-layout.jsx'
-import { supabase } from '../lib/supabaseClient'
-import { useCart } from '../context/cart-context'
-import { useAuth } from '../context/auth-context'
-import '../assets/styles/restaurant-products.css'
+import MainLayout from '../../layouts/home-layout.jsx'
+import { supabase } from '../../lib/supabaseClient'
+import { useCart } from '../../context/cart-context'
+import { useAuth } from '../../context/auth-context'
+import '../../assets/styles/restaurant-products.css'
 
 export default function RestaurantProducts() {
   const { restaurantId, categoryName } = useParams()
@@ -38,7 +38,7 @@ export default function RestaurantProducts() {
         // Lấy tất cả categories để tìm match (case-insensitive)
         const { data: allCategories, error: catError } = await supabase
           .from('category')
-          .select('category_id, name, status')
+          .select('category_id, name, status, restaurant_id')
 
         if (catError) {
           throw catError
@@ -48,15 +48,30 @@ export default function RestaurantProducts() {
           throw new Error('No categories found')
         }
 
-        // Tìm category theo tên (case-insensitive)
-        const matchedCategory = allCategories.find(
-          (cat) => cat.name.toLowerCase() === categoryName.toLowerCase() && cat.status === true
+        // Tìm category theo tên + restaurant_id (case-insensitive)
+        let matchedCategory = allCategories.find(
+          (cat) =>
+            cat.name.toLowerCase() === categoryName.toLowerCase() &&
+            cat.status === true &&
+            cat.restaurant_id === restaurantId
         )
+
+        // Nếu không tìm thấy category của nhà hàng này, tìm category tổng quát (null restaurant_id)
+        if (!matchedCategory) {
+          matchedCategory = allCategories.find(
+            (cat) =>
+              cat.name.toLowerCase() === categoryName.toLowerCase() &&
+              cat.status === true &&
+              !cat.restaurant_id
+          )
+        }
 
         if (!matchedCategory) {
           const availableCategories = allCategories.map((c) => c.name).join(', ')
           throw new Error(
-            `Category "${categoryName}" not found. Available: ${availableCategories || 'none'}`
+            `Category "${categoryName}" not found for this restaurant. Available: ${
+              availableCategories || 'none'
+            }`
           )
         }
 

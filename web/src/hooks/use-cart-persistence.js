@@ -24,7 +24,7 @@ export function useCartPersistence(user, cartItems, setCartItems) {
         // Fetch cart items with product details
         const { data, error } = await supabase
           .from('cart')
-          .select('product_id, quantity, price, products(id, name, price, image_url, description)')
+          .select('product_id, quantity, price, product(product_id, name, price, image_url, description)')
           .eq('customer_id', user.id)
         
         if (error) throw error
@@ -43,10 +43,10 @@ export function useCartPersistence(user, cartItems, setCartItems) {
             // Add new product to map
             cartMap.set(productId, {
               id: cartItem.product_id,
-              name: cartItem.products.name,
-              price: cartItem.products.price,
-              image: cartItem.products.image_url,
-              description: cartItem.products.description,
+              name: cartItem.product.name,
+              price: cartItem.product.price,
+              image: cartItem.product.image_url,
+              description: cartItem.product.description,
               quantity: cartItem.quantity,
             })
           }

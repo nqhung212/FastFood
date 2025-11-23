@@ -28,6 +28,12 @@ CREATE TABLE restaurant (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
+ALTER TABLE restaurant
+ADD COLUMN address TEXT,
+ADD COLUMN latitude DOUBLE PRECISION,
+ADD COLUMN longitude DOUBLE PRECISION;
+
+
 CREATE TABLE category (
   category_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   restaurant_id UUID REFERENCES restaurant(restaurant_id),
@@ -118,3 +124,4 @@ CREATE TABLE order_notifications (
   is_read BOOLEAN DEFAULT FALSE,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
+

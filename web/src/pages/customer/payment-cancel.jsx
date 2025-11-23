@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import MainLayout from '../layouts/home-layout.jsx'
+import MainLayout from '../../layouts/home-layout.jsx'
 
 export default function PaymentCancelPage() {
   const navigate = useNavigate()

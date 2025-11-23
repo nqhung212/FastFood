@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
-import MainLayout from '../layouts/home-layout.jsx'
+import MainLayout from '../../layouts/home-layout.jsx'
 import axios from 'axios'
 
 export default function PaymentRollbackPage() {

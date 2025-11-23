@@ -1,8 +1,8 @@
 // src/pages/menu.jsx
 import { Link } from 'react-router-dom'
-import MenuLayout from '../layouts/menu-layout.jsx'
-import { useProducts } from '../hooks/use-products.js'
-import '../assets/styles/menu-categories.css'
+import MenuLayout from '../../layouts/menu-layout.jsx'
+import { useProducts } from '../../hooks/use-products.js'
+import '../../assets/styles/menu-categories.css'
 
 const getImageUrl = (imageField) => {
   if (!imageField) return '/images/placeholder.png'

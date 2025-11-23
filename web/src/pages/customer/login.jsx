@@ -1,14 +1,14 @@
-// src/pages/login.jsx
+// src/pages/customer/login.jsx
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import MainLayout from '../layouts/home-layout'
-import '../assets/styles/auth.css'
-import { useAuth } from '../context/auth-context'
-import { supabase } from '../lib/supabaseClient'
+import MainLayout from '../../layouts/home-layout'
+import '../../assets/styles/auth.css'
+import { useAuth } from '../../context/auth-context'
+import { supabase } from '../../lib/supabaseClient'
 
 export default function Login() {
   const { login } = useAuth()
-  const [username, setUsername] = useState('')
+  const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [message, setMessage] = useState('')
   const [loading, setLoading] = useState(false)
@@ -20,21 +20,36 @@ export default function Login() {
     setMessage('')
 
     try {
-      // Step 1: Query bảng user_account để tìm email theo email hoặc tìm user đã tồn tại
+      // Validate input
+      if (!email || !password) {
+        throw new Error('Email and password are required')
+      }
+
+      // Check if user exists in user_account
       const { data: userData, error: userError } = await supabase
         .from('user_account')
-        .select('email')
-        .eq('email', username)
+        .select('user_id, email, role, status')
+        .eq('email', email)
         .single()
 
       if (userError || !userData) {
-        throw new Error('User not found')
+        throw new Error('Email not found - please register first')
       }
 
-      const { email } = userData
+      if (!userData.status) {
+        throw new Error('Account is inactive')
+      }
 
-      // Step 2: Login sử dụng Supabase Auth với email và password
-      await login({ email, password })
+      // Login using Supabase Auth
+      const { error: authError } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      })
+
+      if (authError) {
+        console.error('Auth error:', authError)
+        throw new Error('Invalid password')
+      }
 
       setMessage('✅ Login successful!')
       setTimeout(() => navigate('/'), 1000)
@@ -52,11 +67,11 @@ export default function Login() {
 
         <form onSubmit={handleLogin} className="login-form">
           <div>
-            <label>Username</label>
+            <label>Email</label>
             <input
-              type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               required
               disabled={loading}
             />

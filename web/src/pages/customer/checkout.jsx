@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import MainLayout from '../layouts/home-layout.jsx'
-import { initiateMoMoPayment, savePaymentToSupabase } from '../services/momo.js'
-import { useAuth } from '../context/auth-context'
-import { useUserData } from '../hooks/use-user-data.js'
-import { supabase } from '../lib/supabaseClient'
+import MainLayout from '../../layouts/home-layout.jsx'
+import { initiateMoMoPayment, savePaymentToSupabase } from '../../services/momo.js'
+import { useAuth } from '../../context/auth-context'
+import { useUserData } from '../../hooks/use-user-data.js'
+import { supabase } from '../../lib/supabaseClient'
 
 export default function CheckoutPage() {
   const navigate = useNavigate()

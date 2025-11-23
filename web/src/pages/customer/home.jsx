@@ -1,15 +1,15 @@
-// src/pages/home.jsx
-import '../assets/styles/home.css'
+// src/pages/customer/home.jsx
+import '../../assets/styles/home.css'
 import { Link } from 'react-router-dom'
 import React, { useEffect, useState } from 'react'
-import MainLayout from '../layouts/home-layout.jsx'
-import getImage from '../utils/import-image.js'
+import MainLayout from '../../layouts/home-layout.jsx'
+import getImage from '../../utils/import-image.js'
 import Banner from './banner.jsx'
 import Services from './services.jsx'
 import Order from './order.jsx'
 import FindStore from './findstore.jsx'
 import News from './news.jsx'
-import { useCategories } from '../hooks/use-categories'
+import { useCategories } from '../../hooks/use-categories'
 
 function Web() {
   const { categories, loading } = useCategories()

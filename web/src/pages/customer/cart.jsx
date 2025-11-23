@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom'
-import MainLayout from '../layouts/home-layout.jsx'
-import { useCart } from '../context/cart-context.jsx'
-import '../assets/styles/cart.css'
+import MainLayout from '../../layouts/home-layout.jsx'
+import { useCart } from '../../context/cart-context.jsx'
+import '../../assets/styles/cart.css'
 
 const getImageUrl = (imageField) => {
   if (!imageField) return '/images/placeholder.png'

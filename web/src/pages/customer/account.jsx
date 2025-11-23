@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import { useAuth } from '../context/auth-context'
-import MainLayout from '../layouts/home-layout.jsx'
-import '../assets/styles/account.css'
+import { useAuth } from '../../context/auth-context'
+import MainLayout from '../../layouts/home-layout.jsx'
+import '../../assets/styles/account.css'
 
 export default function AccountPage() {
   const { user } = useAuth()

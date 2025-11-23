@@ -1,8 +1,8 @@
 import { useParams, useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
-import MainLayout from '../layouts/home-layout.jsx'
-import { supabase } from '../lib/supabaseClient'
-import '../assets/styles/category-restaurants.css'
+import MainLayout from '../../layouts/home-layout.jsx'
+import { supabase } from '../../lib/supabaseClient'
+import '../../assets/styles/category-restaurants.css'
 
 export default function CategoryRestaurants() {
   const { categoryName } = useParams()
@@ -29,23 +29,26 @@ export default function CategoryRestaurants() {
           throw new Error('No categories found in database')
         }
 
-        // Tìm category theo tên (case-insensitive)
-        const matchedCategory = allCategories.find(
+        // Tìm tất cả categories có cùng tên (case-insensitive)
+        const matchedCategories = allCategories.filter(
           (cat) => cat.name.toLowerCase() === categoryName.toLowerCase() && cat.status === true
         )
 
-        if (!matchedCategory) {
+        if (matchedCategories.length === 0) {
           const availableCategories = allCategories.map((c) => c.name).join(', ')
           throw new Error(
             `Category "${categoryName}" not found. Available: ${availableCategories || 'none'}`
           )
         }
 
-        // Lấy tất cả restaurants có products trong category này
+        // Lấy tất cả category_ids có cùng tên
+        const categoryIds = matchedCategories.map((cat) => cat.category_id)
+
+        // Lấy tất cả restaurants có products trong bất kỳ category nào có tên này
         const { data: productsData, error: prodError } = await supabase
           .from('product')
           .select('restaurant_id')
-          .eq('category_id', matchedCategory.category_id)
+          .in('category_id', categoryIds)
 
         if (prodError) throw prodError
 

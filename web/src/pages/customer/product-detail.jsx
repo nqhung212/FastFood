@@ -1,11 +1,11 @@
 // src/pages/product-detail.jsx
 import { useParams, useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
-import MainLayout from '../layouts/home-layout.jsx'
-import '../assets/styles/product-detail.css'
-import { useCart } from '../context/cart-context.jsx'
-import { useAuth } from '../context/auth-context.jsx'
-import { supabase } from '../lib/supabaseClient'
+import MainLayout from '../../layouts/home-layout.jsx'
+import '../../assets/styles/product-detail.css'
+import { useCart } from '../../context/cart-context.jsx'
+import { useAuth } from '../../context/auth-context.jsx'
+import { supabase } from '../../lib/supabaseClient'
 
 export default function ProductDetail() {
   const { slug } = useParams()
