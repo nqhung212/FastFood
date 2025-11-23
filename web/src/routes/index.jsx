@@ -22,6 +22,15 @@ import AdminUsers from '../pages/admin/users'
 import AdminProducts from '../pages/admin/products'
 import AdminCategories from '../pages/admin/categories'
 
+// Restaurant Owner pages
+import RestaurantRegister from '../pages/restaurant_owner/register'
+import RestaurantLogin from '../pages/restaurant_owner/login'
+import RestaurantDashboard from '../pages/restaurant_owner/dashboard'
+import ManageProducts from '../pages/restaurant_owner/manage-products'
+import ManageCategories from '../pages/restaurant_owner/manage-categories'
+import RestaurantInfo from '../pages/restaurant_owner/restaurant-info'
+import RestaurantOrders from '../pages/restaurant_owner/orders'
+
 export const publicRoutes = [
   { path: '/', element: Web },
   { path: '/menu', element: Menu },
@@ -39,6 +48,8 @@ export const publicRoutes = [
   { path: '/menu/search/:searchTerm', element: Search },
   { path: '/payment-rollback', element: PaymentRollbackPage },
   { path: '/admin/login', element: AdminLogin },
+  { path: '/restaurant/register', element: RestaurantRegister },
+  { path: '/restaurant/login', element: RestaurantLogin },
 ]
 
 export const adminRoutes = [
@@ -47,6 +58,14 @@ export const adminRoutes = [
   { path: '/admin/users', element: AdminUsers },
   { path: '/admin/products', element: AdminProducts },
   { path: '/admin/categories', element: AdminCategories },
+]
+
+export const restaurantOwnerRoutes = [
+  { path: '/restaurant/dashboard', element: RestaurantDashboard },
+  { path: '/restaurant/products', element: ManageProducts },
+  { path: '/restaurant/categories', element: ManageCategories },
+  { path: '/restaurant/info', element: RestaurantInfo },
+  { path: '/restaurant/orders', element: RestaurantOrders },
 ]
 
 export const privateRoutes = []

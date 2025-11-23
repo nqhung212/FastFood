@@ -1,0 +1,200 @@
+import { useState, useEffect } from 'react'
+import { useNavigate, Link } from 'react-router-dom'
+import RestaurantLayout from '../../layouts/restaurant-layout'
+import { supabase } from '../../lib/supabaseClient'
+import '../../assets/styles/restaurant-manage.css'
+
+export default function RestaurantOrders() {
+  const navigate = useNavigate()
+  const [orders, setOrders] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [message, setMessage] = useState('')
+  const [filter, setFilter] = useState('all')
+
+  useEffect(() => {
+    fetchOrders()
+  }, [filter])
+
+  const fetchOrders = async () => {
+    try {
+      const ownerId = localStorage.getItem('restaurantOwnerId')
+      if (!ownerId) {
+        navigate('/restaurant/login')
+        return
+      }
+
+      // Get restaurant_id
+      const { data: restaurant, error: restError } = await supabase
+        .from('restaurant')
+        .select('restaurant_id')
+        .eq('owner_id', ownerId)
+        .single()
+
+      if (restError) throw restError
+
+      // Get orders
+      let query = supabase
+        .from('order')
+        .select('*, order_item(*), payment(*)')
+        .eq('restaurant_id', restaurant.restaurant_id)
+
+      if (filter !== 'all') {
+        query = query.eq('order_status', filter)
+      }
+
+      const { data, error } = await query.order('created_at', { ascending: false })
+
+      if (error) throw error
+      setOrders(data || [])
+    } catch (err) {
+      console.error('Error fetching orders:', err)
+      setMessage(`❌ ${err.message}`)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleStatusChange = async (orderId, newStatus) => {
+    try {
+      const { error } = await supabase
+        .from('order')
+        .update({ order_status: newStatus })
+        .eq('order_id', orderId)
+
+      if (error) throw error
+      setMessage('✅ Order status updated successfully')
+      fetchOrders()
+    } catch (err) {
+      console.error('Error:', err)
+      setMessage(`❌ ${err.message}`)
+    }
+  }
+
+  if (loading) {
+    return (
+      <RestaurantLayout>
+        <div className="manage-page">
+          <p>Loading orders...</p>
+        </div>
+      </RestaurantLayout>
+    )
+  }
+
+  return (
+    <RestaurantLayout>
+      <div className="manage-page">
+        <div className="manage-header">
+          <h1>Orders Management</h1>
+          <Link to="/restaurant/dashboard" className="btn-back">
+            ← Back to Dashboard
+          </Link>
+        </div>
+
+        {message && (
+          <p className={message.startsWith('❌') ? 'error-message' : 'success-message'}>
+            {message}
+          </p>
+        )}
+
+        <div className="filter-buttons">
+          <button onClick={() => setFilter('all')} className={filter === 'all' ? 'active' : ''}>
+            All Orders
+          </button>
+          <button
+            onClick={() => setFilter('pending')}
+            className={filter === 'pending' ? 'active' : ''}
+          >
+            Pending
+          </button>
+          <button
+            onClick={() => setFilter('confirmed')}
+            className={filter === 'confirmed' ? 'active' : ''}
+          >
+            Confirmed
+          </button>
+          <button
+            onClick={() => setFilter('preparing')}
+            className={filter === 'preparing' ? 'active' : ''}
+          >
+            Preparing
+          </button>
+          <button
+            onClick={() => setFilter('delivering')}
+            className={filter === 'delivering' ? 'active' : ''}
+          >
+            Delivering
+          </button>
+          <button
+            onClick={() => setFilter('completed')}
+            className={filter === 'completed' ? 'active' : ''}
+          >
+            Completed
+          </button>
+        </div>
+
+        <div className="orders-list">
+          {orders.length === 0 ? (
+            <p>No orders found</p>
+          ) : (
+            orders.map((order) => (
+              <div key={order.order_id} className="order-card">
+                <div className="order-header">
+                  <h3>Order #{order.order_id.slice(0, 8)}</h3>
+                  <span className={`status ${order.order_status}`}>{order.order_status}</span>
+                </div>
+
+                <div className="order-info">
+                  <p>
+                    <strong>Customer:</strong> {order.shipping_name}
+                  </p>
+                  <p>
+                    <strong>Address:</strong> {order.shipping_address}
+                  </p>
+                  <p>
+                    <strong>Phone:</strong> {order.shipping_phone}
+                  </p>
+                  <p>
+                    <strong>Total:</strong> {parseFloat(order.total_price).toLocaleString()}₫
+                  </p>
+                  <p>
+                    <strong>Payment:</strong> {order.payment_status}
+                  </p>
+                  <p>
+                    <strong>Created:</strong> {new Date(order.created_at).toLocaleString()}
+                  </p>
+                </div>
+
+                {order.order_item && order.order_item.length > 0 && (
+                  <div className="order-items">
+                    <h4>Items:</h4>
+                    <ul>
+                      {order.order_item.map((item) => (
+                        <li key={item.order_item_id}>
+                          Qty: {item.quantity} × {parseFloat(item.price).toLocaleString()}₫
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                <div className="order-actions">
+                  <select
+                    value={order.order_status}
+                    onChange={(e) => handleStatusChange(order.order_id, e.target.value)}
+                  >
+                    <option value="pending">Pending</option>
+                    <option value="confirmed">Confirmed</option>
+                    <option value="preparing">Preparing</option>
+                    <option value="delivering">Delivering</option>
+                    <option value="completed">Completed</option>
+                    <option value="cancelled">Cancelled</option>
+                  </select>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      </div>
+    </RestaurantLayout>
+  )
+}
