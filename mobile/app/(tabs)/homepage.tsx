@@ -14,8 +14,10 @@ import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { fetchCategories } from "@/service/categoryService";
 import { fetchProducts } from "@/service/productService";
+import { fetchRestaurants } from "@/service/restaurantService";
 import { Category } from "@/type/category";
 import { Product } from "@/type/product";
+import { Restaurant } from "@/type/restaurant";
 import { styles } from "@/assets/css/homepage.style";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { CartContext } from "../cart/CartContext";
@@ -28,6 +30,7 @@ export default function HomeScreen() {
   const cartCtx = useContext(CartContext);
   const [categories, setCategories] = useState<Category[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
+  const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -45,12 +48,14 @@ export default function HomeScreen() {
     const loadData = async () => {
       try {
         setLoading(true);
-        const [categoriesData, productsData] = await Promise.all([
+        const [categoriesData, productsData, restaurantsData] = await Promise.all([
           fetchCategories(),
           fetchProducts(),
+          fetchRestaurants(),
         ]);
-        setCategories(categoriesData);
-        setProducts(productsData);
+        setCategories(categoriesData || []);
+        setProducts(productsData || []);
+        setRestaurants(restaurantsData || []);
       } catch (err: any) {
         console.error("Lỗi tải dữ liệu:", err);
         setError("Không thể tải dữ liệu. Vui lòng thử lại.");
@@ -100,7 +105,8 @@ export default function HomeScreen() {
   }
 
   return (
-    <ScrollView style={styles.container}>
+    <View style={{ flex: 1 }}>
+      <ScrollView style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
         <Image
@@ -214,6 +220,24 @@ export default function HomeScreen() {
         )}
       />
 
+      {/* Quán nổi tiếng (row layout) */}
+      <Text style={styles.sectionTitle}>Quán nổi tiếng</Text>
+      {restaurants.length === 0 ? (
+        <Text style={{ textAlign: "center", color: "#888", marginTop: 10, marginBottom: 30 }}>Không có quán nào để hiển thị</Text>
+      ) : (
+        <View style={{ paddingBottom: 16 }}>
+          {restaurants.map((r) => (
+            <TouchableOpacity key={r.id} style={styles.restaurantRowCard} onPress={() => router.push(`/cart/menu?restaurantId=${r.id}`)}>
+              <Image source={{ uri: r.logo || 'https://uuxtbxkgnktfcbdevbmx.supabase.co/storage/v1/object/public/product-image/logo.png' }} style={styles.restaurantLogo} resizeMode="cover" />
+              <View style={styles.restaurantInfo}>
+                <Text style={styles.restaurantName}>{r.name}</Text>
+                {r.description ? <Text style={styles.restaurantDesc} numberOfLines={2}>{r.description}</Text> : null}
+              </View>
+            </TouchableOpacity>
+          ))}
+        </View>
+      )}
+
       {/* Món nổi bật */}
       <Text style={styles.sectionTitle}>Món nổi bật</Text>
 
@@ -262,6 +286,34 @@ export default function HomeScreen() {
           ))}
         </View>
       )}
-    </ScrollView>
+      </ScrollView>
+      {/* Simple cart button fixed at bottom-right that navigates to /cart */}
+      <View style={{ position: 'absolute', right: 20, bottom: 24, zIndex: 1000 }}>
+        <TouchableOpacity
+          onPress={() => router.push('cart/Cart')}
+          activeOpacity={0.8}
+          style={{
+            backgroundColor: '#FF6347',
+            width: 65,
+            height: 65,
+            borderRadius: 28,
+            alignItems: 'center',
+            justifyContent: 'center',
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.3,
+            shadowRadius: 4,
+            elevation: 6,
+          }}
+        >
+          <Ionicons name="cart" size={26} color="#fff" />
+          {cartCtx && cartCtx.totalItemCount > 0 && (
+            <View style={{ position: 'absolute', top: -6, right: -6, backgroundColor: '#222', borderRadius: 12, paddingHorizontal: 6, paddingVertical: 2 }}>
+              <Text style={{ color: '#fff', fontSize: 12, fontWeight: '700' }}>{cartCtx.totalItemCount}</Text>
+            </View>
+          )}
+        </TouchableOpacity>
+      </View>
+    </View>
   );
 }

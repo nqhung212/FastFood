@@ -4,7 +4,7 @@ import { fetchCategories } from "@/service/categoryService";
 import { Category } from "@/type/category";
 import { Product } from "@/type/product";
 
-export const useMenu = () => {
+export const useMenu = (restaurantId?: string) => {
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string | "all">("all");
   const [loading, setLoading] = useState(true); // 🔹 thêm lại dòng này
@@ -19,7 +19,7 @@ export const useMenu = () => {
       setLoading(true)
       try {
   const categoryId = selectedCategory === 'all' ? undefined : String(selectedCategory)
-  const products = await fetchProductsByCategory(categoryId)
+  const products = await fetchProductsByCategory(categoryId, restaurantId)
         if (!cancelled) setFilteredProducts(products)
       } catch (err: any) {
         console.error('Lỗi Supabase:', err)
@@ -30,15 +30,18 @@ export const useMenu = () => {
     }
     load()
     return () => { cancelled = true }
-  }, [selectedCategory])
+  }, [selectedCategory, restaurantId])
 
   // No client-side filtering anymore; handled by server
 
   useEffect(() => {
     async function loadCategories() {
       try {
-        const data = await fetchCategories();
+        // fetch categories for the given restaurant when restaurantId is provided
+        const data = await fetchCategories(restaurantId);
         setCategories(data);
+        // reset selected category when restaurant changes
+        setSelectedCategory('all');
       } catch (err) {
         console.error("Lỗi tải categories:", err);
       } finally {
@@ -46,7 +49,7 @@ export const useMenu = () => {
       }
     }
     loadCategories();
-  }, []);
+  }, [restaurantId]);
 
   return {
     filteredProducts,

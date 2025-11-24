@@ -31,7 +31,7 @@ export default function LoginScreen() {
 
 
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+    // <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={{ flex: 1 }}
@@ -85,6 +85,6 @@ export default function LoginScreen() {
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
-    </TouchableWithoutFeedback>
+    // </TouchableWithoutFeedback>
   );
 }

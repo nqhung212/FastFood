@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, Image, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
+import { Text, Image, StyleSheet, Dimensions, TouchableOpacity, View } from 'react-native';
 import { Link } from 'expo-router';
 import { Product } from '@/type/product';
 
@@ -11,27 +11,39 @@ type ProductCardProps = {
   onAddToCart?: (item: Product) => void;
 };
 
-const ProductCard = ({ item }: ProductCardProps) => {
+const ProductCard = ({ item, onAddToCart }: ProductCardProps) => {
+
   return (
-    <Link
-      href={{
-        pathname: "/product/[id]",
-        params: { id: item.id },
-      }}
-      asChild
-    >
-      <TouchableOpacity style={styles.card}>
-        <Image
-          source={{ uri: item.image }}
-          style={styles.image}
-          resizeMode="contain"
-        />
-        <Text style={styles.name} numberOfLines={2}>
-          {item.name}
-        </Text>
-        <Text style={styles.price}>{item.price.toLocaleString()}đ</Text>
+    <View style={styles.wrapper}>
+      <Link
+        href={{
+          pathname: "/product/[id]",
+          params: { id: item.id },
+        }}
+        asChild
+      >
+        <TouchableOpacity style={styles.card}>
+          <Image
+            source={{ uri: item.image }}
+            style={styles.image}
+            resizeMode="contain"
+          />
+          <Text style={styles.name} numberOfLines={2}>
+            {item.name}
+          </Text>
+          <Text style={styles.price}>{item.price.toLocaleString()}đ</Text>
+        </TouchableOpacity>
+      </Link>
+
+      {/* Add button - separate from Link so tapping it won't navigate */}
+      <TouchableOpacity
+        style={styles.addButton}
+        onPress={() => onAddToCart && onAddToCart(item)}
+        accessibilityLabel={`Thêm ${item.name} vào giỏ`}
+      >
+        <Text style={styles.addText}>+</Text>
       </TouchableOpacity>
-    </Link>
+    </View>
   );
 };
 
@@ -68,6 +80,28 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     color: "#D70F17",
     marginTop: 5,
+  },
+  wrapper: {
+    width: CARD_WIDTH,
+    margin: 6,
+  },
+  addButton: {
+    position: 'absolute',
+    right: 12,
+    bottom: 12,
+    backgroundColor: '#D70F17',
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    alignItems: 'center',
+    justifyContent: 'center',
+    elevation: 4,
+  },
+  addText: {
+    color: '#fff',
+    fontSize: 22,
+    lineHeight: 22,
+    fontWeight: '700',
   },
 });
 

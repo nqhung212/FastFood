@@ -167,4 +167,41 @@ export const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: '700',
   },
+  /** ---------- RESTAURANT (row layout) ---------- */
+  restaurantRowCard: {
+    width: width - 40,
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    padding: 10,
+    marginLeft: 20,
+    marginBottom: 12,
+    shadowColor: '#000',
+    shadowOpacity: 0.06,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 6,
+    elevation: 3,
+  },
+  restaurantLogo: {
+    width: 84,
+    height: 84,
+    borderRadius: 10,
+    backgroundColor: '#f0f0f0',
+    marginRight: 12,
+  },
+  restaurantInfo: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  restaurantName: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#111',
+  },
+  restaurantDesc: {
+    marginTop: 6,
+    color: '#666',
+    fontSize: 13,
+  },
 });

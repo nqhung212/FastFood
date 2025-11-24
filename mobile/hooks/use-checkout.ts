@@ -36,6 +36,13 @@ export const useCheckout = () => {
         }
         // 2. Trường hợp "Từ giỏ hàng"
         if (cart && cart.length > 0) {
+            // If a restaurantId is provided in params, filter the cart to that restaurant only
+            const rid = params?.restaurantId || params?.restaurant_id || null;
+            if (rid) {
+                const filtered = cart.filter((c: any) => String(c.restaurant_id) === String(rid));
+                const price = filtered.reduce((s: number, it: any) => s + (Number(it.price || 0) * Number(it.quantity || 0)), 0);
+                return { checkoutItems: filtered, totalPrice: price };
+            }
             return { checkoutItems: cart, totalPrice: total };
         }
         // Mặc định

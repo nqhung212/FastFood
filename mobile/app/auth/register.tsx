@@ -23,7 +23,7 @@ export default function RegisterScreen() {
   const router = useRouter();
 
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+    // <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={{ flex: 1 }}
@@ -110,6 +110,6 @@ export default function RegisterScreen() {
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
-    </TouchableWithoutFeedback>
+    /* </TouchableWithoutFeedback> */
   );
 }
