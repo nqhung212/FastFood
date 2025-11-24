@@ -117,6 +117,7 @@ export default function RestaurantProducts() {
       return
     }
 
+    console.log('🔍 handleAddToCart - restaurantId from params:', restaurantId)
     addToCart(
       {
         id: product.product_id,
@@ -124,6 +125,7 @@ export default function RestaurantProducts() {
         price: product.price,
         image: product.image_url,
         description: product.description,
+        restaurant_id: restaurantId,
       },
       1
     )

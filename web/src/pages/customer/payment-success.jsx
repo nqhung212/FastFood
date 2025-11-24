@@ -16,13 +16,12 @@ export default function PaymentSuccessPage() {
   const [hasChecked, setHasChecked] = useState(false)
   const [isFromCheckout, setIsFromCheckout] = useState(false)
 
-  // Effect 1: Set orderId and clear cart once (only if from checkout redirect)
+  // Effect 1: Set orderId (only if from checkout redirect)
   useEffect(() => {
     const state = location.state
     if (state?.orderId) {
       setOrderId(state.orderId)
       setIsFromCheckout(true)
-      clearCart()
 
       // Get checkout data from sessionStorage
       const data = sessionStorage.getItem('checkoutData')
@@ -37,6 +36,14 @@ export default function PaymentSuccessPage() {
       return () => clearTimeout(timer)
     }
   }, []) // Run only once on mount
+
+  // Effect 1.5: Clear cart when payment is confirmed successful
+  useEffect(() => {
+    if (paymentStatus?.status === 'success') {
+      console.log('🗑️ Payment successful, clearing cart...')
+      clearCart()
+    }
+  }, [paymentStatus?.status])
 
   // Effect 2: Check payment status ONLY if from checkout redirect
   useEffect(() => {

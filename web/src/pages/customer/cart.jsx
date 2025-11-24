@@ -18,15 +18,23 @@ export default function CartPage() {
   const totalPrice = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0)
 
   const handleCheckout = () => {
+    // Get restaurant_id from first item (all items from same restaurant)
+    const restaurantId = cartItems.length > 0 ? cartItems[0].restaurant_id : null
+
+    console.log('🛒 Cart Items:', cartItems)
+    console.log('📍 Restaurant ID extracted:', restaurantId)
+
     const cartData = {
       items: cartItems.map((item) => ({
         ...item,
         quantity: item.quantity || 1,
         subtotal: item.price * (item.quantity || 1),
       })),
+      restaurant_id: restaurantId,
       total: totalPrice,
       timestamp: new Date().toISOString(),
     }
+    console.log('📦 Checkout Data:', cartData)
     sessionStorage.setItem('checkoutData', JSON.stringify(cartData))
     navigate('/checkout')
   }
@@ -41,11 +49,11 @@ export default function CartPage() {
         ) : (
           <>
             <ul className="cart-list">
-              {cartItems.map((item) => {
+              {cartItems.map((item, index) => {
                 const imgSrc = getImageUrl(item.image)
 
                 return (
-                  <li key={item.id} className="cart-item">
+                  <li key={index} className="cart-item">
                     <img src={imgSrc} alt={item.name} />
                     <div className="cart-info">
                       <h3>{item.name}</h3>

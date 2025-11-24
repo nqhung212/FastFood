@@ -18,9 +18,15 @@ export default function ProductDetail() {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const { data, error } = await supabase.from('product').select('*').eq('slug', slug).limit(1)
+        const { data, error } = await supabase
+          .from('product')
+          .select('*, restaurant_id')
+          .eq('slug', slug)
+          .limit(1)
         if (error) throw error
-        setProduct(data && data.length ? data[0] : null)
+        const fetchedProduct = data && data.length ? data[0] : null
+        console.log('🛍️ Fetched product:', fetchedProduct)
+        setProduct(fetchedProduct)
       } catch (err) {
         console.error('Error loading product:', err)
       }
@@ -37,6 +43,8 @@ export default function ProductDetail() {
     }
 
     if (product && quantity > 0) {
+      console.log('➕ Adding to cart. Product object:', product)
+      console.log('   restaurant_id in product:', product.restaurant_id)
       addToCart(
         {
           ...product,
