@@ -1,5 +1,5 @@
 // src/pages/customer/login.jsx
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import MainLayout from '../../layouts/home-layout'
 import '../../assets/styles/auth.css'
@@ -9,17 +9,17 @@ import { supabase } from '../../lib/supabaseClient'
 export default function Login() {
   const { login, user } = useAuth()
   const navigate = useNavigate()
-
-  // Redirect to home if already logged in
-  if (user) {
-    navigate('/')
-    return null
-  }
-
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [message, setMessage] = useState('')
   const [loading, setLoading] = useState(false)
+
+  // Redirect to home if already logged in - use useEffect!
+  useEffect(() => {
+    if (user) {
+      navigate('/')
+    }
+  }, [user, navigate])
 
   const handleLogin = async (e) => {
     e.preventDefault()
