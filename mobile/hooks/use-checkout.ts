@@ -107,7 +107,7 @@ export const useCheckout = () => {
             if (!params?.id) clearCart(); // Xóa giỏ hàng (nếu không phải "mua ngay")
 
             Alert.alert("Thành công", "Đặt hàng thành công!", [
-                { text: "OK", onPress: () => router.push("/(tabs)/menu") },
+                { text: "OK", onPress: () => router.push("/(tabs)/homepage") },
             ]);
         } catch (err) {
             console.error("COD Error:", err);
@@ -134,7 +134,7 @@ export const useCheckout = () => {
                         text: "OK",
                         onPress: () => {
                             if (!params?.id) clearCart();
-                            router.push("/(tabs)/menu");
+                            router.push("/(tabs)/homepage");
                         },
                     },
                 ]
