@@ -1,5 +1,5 @@
 // src/pages/findstore.jsx
-import '../assets/styles/findstore.css'
+import '../../assets/styles/findstore.css'
 import { useState } from 'react'
 
 export default function FindStore() {

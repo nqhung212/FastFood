@@ -13,7 +13,7 @@ export default function ProductCategoriesList({ category: propCategory }) {
 
     const fetchProducts = async () => {
       try {
-        const { data, error } = await supabase.from('products').select('*')
+        const { data, error } = await supabase.from('product').select('*')
         if (error) throw error
         if (mounted) setProducts(data || [])
       } catch (err) {

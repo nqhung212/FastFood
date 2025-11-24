@@ -16,8 +16,8 @@ export default function AdminProducts() {
     const fetchProducts = async () => {
       try {
         const { data, error } = await supabase
-          .from('products')
-          .select('id, name, price, category_id')
+          .from('product')
+          .select('product_id, name, price, category_id')
           .order(sortConfig.column, { ascending: sortConfig.ascending })
 
         if (error) throw error
@@ -89,10 +89,10 @@ export default function AdminProducts() {
             <tbody>
               {products.length > 0 ? (
                 products.map((product) => (
-                  <tr key={product.id}>
+                  <tr key={product.product_id}>
                     <td>{product.name}</td>
-                    <td>${product.price.toLocaleString('en-US')}</td>
-                    <td>{product.category_id}</td>
+                    <td>{product.price.toLocaleString()}₫</td>
+                    <td>{product.category_id.slice(0, 8)}...</td>
                     <td className="actions">
                       <button className="btn-small btn-edit">Edit</button>
                     </td>

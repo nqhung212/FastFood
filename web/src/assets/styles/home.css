@@ -1,12 +1,22 @@
+.home-header {
+  padding: 40px 20px 20px 20px;
+  text-align: center;
+}
+
+.home-heading {
+  font-size: 32px;
+  font-weight: 700;
+  color: #333;
+  margin: 0;
+  letter-spacing: -0.5px;
+}
+
 .home-categories {
   display: grid;
-  /* use a fixed max column width so cards appear centered rather than stretched */
-  grid-template-columns: repeat(auto-fit, minmax(220px, 320px));
-  gap: 40px;
-  padding: 20px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  padding: 20px 40px;
   align-items: stretch;
-  justify-content: center; /* center the whole grid inside the container */
-  justify-items: center; /* center each item inside its grid cell */
 }
 
 /* Category Card: consistent aspect ratio, image cover and overlay title */
@@ -14,15 +24,14 @@
   position: relative;
   display: block;
   width: 100%;
-  max-width: 320px;
-  aspect-ratio: 4 / 5; /* keeps cards uniform height */
-  border-radius: 14px;
+  aspect-ratio: 1 / 1;
+  border-radius: 10px;
   overflow: hidden;
   text-decoration: none;
   color: var(--text-dark);
   background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.02));
-  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
-  transition: transform 0.32s cubic-bezier(.2,.9,.2,1), box-shadow 0.32s ease;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transition: transform 0.3s cubic-bezier(.2,.9,.2,1), box-shadow 0.3s ease;
   font-family: 'Baloo 2', sans-serif;
 }
 
@@ -86,35 +95,54 @@
   text-align: center;
 }
 
-/* Make grid items centered on small screens */
+/* Responsive grid */
+@media (max-width: 1024px) {
+  .home-categories {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    padding: 20px 30px;
+  }
+
+  .home-heading {
+    font-size: 28px;
+  }
+}
+
 @media (max-width: 768px) {
   .home-categories {
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 18px;
-    padding: 28px 12px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+    padding: 20px 20px;
   }
 
   .category-title {
-    font-size: 18px;
+    font-size: 16px;
     bottom: 12px;
+  }
+
+  .home-heading {
+    font-size: 24px;
   }
 }
 
 @media (max-width: 480px) {
   .home-categories {
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    grid-template-columns: repeat(2, 1fr);
     gap: 12px;
     padding: 20px 10px;
   }
 
   .category-card {
-    max-width: none;
-    aspect-ratio: 3 / 4;
-    border-radius: 12px;
+    aspect-ratio: 1 / 1;
+    border-radius: 10px;
   }
 
   .category-title {
-    font-size: 16px;
+    font-size: 14px;
     bottom: 10px;
+  }
+
+  .home-heading {
+    font-size: 20px;
   }
 }

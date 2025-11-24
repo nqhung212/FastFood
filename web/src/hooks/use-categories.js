@@ -12,12 +12,27 @@ export function useCategories() {
 
     const fetchCategories = async () => {
       try {
-        const { data, error } = await supabase.from('categories').select('*')
+        const { data, error } = await supabase.from('category').select('*')
         if (error) {
           console.error('Categories fetch error:', error)
           throw error
         }
-        if (mounted) setCategories(data || [])
+        
+        // Remove duplicate categories by name (keep first occurrence)
+        const uniqueCategories = []
+        const seenNames = new Set()
+        
+        if (data) {
+          data.forEach((cat) => {
+            const categoryName = cat.name?.toLowerCase()
+            if (categoryName && !seenNames.has(categoryName)) {
+              seenNames.add(categoryName)
+              uniqueCategories.push(cat)
+            }
+          })
+        }
+        
+        if (mounted) setCategories(uniqueCategories)
       } catch (err) {
         console.error('Categories error:', err)
         setError(err.message || String(err))
@@ -49,8 +64,8 @@ export function useProductsByCategory(category) {
       try {
         // Step 1: Get all categories to find matching one
         const { data: allCategories, error: catError } = await supabase
-          .from('categories')
-          .select('id, name')
+          .from('category')
+          .select('category_id, name')
 
         if (catError) {
           console.error('❌ Fetch categories error:', catError)
@@ -68,9 +83,9 @@ export function useProductsByCategory(category) {
 
         // Step 2: Fetch products by category_id
         const { data: productsData, error: productsError } = await supabase
-          .from('products')
+          .from('product')
           .select('*')
-          .eq('category_id', matchedCategory.id)
+          .eq('category_id', matchedCategory.category_id)
 
         if (productsError) {
           console.error('Products fetch error:', productsError)

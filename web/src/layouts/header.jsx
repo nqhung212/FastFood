@@ -1,70 +1,24 @@
 // src/layouts/header.jsx
-import { Link, useNavigate, useLocation } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useCart } from '../context/cart-context'
 import { useAuth } from '../context/auth-context'
 import { useSearch } from '../hooks/use-search'
-import { useState, useEffect, useRef } from 'react'
+import { useState } from 'react'
 import { useHeaderScroll } from '../hooks/use-header-scroll'
-import getImage from '../utils/import-image.js'
-
-const categories = [
-  { name: 'Burger', image: '/images/burger.jpg' },
-  { name: 'Chicken', image: '/images/pizza.jpg' },
-  { name: 'Fries', image: '/images/cola.jpg' },
-]
 
 export default function Header() {
   const navigate = useNavigate()
-  const location = useLocation()
   const { cartItems } = useCart()
   const { user, logout } = useAuth()
   const { searchTerm, setSearchTerm, handleSearch, handleKeyPress } = useSearch()
-  const [showCategoryDropdown, setShowCategoryDropdown] = useState(false)
   const [showHeaderTop, setShowHeaderTop] = useState(true)
-  const menuRef = useRef(null)
-  const hideTimeoutRef = useRef(null)
-  const lastScrollRef = useRef(0)
-  const HIDE_DELAY = 100 // ms
 
   const handleAvatarClick = () => {
     navigate('/account')
   }
 
-  const isMenuPage = location.pathname.includes('/menu')
-
   // Use custom hook for header scroll behavior
   useHeaderScroll(setShowHeaderTop)
-
-  // Always open dropdown when on /menu
-  useEffect(() => {
-    if (isMenuPage) {
-      setShowCategoryDropdown(true)
-    }
-  }, [isMenuPage])
-
-  // Close dropdown when clicking outside (only when not on /menu)
-  useEffect(() => {
-    if (isMenuPage) return
-
-    const handleClickOutside = (event) => {
-      if (menuRef.current && !menuRef.current.contains(event.target)) {
-        setShowCategoryDropdown(false)
-      }
-    }
-
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [isMenuPage])
-
-  // Clear any pending hide timeout on unmount
-  useEffect(() => {
-    return () => {
-      if (hideTimeoutRef.current) {
-        clearTimeout(hideTimeoutRef.current)
-        hideTimeoutRef.current = null
-      }
-    }
-  }, [])
 
   return (
     <header className="header-banner">
@@ -152,104 +106,6 @@ export default function Header() {
           </div>
         </div>
       </div>
-
-      {/* Navigation Bar */}
-      <nav className="header-nav">
-        <div className="nav-container">
-          <Link to="/" className={`nav-item ${location.pathname === '/' ? 'active' : ''}`}>
-            HOME
-          </Link>
-          <div
-            ref={menuRef}
-            className={`nav-item menu-item ${isMenuPage ? 'active' : ''}`}
-            onMouseEnter={() => {
-              // clear any pending hide timeout and show dropdown
-              if (hideTimeoutRef.current) {
-                clearTimeout(hideTimeoutRef.current)
-                hideTimeoutRef.current = null
-              }
-              if (!isMenuPage) setShowCategoryDropdown(true)
-            }}
-            onMouseLeave={() => {
-              // delay hiding so user can move into the dropdown without it disappearing
-              if (isMenuPage) return
-              if (hideTimeoutRef.current) clearTimeout(hideTimeoutRef.current)
-              hideTimeoutRef.current = setTimeout(() => {
-                setShowCategoryDropdown(false)
-                hideTimeoutRef.current = null
-              }, HIDE_DELAY)
-            }}
-          >
-            <button type="button" onClick={() => navigate('/menu')}>
-              MENU
-            </button>
-            {showCategoryDropdown && !isMenuPage && (
-              <div
-                className="category-dropdown"
-                onMouseEnter={() => {
-                  if (hideTimeoutRef.current) {
-                    clearTimeout(hideTimeoutRef.current)
-                    hideTimeoutRef.current = null
-                  }
-                }}
-                onMouseLeave={() => {
-                  if (isMenuPage) return
-                  if (hideTimeoutRef.current) clearTimeout(hideTimeoutRef.current)
-                  hideTimeoutRef.current = setTimeout(() => {
-                    setShowCategoryDropdown(false)
-                    hideTimeoutRef.current = null
-                  }, HIDE_DELAY)
-                }}
-              >
-                {categories.map((cat) => (
-                  <button
-                    key={cat.name}
-                    className="dropdown-item"
-                    type="button"
-                    onClick={() => {
-                      navigate(`/menu/${cat.name}`)
-                      setShowCategoryDropdown(false)
-                    }}
-                    style={{ background: 'none', border: 'none', cursor: 'pointer' }}
-                  >
-                    <img src={getImage(cat.image)} alt={cat.name} />
-
-                    <span>{cat.name}</span>
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-          <a href="#" className="nav-item">
-            PROMOTION
-          </a>
-          <a href="#" className="nav-item">
-            CONTACT
-          </a>
-          <a href="#" className="nav-item">
-            ABOUT
-          </a>
-        </div>
-      </nav>
-
-      {/* Category Dropdown khi ở /menu */}
-      {isMenuPage && showCategoryDropdown && (
-        <div className="menu-page-dropdown-section">
-          <div className="menu-page-dropdown">
-            {categories.map((cat) => (
-              <button
-                key={cat.name}
-                className="dropdown-item"
-                onClick={() => navigate(`/menu/${cat.name}`)}
-                style={{ background: 'none', border: 'none', cursor: 'pointer' }}
-              >
-                <img src={getImage(cat.image)} alt={cat.name} />
-                <span>{cat.name}</span>
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
     </header>
   )
 }

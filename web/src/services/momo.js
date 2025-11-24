@@ -57,12 +57,12 @@ export async function initiateMoMoPayment(paymentData, onSuccess) {
 
 export async function savePaymentToSupabase(paymentData) {
   try {
-    const { data, error } = await supabase.from('payments').insert([
+    const { data, error } = await supabase.from('payment').insert([
       {
+        payment_id: crypto.randomUUID(),
         order_id: paymentData.orderId,
         amount: paymentData.amount,
         status: paymentData.status || 'pending',
-        payment_data: paymentData.paymentData || null,
         provider: 'momo',
       }
     ]);
@@ -79,9 +79,9 @@ export async function savePaymentToSupabase(paymentData) {
 export async function saveOrderToSupabase(orderData) {
   try {
     const { data: existingOrder, error: checkError } = await supabase
-      .from('orders')
-      .select('id')
-      .eq('id', orderData.orderId)
+      .from('order')
+      .select('order_id')
+      .eq('order_id', orderData.orderId)
       .maybeSingle()
 
     if (checkError) throw checkError
@@ -89,24 +89,25 @@ export async function saveOrderToSupabase(orderData) {
     if (existingOrder) {
       console.log('📝 Order already exists, updating status to completed...')
       const { error } = await supabase
-        .from('orders')
-        .update({ status: 'completed' })
-        .eq('id', orderData.orderId)
+        .from('order')
+        .update({ order_status: 'completed' })
+        .eq('order_id', orderData.orderId)
       
       if (error) throw error
       console.log('✅ Order status updated to Supabase')
       return { success: true }
     } else {
       console.log('➕ Creating new order...')
-      const { error } = await supabase.from('orders').insert([
+      const { error } = await supabase.from('order').insert([
         {
-          id: orderData.orderId,
-          user_id: orderData.userId,
-          total_amount: orderData.amount,
-          status: 'completed',
-          customer_name: orderData.customerName || '',
-          customer_phone: orderData.customerPhone || '',
-          customer_address: orderData.customerAddress || '',
+          order_id: orderData.orderId,
+          customer_id: orderData.userId,
+          total_price: orderData.amount,
+          order_status: 'completed',
+          payment_status: 'paid',
+          shipping_name: orderData.customerName || '',
+          shipping_phone: orderData.customerPhone || '',
+          shipping_address: orderData.customerAddress || '',
         }
       ])
 
@@ -117,6 +118,7 @@ export async function saveOrderToSupabase(orderData) {
     if (orderData.items && orderData.items.length > 0) {
       console.log('📦 Saving order items...')
       const orderItems = orderData.items.map(item => ({
+        order_item_id: crypto.randomUUID(),
         order_id: orderData.orderId,
         product_id: item.id,
         quantity: item.quantity,

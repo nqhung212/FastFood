@@ -1,8 +1,8 @@
 // src/pages/search.jsx
 import { Link, useParams } from 'react-router-dom'
-import MenuLayout from '../layouts/menu-layout.jsx'
-import { useProducts } from '../hooks/use-products.js'
-import '../assets/styles/menu-categories.css'
+import MenuLayout from '../../layouts/menu-layout.jsx'
+import { useProducts } from '../../hooks/use-products.js'
+import '../../assets/styles/menu-categories.css'
 
 export default function Search() {
   const { searchTerm } = useParams()

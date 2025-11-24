@@ -21,19 +21,21 @@ export default function AdminDashboard() {
     const fetchStats = async () => {
       try {
         // Fetch orders count
-        const { count: ordersCount } = await supabase.from('orders').select('*', { count: 'exact' })
+        const { count: ordersCount } = await supabase.from('order').select('*', { count: 'exact' })
 
         // Fetch users count
-        const { count: usersCount } = await supabase.from('users').select('*', { count: 'exact' })
+        const { count: usersCount } = await supabase
+          .from('user_account')
+          .select('*', { count: 'exact' })
 
         // Fetch products count
         const { count: productsCount } = await supabase
-          .from('products')
+          .from('product')
           .select('*', { count: 'exact' })
 
         // Fetch categories count
         const { count: categoriesCount } = await supabase
-          .from('categories')
+          .from('category')
           .select('*', { count: 'exact' })
 
         setStats({

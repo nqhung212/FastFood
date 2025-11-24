@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
-import MainLayout from '../layouts/home-layout.jsx'
-import { useCart } from '../context/cart-context.jsx'
-import { useAuth } from '../context/auth-context'
-import { checkPaymentStatus } from '../api/momo-payment.js'
-import { saveOrderToSupabase } from '../services/momo.js'
+import MainLayout from '../../layouts/home-layout.jsx'
+import { useCart } from '../../context/cart-context.jsx'
+import { useAuth } from '../../context/auth-context'
+import { checkPaymentStatus } from '../../api/momo-payment.js'
+import { saveOrderToSupabase } from '../../services/momo.js'
 
 export default function PaymentSuccessPage() {
   const navigate = useNavigate()

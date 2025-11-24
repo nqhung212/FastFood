@@ -1,5 +1,5 @@
 // src/pages/order.jsx
-import '../assets/styles/order.css'
+import '../../assets/styles/order.css'
 const a = [
   {
     id: 1,

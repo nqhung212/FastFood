@@ -1,5 +1,5 @@
 // src/pages/banner.jsx
-import '../assets/styles/banner.css'
+import '../../assets/styles/banner.css'
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 

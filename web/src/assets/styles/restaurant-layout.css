@@ -1,0 +1,283 @@
+/* Restaurant Layout Styles */
+
+.restaurant-layout {
+  display: flex;
+  height: 100vh;
+  background-color: #f5f5f5;
+}
+
+/* Sidebar */
+.restaurant-sidebar {
+  width: 250px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+  position: relative;
+  z-index: 100;
+}
+
+.sidebar-header {
+  padding: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sidebar-header h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.close-mobile-menu {
+  display: none;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 0;
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: 20px 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.nav-item {
+  padding: 15px 20px;
+  color: white;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  font-size: 15px;
+  transition: all 0.3s ease;
+  border-left: 4px solid transparent;
+}
+
+.nav-item:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+  border-left-color: white;
+  padding-left: 22px;
+}
+
+.sidebar-footer {
+  padding: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.btn-logout-sidebar {
+  width: 100%;
+  padding: 12px;
+  background-color: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.btn-logout-sidebar:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+  border-color: white;
+}
+
+/* Main Content Area */
+.restaurant-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.restaurant-header {
+  background-color: white;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.menu-toggle {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #333;
+}
+
+.page-title {
+  margin: 0;
+  font-size: 24px;
+  color: #333;
+  font-weight: 600;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.user-email {
+  font-size: 14px;
+  color: #666;
+}
+
+.btn-logout-header {
+  padding: 10px 20px;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+}
+
+.btn-logout-header:hover {
+  background-color: #c82333;
+}
+
+/* Main Content */
+.restaurant-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0;
+}
+
+/* Footer */
+.restaurant-footer {
+  background-color: white;
+  padding: 20px;
+  text-align: center;
+  border-top: 1px solid #e0e0e0;
+  color: #666;
+  font-size: 13px;
+}
+
+.mobile-menu-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 99;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .restaurant-layout {
+    flex-direction: column;
+  }
+
+  .restaurant-sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100vh;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    z-index: 101;
+  }
+
+  .restaurant-sidebar.mobile-open {
+    transform: translateX(0);
+  }
+
+  .mobile-menu-overlay {
+    display: block;
+  }
+
+  .close-mobile-menu {
+    display: block;
+  }
+
+  .menu-toggle {
+    display: block;
+  }
+
+  .restaurant-main {
+    flex: 1;
+  }
+
+  .restaurant-header {
+    padding: 15px;
+  }
+
+  .header-left {
+    gap: 15px;
+  }
+
+  .page-title {
+    font-size: 18px;
+  }
+
+  .header-right {
+    gap: 10px;
+  }
+
+  .user-email {
+    display: none;
+  }
+
+  .btn-logout-header {
+    padding: 8px 16px;
+    font-size: 13px;
+  }
+
+  .restaurant-content {
+    padding: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .restaurant-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .header-left {
+    width: 100%;
+  }
+
+  .page-title {
+    font-size: 16px;
+  }
+
+  .header-right {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  .btn-logout-header {
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+}

@@ -91,7 +91,7 @@ export function useUsers() {
 
     const fetchUsers = async () => {
       try {
-        const { data, error } = await supabase.from('users').select('*')
+        const { data, error } = await supabase.from('user_account').select('*')
         if (error) throw error
         if (mounted) setUsers(data || [])
       } catch (err) {

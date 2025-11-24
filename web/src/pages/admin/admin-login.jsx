@@ -1,10 +1,10 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { supabase } from '../lib/supabaseClient'
-import '../assets/styles/auth.css'
+import { supabase } from '../../lib/supabaseClient'
+import '../../assets/styles/auth.css'
 
 export default function AdminLogin() {
-  const [username, setUsername] = useState('')
+  const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [message, setMessage] = useState('')
   const [loading, setLoading] = useState(false)
@@ -16,39 +16,50 @@ export default function AdminLogin() {
     setMessage('')
 
     try {
-      // Query users table to check username + password
+      // Validate input
+      if (!email || !password) {
+        throw new Error('Email and password are required')
+      }
+
+      // Check if user exists and is admin
       const { data: userData, error: userError } = await supabase
-        .from('users')
-        .select('id, username, role')
-        .eq('username', username)
-        .eq('password', password)
+        .from('user_account')
+        .select('user_id, email, role, status')
+        .eq('email', email)
+        .eq('role', 'admin')
+        .eq('status', true)
         .single()
 
       if (userError || !userData) {
-        throw new Error('Invalid username or password')
+        throw new Error('Invalid email or not an admin user')
       }
 
-      // Check role
-      if (userData.role !== 'admin') {
-        throw new Error('Only admin users can access this page')
+      // Login using Supabase Auth
+      const { error: authError } = await supabase.auth.signInWithPassword({
+        email: email,
+        password: password,
+      })
+
+      if (authError) {
+        throw new Error('Invalid password')
       }
 
       // Save admin session to localStorage
       localStorage.setItem(
         'adminSession',
         JSON.stringify({
-          id: userData.id,
-          username: userData.username,
+          id: userData.user_id,
+          email: userData.email,
           role: userData.role,
           loginTime: new Date().toISOString(),
         })
       )
 
-      setMessage('Login successful!')
+      setMessage('✅ Login successful!')
       setTimeout(() => navigate('/admin'), 1000)
     } catch (err) {
       console.error('Admin login error:', err)
-      setMessage(`${err.message}`)
+      setMessage(`❌ ${err.message}`)
       setLoading(false)
     }
   }
@@ -80,12 +91,12 @@ export default function AdminLogin() {
             <label
               style={{ display: 'block', marginBottom: '5px', color: '#333', fontWeight: '500' }}
             >
-              Username
+              Email
             </label>
             <input
-              type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               required
               disabled={loading}
               style={{
@@ -148,8 +159,8 @@ export default function AdminLogin() {
               padding: '10px',
               borderRadius: '4px',
               textAlign: 'center',
-              background: message.includes('Invalid') || message.includes('Only') ? '#fee' : '#efe',
-              color: message.includes('Invalid') || message.includes('Only') ? '#c33' : '#3c3',
+              background: message.startsWith('❌') ? '#fee' : '#efe',
+              color: message.startsWith('❌') ? '#c33' : '#3c3',
               fontSize: '14px',
             }}
           >

@@ -1,5 +1,5 @@
 // src/pages/services.jsx
-import '../assets/styles/services.css'
+import '../../assets/styles/services.css'
 
 const services = [
   {

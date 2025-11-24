@@ -1,11 +1,11 @@
 // src/pages/product-detail.jsx
 import { useParams, useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
-import MainLayout from '../layouts/home-layout.jsx'
-import '../assets/styles/product-detail.css'
-import { useCart } from '../context/cart-context.jsx'
-import { useAuth } from '../context/auth-context.jsx'
-import { supabase } from '../lib/supabaseClient'
+import MainLayout from '../../layouts/home-layout.jsx'
+import '../../assets/styles/product-detail.css'
+import { useCart } from '../../context/cart-context.jsx'
+import { useAuth } from '../../context/auth-context.jsx'
+import { supabase } from '../../lib/supabaseClient'
 
 export default function ProductDetail() {
   const { slug } = useParams()
@@ -18,11 +18,7 @@ export default function ProductDetail() {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const { data, error } = await supabase
-          .from('products')
-          .select('*')
-          .eq('slug', slug)
-          .limit(1)
+        const { data, error } = await supabase.from('product').select('*').eq('slug', slug).limit(1)
         if (error) throw error
         setProduct(data && data.length ? data[0] : null)
       } catch (err) {

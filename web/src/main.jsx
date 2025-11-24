@@ -5,11 +5,13 @@ import { createRoot } from 'react-dom/client'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { AuthProvider } from './context/auth-context.jsx'
 import { CartProvider } from './context/cart-context.jsx'
-import { publicRoutes, adminRoutes } from './routes'
+import ScrollToTop from './components/scroll-to-top.jsx'
+import { publicRoutes, adminRoutes, restaurantOwnerRoutes } from './routes'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
+      <ScrollToTop />
       <AuthProvider>
         <CartProvider>
           <Routes>
@@ -17,6 +19,9 @@ createRoot(document.getElementById('root')).render(
               <Route key={path} path={path} element={<Element />} />
             ))}
             {adminRoutes.map(({ path, element: Element }) => (
+              <Route key={path} path={path} element={<Element />} />
+            ))}
+            {restaurantOwnerRoutes.map(({ path, element: Element }) => (
               <Route key={path} path={path} element={<Element />} />
             ))}
           </Routes>

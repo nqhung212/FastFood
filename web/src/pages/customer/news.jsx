@@ -1,5 +1,5 @@
 // src/pages/news.jsx
-import '../assets/styles/news.css'
+import '../../assets/styles/news.css'
 
 const newsItems = [
   {

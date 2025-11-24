@@ -16,8 +16,8 @@ export default function AdminCategories() {
     const fetchCategories = async () => {
       try {
         const { data, error } = await supabase
-          .from('categories')
-          .select('id, name')
+          .from('category')
+          .select('category_id, name')
           .order(sortConfig.column, { ascending: sortConfig.ascending })
 
         if (error) throw error
@@ -74,9 +74,6 @@ export default function AdminCategories() {
           <table className="admin-table">
             <thead>
               <tr>
-                <th onClick={() => handleSort('id')} className="sortable">
-                  ID {getSortIcon('id')}
-                </th>
                 <th onClick={() => handleSort('name')} className="sortable">
                   Category Name {getSortIcon('name')}
                 </th>
@@ -86,8 +83,7 @@ export default function AdminCategories() {
             <tbody>
               {categories.length > 0 ? (
                 categories.map((category) => (
-                  <tr key={category.id}>
-                    <td>{category.id}</td>
+                  <tr key={category.category_id}>
                     <td>{category.name}</td>
                     <td className="actions">
                       <button className="btn-small btn-edit">Edit</button>
@@ -96,7 +92,7 @@ export default function AdminCategories() {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="3" style={{ textAlign: 'center', padding: '20px' }}>
+                  <td colSpan="2" style={{ textAlign: 'center', padding: '20px' }}>
                     No categories found
                   </td>
                 </tr>

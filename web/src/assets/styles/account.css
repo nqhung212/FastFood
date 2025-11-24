@@ -390,3 +390,131 @@
     width: 100%;
   }
 }
+
+/* Order Item Styles */
+.order-item {
+  background-color: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: box-shadow 0.3s ease;
+}
+
+.order-item:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.order-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.order-header div:first-child {
+  flex: 1;
+}
+
+.order-header strong {
+  font-size: 16px;
+  color: #333;
+}
+
+.order-date {
+  margin: 5px 0 0 0;
+  font-size: 13px;
+  color: #999;
+}
+
+.order-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.order-info strong {
+  font-size: 18px;
+  color: #667eea;
+}
+
+.order-status {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: white;
+}
+
+.order-status.pending {
+  background-color: #ffc107;
+  color: #333;
+}
+
+.order-status.confirmed {
+  background-color: #17a2b8;
+}
+
+.order-status.preparing {
+  background-color: #fd7e14;
+}
+
+.order-status.delivering {
+  background-color: #007bff;
+}
+
+.order-status.completed {
+  background-color: #28a745;
+}
+
+.order-status.cancelled {
+  background-color: #dc3545;
+}
+
+.order-details {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  font-size: 14px;
+  color: #666;
+}
+
+@media (max-width: 600px) {
+  .order-details {
+    grid-template-columns: 1fr;
+  }
+
+  .order-header {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .order-info {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+.btn-view-detail {
+  align-self: flex-start;
+  padding: 8px 16px;
+  background-color: #667eea;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+  text-decoration: none;
+}
+
+.btn-view-detail:hover {
+  background-color: #5568d3;
+}

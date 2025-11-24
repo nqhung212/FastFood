@@ -24,21 +24,22 @@ export function CartProvider({ children }) {
         try {
           // Delete all existing cart items for this user
           const { error: deleteError } = await supabase
-            .from('carts')
+            .from('cart')
             .delete()
-            .eq('user_id', user.id)
+            .eq('customer_id', user.id)
 
           if (deleteError) throw deleteError
 
           // Insert new cart items (only if cart is not empty)
           if (cartItems && cartItems.length > 0) {
             const itemsToInsert = cartItems.map((item) => ({
-              user_id: user.id,
+              customer_id: user.id,
               product_id: item.id,
               quantity: item.quantity,
+              price: item.price || 0,
             }))
 
-            const { error: insertError } = await supabase.from('carts').insert(itemsToInsert)
+            const { error: insertError } = await supabase.from('cart').insert(itemsToInsert)
 
             if (insertError) throw insertError
           }
@@ -106,9 +107,9 @@ export function CartProvider({ children }) {
     // if user logged in, remove all cart items in Supabase
     if (user) {
       supabase
-        .from('carts')
+        .from('cart')
         .delete()
-        .eq('user_id', user.id)
+        .eq('customer_id', user.id)
         .then(({ error }) => {
           if (error) console.error('Error clearing cart in Supabase', error)
         })
