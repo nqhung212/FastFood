@@ -41,7 +41,7 @@ export default function PaymentSuccessPage() {
   useEffect(() => {
     if (paymentStatus?.status === 'success') {
       console.log('🗑️ Payment successful, clearing cart...')
-      clearCart()
+      clearCart() // Now it's async and will handle database cleanup
     }
   }, [paymentStatus?.status])
 

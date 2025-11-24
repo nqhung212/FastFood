@@ -7,26 +7,20 @@ import { supabase } from '../lib/supabaseClient'
  * @param {Array} cartItems - Current cart items
  * @param {Function} setCartItems - State setter for cart items
  */
-export function useCartPersistence(user, cartItems, setCartItems) {
-  // Load cart from localStorage for guests OR from Supabase for authenticated users
+export function useCartPersistence(user, isLoading, cartItems, setCartItems) {
+  // Load cart from Supabase for authenticated users ONLY
+  // Wait until auth is ready (isLoading = false) before loading cart
   useEffect(() => {
     let mounted = true
 
     const loadCart = async () => {
       try {
+        // Don't load if still checking auth status
+        if (isLoading) return
+
         if (!user) {
-          // Guest user: load from localStorage
-          const savedCart = localStorage.getItem('cart')
-          if (mounted && savedCart) {
-            try {
-              setCartItems(JSON.parse(savedCart))
-            } catch (err) {
-              console.error('Error parsing cart from localStorage', err)
-              setCartItems([])
-            }
-          } else if (mounted) {
-            setCartItems([])
-          }
+          // Not logged in - empty cart
+          if (mounted) setCartItems([])
           return
         }
 
@@ -49,7 +43,6 @@ export function useCartPersistence(user, cartItems, setCartItems) {
           image: cartItem.product?.image_url,
         })) || []
 
-        console.log('📦 Cart loaded from Supabase:', loadedCartItems)
         if (mounted) setCartItems(loadedCartItems)
       } catch (err) {
         console.error('Error loading cart', err)
@@ -62,6 +55,6 @@ export function useCartPersistence(user, cartItems, setCartItems) {
     return () => {
       mounted = false
     }
-  }, [user]) // Only depend on user, not setCartItems
+  }, [user?.id, isLoading])
 }
 

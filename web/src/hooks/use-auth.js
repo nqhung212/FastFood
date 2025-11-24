@@ -10,6 +10,7 @@ import { supabase } from '../lib/supabaseClient'
  */
 export function useAuthListener() {
   const [user, setUser] = useState(null)
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     let mounted = true
@@ -20,9 +21,13 @@ export function useAuthListener() {
         const {
           data: { user: currentUser },
         } = await supabase.auth.getUser()
-        if (mounted) setUser(currentUser)
+        if (mounted) {
+          setUser(currentUser)
+          setIsLoading(false)
+        }
       } catch (err) {
         console.error('Error getting supabase user', err)
+        if (mounted) setIsLoading(false)
       }
     }
 
@@ -30,7 +35,10 @@ export function useAuthListener() {
 
     // Listen for auth changes (login/logout)
     const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (mounted) setUser(session?.user ?? null)
+      if (mounted) {
+        setUser(session?.user ?? null)
+        setIsLoading(false)
+      }
     })
 
     // Cleanup: prevent state updates after unmount and unsubscribe from listener
@@ -40,7 +48,7 @@ export function useAuthListener() {
     }
   }, [])
 
-  return { user }
+  return { user, isLoading }
 }
 
 // Hook for current authenticated user (reads from auth context)
