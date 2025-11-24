@@ -105,7 +105,7 @@ export default function CheckoutScreen() {
             }
 
             const { data: orderData, error: orderError } = await supabase
-                .from('"order"')
+                .from('order')
                 .insert([
                     {
                         customer_id: userId,
@@ -162,7 +162,7 @@ export default function CheckoutScreen() {
             const orderId = uuidv4();
             const userId = user?.id || null;
 
-            await supabase.from('"order"').insert([
+            await supabase.from('order').insert([
                 {
                     order_id: orderId,
                     customer_id: userId,
@@ -234,7 +234,7 @@ export default function CheckoutScreen() {
                             text: "OK",
                             onPress: () => {
                                 if (!params?.id) clearCart();
-                                router.push("/(tabs)/menu");
+                                router.push("/(tabs)/homepage");
                             },
                         },
                     ]

@@ -31,7 +31,7 @@ export default function OrderHistoryScreen() {
         setUser(parsed);
 
         const { data, error } = await supabase
-            .from('"order"')
+            .from('order')
             .select('*')
             .eq('customer_id', parsed.id)
             .order('created_at', { ascending: false });

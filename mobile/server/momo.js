@@ -31,7 +31,7 @@ router.post("/checkout", async (req, res) => {
 
     // 🧾 Ensure order exists in new schema (quoted table name "order") to avoid FK issues
     const { error: insertOrderError } = await supabase
-      .from('"order"')
+      .from('order')
       .insert([{ order_id: orderId, total_price: amount, order_status: 'pending', payment_status: 'pending' }])
       .select('order_id');
     if (insertOrderError)
@@ -129,7 +129,7 @@ router.post("/callback", async (req, res) => {
 
       // ✅ Update order payment status and order status
       const { error: updateErr } = await supabase
-        .from('"order"')
+        .from('order')
         .update({ payment_status: 'paid', order_status: 'confirmed' })
         .eq('order_id', orderId);
       if (updateErr) console.error('⚠️ Lỗi cập nhật orders:', updateErr);
@@ -150,7 +150,7 @@ router.post("/callback", async (req, res) => {
     } else {
       console.warn(`⚠️ Thanh toán thất bại cho đơn ${orderId}`);
 
-      await supabase.from('"order"').update({ payment_status: 'failed', order_status: 'cancelled' }).eq('order_id', orderId);
+  await supabase.from('order').update({ payment_status: 'failed', order_status: 'cancelled' }).eq('order_id', orderId);
 
       await supabase.from('payment').insert([
         {

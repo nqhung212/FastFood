@@ -42,7 +42,7 @@ const createOrderInSupabase = async (orderId: string, orderData: any) => {
 
         // 1. Create order in new schema: table is named "order"
         const { error: orderError } = await supabase
-            .from('"order"')
+            .from('order')
             .insert([
                 {
                     order_id: orderId,
@@ -66,7 +66,7 @@ const createOrderInSupabase = async (orderId: string, orderData: any) => {
             price: item.price,
         }));
 
-        const { error: itemsError } = await supabase.from('order_item').insert(orderItems);
+    const { error: itemsError } = await supabase.from('order_item').insert(orderItems);
         if (itemsError) throw itemsError;
 };
 
