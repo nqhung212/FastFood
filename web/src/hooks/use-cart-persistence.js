@@ -7,33 +7,27 @@ import { supabase } from '../lib/supabaseClient'
  * @param {Array} cartItems - Current cart items
  * @param {Function} setCartItems - State setter for cart items
  */
-export function useCartPersistence(user, cartItems, setCartItems) {
-  // Load cart from localStorage for guests OR from Supabase for authenticated users
+export function useCartPersistence(user, isLoading, cartItems, setCartItems) {
+  // Load cart from Supabase for authenticated users ONLY
+  // Wait until auth is ready (isLoading = false) before loading cart
   useEffect(() => {
     let mounted = true
 
     const loadCart = async () => {
       try {
+        // Don't load if still checking auth status
+        if (isLoading) return
+
         if (!user) {
-          // Guest user: load from localStorage
-          const savedCart = localStorage.getItem('cart')
-          if (mounted && savedCart) {
-            try {
-              setCartItems(JSON.parse(savedCart))
-            } catch (err) {
-              console.error('Error parsing cart from localStorage', err)
-              setCartItems([])
-            }
-          } else if (mounted) {
-            setCartItems([])
-          }
+          // Not logged in - empty cart
+          if (mounted) setCartItems([])
           return
         }
 
         // Authenticated user: load from Supabase
         const { data, error } = await supabase
           .from('cart')
-          .select('product_id, quantity, price')
+          .select('product_id, quantity, price, product(restaurant_id, name, description, image_url)')
           .eq('customer_id', user.id)
 
         if (error) throw error
@@ -43,6 +37,10 @@ export function useCartPersistence(user, cartItems, setCartItems) {
           id: cartItem.product_id,
           quantity: cartItem.quantity,
           price: cartItem.price,
+          restaurant_id: cartItem.product?.restaurant_id,
+          name: cartItem.product?.name,
+          description: cartItem.product?.description,
+          image: cartItem.product?.image_url,
         })) || []
 
         if (mounted) setCartItems(loadedCartItems)
@@ -57,6 +55,6 @@ export function useCartPersistence(user, cartItems, setCartItems) {
     return () => {
       mounted = false
     }
-  }, [user, setCartItems])
+  }, [user?.id, isLoading])
 }
 

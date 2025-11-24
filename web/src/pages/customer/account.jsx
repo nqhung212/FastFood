@@ -235,10 +235,10 @@ export default function AccountPage() {
                 ) : (
                   <div className="orders-list">
                     {orders.map((order) => (
-                      <div key={order.id} className="order-item">
-                        <p>Order #{order.id}</p>
-                        <p>Total: {order.total}</p>
-                        <p>Date: {order.date}</p>
+                      <div key={order.order_id} className="order-item">
+                        <p>Order #{order.order_id.slice(0, 8)}</p>
+                        <p>Total: {parseFloat(order.total_price).toLocaleString()}₫</p>
+                        <p>Date: {new Date(order.created_at).toLocaleDateString()}</p>
                       </div>
                     ))}
                   </div>

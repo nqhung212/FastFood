@@ -43,10 +43,10 @@ export default function OrderDetail() {
           .from('delivery_tracking')
           .select('*')
           .eq('order_id', orderId)
-          .single()
+          .maybeSingle()
 
-        if (trackingError && trackingError.code !== 'PGRST116') {
-          throw trackingError
+        if (trackingError) {
+          console.log('No delivery tracking found:', trackingError)
         }
         setDeliveryTracking(trackingData || null)
       } catch (err) {
