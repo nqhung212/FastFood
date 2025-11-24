@@ -227,7 +227,7 @@ export default function HomeScreen() {
       ) : (
         <View style={{ paddingBottom: 16 }}>
           {restaurants.map((r) => (
-            <TouchableOpacity key={r.id} style={styles.restaurantRowCard} onPress={() => router.push(`/cart/menu?restaurantId=${r.id}`)}>
+            <TouchableOpacity key={r.id} style={styles.restaurantRowCard} onPress={() => router.push(`/order/menu?restaurantId=${r.id}`)}>
               <Image source={{ uri: r.logo || 'https://uuxtbxkgnktfcbdevbmx.supabase.co/storage/v1/object/public/product-image/logo.png' }} style={styles.restaurantLogo} resizeMode="cover" />
               <View style={styles.restaurantInfo}>
                 <Text style={styles.restaurantName}>{r.name}</Text>

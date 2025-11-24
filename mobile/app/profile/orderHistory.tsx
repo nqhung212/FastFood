@@ -131,10 +131,11 @@ export default function OrderHistoryScreen() {
                 ) : (
                     orders.map((order) => (
                         <TouchableOpacity
-                            key={order.order_id}
-                            style={styles.orderCard}
-                            activeOpacity={0.85}
-                        >
+                                key={order.order_id}
+                                style={styles.orderCard}
+                                activeOpacity={0.85}
+                                onPress={() => router.push(`/order/order?orderId=${order.order_id}`)}
+                            >
                             <View style={styles.orderHeader}>
                                 <Text style={styles.orderCode}>Mã đơn: #{order.order_id?.slice(0, 8)}</Text>
                                 <View

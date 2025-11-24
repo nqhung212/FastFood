@@ -63,7 +63,10 @@ export default function OrderDetailScreen() {
       (payload: any) => {
         console.log('realtime order INSERT', payload?.eventType, payload?.new ? Object.keys(payload.new) : null);
         if (payload?.new) {
-          setOrder((prev: any) => ({ ...(prev || {}), ...(payload.new || {}) }));
+          setOrder((prev: any) => {
+            const merged = { ...(prev || {}), ...(payload.new || {}) };
+            return merged;
+          });
           setTick(t => t + 1);
         }
       }
@@ -74,7 +77,10 @@ export default function OrderDetailScreen() {
       (payload: any) => {
         console.log('realtime order UPDATE', payload?.eventType, payload?.new ? Object.keys(payload.new) : null);
         if (payload?.new) {
-          setOrder((prev: any) => ({ ...(prev || {}), ...(payload.new || {}) }));
+          setOrder((prev: any) => {
+            const merged = { ...(prev || {}), ...(payload.new || {}) };
+            return merged;
+          });
           setTick(t => t + 1);
         }
       }
