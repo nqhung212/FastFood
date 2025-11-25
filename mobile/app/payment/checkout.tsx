@@ -28,7 +28,7 @@ export default function CheckoutScreen() {
     return (
         <>
             <Stack.Screen options={{ headerShown: false }} />
-            <SafeAreaView style={styles.safeArea}>
+            {/* <SafeAreaView style={styles.safeArea}> */}
                 <ScrollView contentContainerStyle={styles.container}>
                     <Image
                         source={{
