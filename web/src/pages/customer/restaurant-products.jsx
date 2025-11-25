@@ -130,7 +130,7 @@ export default function RestaurantProducts() {
       },
       1
     )
-    
+
     // Show toast notification instead of alert
     setNotification(`✓ ${product.name} added to cart`)
     setTimeout(() => setNotification(''), 3000)
@@ -139,11 +139,7 @@ export default function RestaurantProducts() {
   return (
     <MainLayout>
       <div className="restaurant-products-page">
-        {notification && (
-          <div className="toast-notification">
-            {notification}
-          </div>
-        )}
+        {notification && <div className="toast-notification">{notification}</div>}
 
         <div className="page-header">
           <button className="back-button" onClick={() => navigate(-1)}>
