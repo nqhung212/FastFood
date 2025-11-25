@@ -34,8 +34,6 @@ import RestaurantOrders from '../pages/restaurant_owner/orders'
 
 export const publicRoutes = [
   { path: '/', element: Web },
-  { path: '/menu', element: Menu },
-  { path: '/menu/:category', element: MenuCategories },
   { path: '/category/:categoryName', element: CategoryRestaurants },
   { path: '/restaurant/:restaurantId/:categoryName', element: RestaurantProducts },
   { path: '/product/:slug', element: ProductDetail },
@@ -47,7 +45,6 @@ export const publicRoutes = [
   { path: '/order-detail/:orderId', element: OrderDetail },
   { path: '/login', element: Login },
   { path: '/register', element: Register },
-  { path: '/menu/search/:searchTerm', element: Search },
   { path: '/payment-rollback', element: PaymentRollbackPage },
   { path: '/admin/login', element: AdminLogin },
   { path: '/restaurant/register', element: RestaurantRegister },

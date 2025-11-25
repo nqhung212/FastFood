@@ -87,14 +87,7 @@ export async function saveOrderToSupabase(orderData) {
     if (checkError) throw checkError
 
     if (existingOrder) {
-      console.log('📝 Order already exists, updating status to completed...')
-      const { error } = await supabase
-        .from('order')
-        .update({ order_status: 'completed' })
-        .eq('order_id', orderData.orderId)
-      
-      if (error) throw error
-      console.log('✅ Order status updated to Supabase')
+      console.log('📝 Order already exists, skipping update...')
       return { success: true }
     } else {
       console.log('➕ Creating new order...')
@@ -103,7 +96,7 @@ export async function saveOrderToSupabase(orderData) {
           order_id: orderData.orderId,
           customer_id: orderData.userId,
           total_price: orderData.amount,
-          order_status: 'completed',
+          order_status: 'pending',
           payment_status: 'paid',
           shipping_name: orderData.customerName || '',
           shipping_phone: orderData.customerPhone || '',

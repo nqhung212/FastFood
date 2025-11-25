@@ -62,6 +62,22 @@ export default function OrderDetail() {
     }
   }, [orderId])
 
+  const handleReceivedOrder = async () => {
+    try {
+      const { error } = await supabase
+        .from('order')
+        .update({ order_status: 'completed' })
+        .eq('order_id', orderId)
+
+      if (error) throw error
+      setOrder({ ...order, order_status: 'completed' })
+      alert('✅ Order marked as received!')
+    } catch (err) {
+      console.error('Error marking order as received:', err)
+      alert(`❌ ${err.message}`)
+    }
+  }
+
   const getStatusColor = (status) => {
     const statusColors = {
       pending: '#ffc107',
@@ -168,6 +184,15 @@ export default function OrderDetail() {
                 </div>
               )}
             </div>
+          </div>
+        )}
+
+        {/* Customer Action Buttons */}
+        {order.order_status === 'delivering' && (
+          <div className="customer-actions">
+            <button onClick={handleReceivedOrder} className="btn-received">
+              ✓ I've Received the Order
+            </button>
           </div>
         )}
 
