@@ -28,7 +28,7 @@ export default function CheckoutScreen() {
     return (
         <>
             <Stack.Screen options={{ headerShown: false }} />
-            <SafeAreaView style={styles.safeArea}>
+            {/* <SafeAreaView style={styles.safeArea}> */}
                 <ScrollView contentContainerStyle={styles.container}>
                     <Image
                         source={{
@@ -113,7 +113,7 @@ export default function CheckoutScreen() {
                             <ActivityIndicator color="#fff" />
                         ) : (
                             <Text style={[styles.orderText, { color: "white" }]}>
-                                Thanh toán bằng MoMo
+                                Pay with MoMo
                             </Text>
                         )}
                     </TouchableOpacity>
