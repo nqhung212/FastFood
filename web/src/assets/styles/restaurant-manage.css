@@ -409,6 +409,73 @@
   box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
+/* Order Action Buttons */
+.order-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 15px;
+}
+
+.btn-action {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  min-width: 120px;
+}
+
+.btn-action:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-action.btn-confirmed {
+  background-color: #17a2b8;
+  color: white;
+}
+
+.btn-action.btn-confirmed:hover:not(:disabled) {
+  background-color: #138496;
+}
+
+.btn-action.btn-preparing {
+  background-color: #fd7e14;
+  color: white;
+}
+
+.btn-action.btn-preparing:hover:not(:disabled) {
+  background-color: #e76e0a;
+}
+
+.btn-action.btn-delivering {
+  background-color: #007bff;
+  color: white;
+}
+
+.btn-action.btn-delivering:hover:not(:disabled) {
+  background-color: #0056b3;
+}
+
+.btn-action.btn-cancelled {
+  background-color: #dc3545;
+  color: white;
+}
+
+.btn-action.btn-cancelled:hover:not(:disabled) {
+  background-color: #c82333;
+}
+
+.no-actions {
+  color: #999;
+  font-size: 14px;
+  font-style: italic;
+  margin: 10px 0 0 0;
+}
+
 @media (max-width: 768px) {
   .manage-item {
     flex-direction: column;
@@ -441,5 +508,9 @@
 
   .form-row {
     grid-template-columns: 1fr;
+  }
+
+  .btn-action {
+    flex: 1;
   }
 }

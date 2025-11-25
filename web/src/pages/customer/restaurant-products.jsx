@@ -16,6 +16,7 @@ export default function RestaurantProducts() {
   const [otherProducts, setOtherProducts] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [notification, setNotification] = useState('')
 
   useEffect(() => {
     const fetchData = async () => {
@@ -129,12 +130,17 @@ export default function RestaurantProducts() {
       },
       1
     )
-    alert('Added to cart!')
+
+    // Show toast notification instead of alert
+    setNotification(`✓ ${product.name} added to cart`)
+    setTimeout(() => setNotification(''), 3000)
   }
 
   return (
     <MainLayout>
       <div className="restaurant-products-page">
+        {notification && <div className="toast-notification">{notification}</div>}
+
         <div className="page-header">
           <button className="back-button" onClick={() => navigate(-1)}>
             ← Back

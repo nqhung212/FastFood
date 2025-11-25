@@ -54,20 +54,52 @@ export default function RestaurantOrders() {
     }
   }
 
-  const handleStatusChange = async (orderId, newStatus) => {
+  // Update order status - controlled flow
+  const handleStatusChange = async (orderId, currentStatus, nextStatus) => {
+    // Validate status flow
+    const validTransitions = {
+      pending: ['confirmed'],
+      confirmed: ['preparing'],
+      preparing: ['delivering'],
+      delivering: [], // Cannot change from delivering - only customer can mark as completed
+      completed: [],
+      cancelled: [],
+    }
+
+    if (!validTransitions[currentStatus]?.includes(nextStatus)) {
+      setMessage(`❌ Cannot change from ${currentStatus} to ${nextStatus}`)
+      return
+    }
+
     try {
       const { error } = await supabase
         .from('order')
-        .update({ order_status: newStatus })
+        .update({ order_status: nextStatus })
         .eq('order_id', orderId)
 
       if (error) throw error
-      setMessage('✅ Order status updated successfully')
+      setMessage(`✅ Order status updated to ${nextStatus}`)
       fetchOrders()
     } catch (err) {
       console.error('Error:', err)
       setMessage(`❌ ${err.message}`)
     }
+  }
+
+  // Get available next statuses for current status
+  const getNextStatuses = (currentStatus) => {
+    const statusMap = {
+      pending: [{ label: 'Confirm Order', value: 'confirmed' }],
+      confirmed: [{ label: 'Start Preparing', value: 'preparing' }],
+      preparing: [{ label: 'Ready for Delivery', value: 'delivering' }],
+      delivering: [
+        { label: 'Waiting for Customer Confirmation', value: 'delivering', disabled: true },
+      ],
+      completed: [{ label: 'Completed', value: 'completed', disabled: true }],
+      cancelled: [{ label: 'Cancelled', value: 'cancelled', disabled: true }],
+    }
+
+    return statusMap[currentStatus] || []
   }
 
   if (loading) {
@@ -178,17 +210,21 @@ export default function RestaurantOrders() {
                 )}
 
                 <div className="order-actions">
-                  <select
-                    value={order.order_status}
-                    onChange={(e) => handleStatusChange(order.order_id, e.target.value)}
-                  >
-                    <option value="pending">Pending</option>
-                    <option value="confirmed">Confirmed</option>
-                    <option value="preparing">Preparing</option>
-                    <option value="delivering">Delivering</option>
-                    <option value="completed">Completed</option>
-                    <option value="cancelled">Cancelled</option>
-                  </select>
+                  {getNextStatuses(order.order_status).map((nextStatus) => (
+                    <button
+                      key={nextStatus.value}
+                      onClick={() =>
+                        handleStatusChange(order.order_id, order.order_status, nextStatus.value)
+                      }
+                      disabled={nextStatus.disabled}
+                      className={`btn-action btn-${nextStatus.value}`}
+                    >
+                      {nextStatus.label}
+                    </button>
+                  ))}
+                  {getNextStatuses(order.order_status).length === 0 && (
+                    <p className="no-actions">No actions available for this order</p>
+                  )}
                 </div>
               </div>
             ))

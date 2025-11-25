@@ -12,26 +12,61 @@ export function useCategories() {
 
     const fetchCategories = async () => {
       try {
-        const { data, error } = await supabase.from('category').select('*')
-        if (error) {
-          console.error('Categories fetch error:', error)
-          throw error
+        // Step 1: Get all active restaurants
+        const { data: activeRestaurants, error: restError } = await supabase
+          .from('restaurant')
+          .select('restaurant_id')
+          .eq('status', 'active')
+
+        if (restError) {
+          console.error('Restaurants fetch error:', restError)
+          throw restError
         }
-        
+
+        const activeRestaurantIds = activeRestaurants?.map((r) => r.restaurant_id) || []
+
+        // Step 2: Fetch products only from active restaurants
+        const { data: products, error: productsError } = await supabase
+          .from('product')
+          .select('category_id')
+          .in('restaurant_id', activeRestaurantIds)
+
+        if (productsError) {
+          console.error('Products fetch error:', productsError)
+          throw productsError
+        }
+
+        // Get unique category IDs that have products from active restaurants
+        const categoryIds = new Set()
+        products?.forEach((product) => {
+          if (product.category_id) {
+            categoryIds.add(product.category_id)
+          }
+        })
+
+        // Step 3: Fetch only categories that have products from active restaurants
+        const { data: categories, error: catError } = await supabase
+          .from('category')
+          .select('*')
+          .in('category_id', Array.from(categoryIds))
+
+        if (catError) {
+          console.error('Categories fetch error:', catError)
+          throw catError
+        }
+
         // Remove duplicate categories by name (keep first occurrence)
         const uniqueCategories = []
         const seenNames = new Set()
-        
-        if (data) {
-          data.forEach((cat) => {
-            const categoryName = cat.name?.toLowerCase()
-            if (categoryName && !seenNames.has(categoryName)) {
-              seenNames.add(categoryName)
-              uniqueCategories.push(cat)
-            }
-          })
-        }
-        
+
+        categories?.forEach((cat) => {
+          const categoryName = cat.name?.toLowerCase()
+          if (categoryName && !seenNames.has(categoryName)) {
+            seenNames.add(categoryName)
+            uniqueCategories.push(cat)
+          }
+        })
+
         if (mounted) setCategories(uniqueCategories)
       } catch (err) {
         console.error('Categories error:', err)

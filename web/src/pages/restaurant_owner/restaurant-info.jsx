@@ -86,7 +86,7 @@ export default function RestaurantInfo() {
       if (error) throw error
 
       setMessage('✅ Restaurant information updated successfully')
-      setTimeout(() => fetchRestaurant(), 1000)
+      setTimeout(() => navigate('/restaurant/dashboard'), 1500)
     } catch (err) {
       console.error('Error:', err)
       setMessage(`❌ ${err.message}`)
