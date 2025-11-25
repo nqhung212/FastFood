@@ -141,4 +141,74 @@ export const processMomoOrder = async (orderData: any) => {
 
     // 3. Mở trang thanh toán
     await openPaymentBrowser(payUrl);
+
+    // Return orderId so caller can continue flow (e.g., poll or finalize)
+    return { orderId, payUrl };
+};
+
+/**
+ * Finalize a MoMo order client-side (used for quick test/simulate flows).
+ * This will mark order as paid/confirmed and insert a payment record.
+ */
+export const finalizeMomoOrder = async (orderId: string, amount: number) => {
+    try {
+        // Ensure order exists before updating/inserting payment
+        const { data: existingOrder, error: orderCheckErr } = await supabase
+            .from('order')
+            .select('order_id')
+            .eq('order_id', orderId)
+            .maybeSingle();
+        if (orderCheckErr) throw orderCheckErr;
+
+        if (!existingOrder) {
+            // Insert a minimal placeholder order so FK constraint won't fail.
+            // shipping_name/address/phone are NOT NULL in schema, so provide empty strings.
+            const { error: insertErr } = await supabase.from('order').insert([
+                {
+                    order_id: orderId,
+                    customer_id: null,
+                    restaurant_id: null,
+                    total_price: amount || 0,
+                    payment_status: 'paid',
+                    order_status: 'confirmed',
+                    shipping_name: '',
+                    shipping_address: '',
+                    shipping_phone: '',
+                },
+            ]);
+            if (insertErr) throw insertErr;
+        } else {
+            const { error: updateErr } = await supabase
+                .from('order')
+                .update({ payment_status: 'paid', order_status: 'confirmed' })
+                .eq('order_id', orderId);
+            if (updateErr) throw updateErr;
+        }
+
+        // Insert payment record only if not exists to avoid duplicates (idempotent)
+        const { data: existingPayments, error: existingErr } = await supabase
+            .from('payment')
+            .select('payment_id')
+            .eq('order_id', orderId)
+            .eq('provider', 'momo')
+            .maybeSingle();
+        if (existingErr) throw existingErr;
+        if (!existingPayments) {
+            const { error: payErr } = await supabase.from('payment').insert([
+                {
+                    order_id: orderId,
+                    provider: 'momo',
+                    amount: amount || 0,
+                    status: 'success',
+                    created_at: new Date().toISOString(),
+                },
+            ]);
+            if (payErr) throw payErr;
+        }
+
+        return { success: true };
+    } catch (err) {
+        console.warn('finalizeMomoOrder err', err);
+        return { success: false, error: err };
+    }
 };

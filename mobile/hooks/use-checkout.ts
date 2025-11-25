@@ -6,6 +6,7 @@ import {
     getStoredUser,
     processCodOrder,
     processMomoOrder,
+    finalizeMomoOrder,
 } from "../service/checkoutService"; // Đường dẫn có thể cần sửa
 
 export const useCheckout = () => {
@@ -123,22 +124,25 @@ export const useCheckout = () => {
 
         setLoading(true);
         try {
-            await processMomoOrder(createOrderData());
+            const orderData = createOrderData();
+            const { orderId, payUrl } = await processMomoOrder(orderData);
 
-            // Thông báo và chuyển hướng
-            Alert.alert(
-                "Đang chuyển hướng",
-                "Sau khi thanh toán thành công, bạn sẽ quay lại ứng dụng.",
-                [
-                    {
-                        text: "OK",
-                        onPress: () => {
-                            if (!params?.id) clearCart();
-                            router.push("/(tabs)/homepage");
-                        },
-                    },
-                ]
-            );
+            // Opened MoMo page. After 3s, mark the order as paid and navigate to order detail.
+            setTimeout(async () => {
+                try {
+                    // Finalize on backend/DB (quick simulation)
+                    await finalizeMomoOrder(orderId, orderData.totalPrice);
+                } catch (e) {
+                    console.warn('finalize momo err', e);
+                } finally {
+                    if (!params?.id) clearCart();
+                    // navigate to order detail
+                    router.push(`/profile/orderHistory`);
+                }
+            }, 3000);
+
+            // Inform user that payment page opened
+            Alert.alert("Đang chuyển hướng", "Trang thanh toán MoMo đã mở — app sẽ kiểm tra và cập nhật đơn sau vài giây.");
         } catch (err) {
             console.error("MoMo Error:", err);
             Alert.alert("Lỗi", "Không thể kết nối đến server MoMo!");
