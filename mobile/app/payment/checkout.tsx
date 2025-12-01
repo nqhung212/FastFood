@@ -28,7 +28,7 @@ export default function CheckoutScreen() {
     return (
         <>
             <Stack.Screen options={{ headerShown: false }} />
-            {/* <SafeAreaView style={styles.safeArea}> */}
+            <SafeAreaView style={styles.safeArea}>
                 <ScrollView contentContainerStyle={styles.container}>
                     <Image
                         source={{
@@ -85,19 +85,6 @@ export default function CheckoutScreen() {
                             editable={!loading} // Thêm
                         />
                     </View>
-
-                    {/* Nút đặt hàng */}
-                    <TouchableOpacity
-                        style={[styles.orderButton, loading && { opacity: 0.6 }]}
-                        onPress={handlePlaceOrder}
-                        disabled={loading}
-                    >
-                        {loading ? (
-                            <ActivityIndicator color="#fff" />
-                        ) : (
-                            <Text style={styles.orderText}>Đặt Hàng</Text>
-                        )}
-                    </TouchableOpacity>
 
                     {/* Nút thanh toán MoMo */}
                     <TouchableOpacity

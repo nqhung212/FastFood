@@ -16,7 +16,7 @@
   ````Cài đặt ngrok
   chạy file index.js: cd mobile/server
                       node index.js
-  chạy ngrok(server riêng): ngrok http 4001
+  chạy lệnh npx ngrok@latest http 4001
   lấy địa chỉ IP của ngrok gán vào .env
   REDIRECT_URL=https://ingenuous-absolutely-cletus.ngrok-free.dev/api/momo/callback
   IPN_URL=https://ingenuous-absolutely-cletus.ngrok-free.dev/api/momo/callback

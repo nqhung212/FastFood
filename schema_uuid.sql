@@ -101,27 +101,35 @@ CREATE TABLE payment (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
-CREATE TABLE delivery_tracking (
-  tracking_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  order_id UUID UNIQUE REFERENCES "order"(order_id),
-  driver_id UUID REFERENCES user_account(user_id),
-  latitude NUMERIC(10, 8),
-  longitude NUMERIC(11, 8),
-  customer_latitude NUMERIC(10, 8),
-  customer_longitude NUMERIC(11, 8),
-  estimated_time_minutes INT DEFAULT 30,
-  status TEXT CHECK (status IN ('pending','on_the_way','arrived','completed')) DEFAULT 'pending',
+CREATE TABLE drone (
+  drone_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name TEXT NOT NULL,
+  status TEXT CHECK (status IN ('idle','assigned','delivering','charging','maintenance'))
+      DEFAULT 'idle',
+  battery_level INT CHECK (battery_level BETWEEN 0 AND 100) DEFAULT 100,
+  max_payload_kg NUMERIC DEFAULT 3.0,
+  current_lat NUMERIC(10, 8),
+  current_lng NUMERIC(11, 8),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
-CREATE TABLE order_notifications (
-  notification_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  order_id UUID REFERENCES "order"(order_id),
-  user_id UUID REFERENCES user_account(user_id),
-  type TEXT CHECK (type IN ('order_confirmed','preparing','on_the_way','arrived','completed','cancelled')),
-  title TEXT NOT NULL,
-  message TEXT NOT NULL,
-  is_read BOOLEAN DEFAULT FALSE,
-  created_at TIMESTAMPTZ DEFAULT NOW()
+CREATE TABLE drone_delivery (
+  mission_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  order_id UUID UNIQUE REFERENCES "order"(order_id),
+  drone_id UUID REFERENCES drone(drone_id),
+  
+  pickup_lat NUMERIC(10, 8),
+  pickup_lng NUMERIC(11, 8),
+  drop_lat NUMERIC(10, 8),
+  drop_lng NUMERIC(11, 8),
+
+  start_at TIMESTAMPTZ,
+  finish_at TIMESTAMPTZ,
+
+  status TEXT CHECK (status IN ('assigned','taking_off','enroute','delivered','failed'))
+      DEFAULT 'assigned',
+
+  updated_at TIMESTAMPTZ DEFAULT NOW()
 );
+
 

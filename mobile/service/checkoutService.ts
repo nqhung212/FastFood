@@ -75,29 +75,42 @@ const createOrderInSupabase = async (orderId: string, orderData: any) => {
 const MOMO_SERVER_URL = "https://ingenuous-absolutely-cletus.ngrok-free.dev";
 
 export const createMoMoPayment = async (orderId: string, totalPrice: number, checkoutItems: any[]) => {
-    const resp = await fetch(`${MOMO_SERVER_URL}/api/momo/checkout`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-        },
-        body: JSON.stringify({
-            amount: totalPrice,
-            orderId: orderId,
-            orderInfo: `Thanh toán đơn hàng #${orderId}`,
-            items: checkoutItems,
-        }),
-    });
+    try {
+        const resp = await fetch(`${MOMO_SERVER_URL}/api/momo/checkout`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Accept: "application/json",
+            },
+            body: JSON.stringify({
+                amount: totalPrice,
+                orderId: orderId,
+                orderInfo: `Thanh toán đơn hàng #${orderId}`,
+                items: checkoutItems,
+            }),
+        });
 
-    if (!resp.ok) {
-        throw new Error(`Server MoMo responded with status ${resp.status}`);
-    }
+        if (!resp.ok) {
+            const text = await resp.text().catch(() => null);
+            console.error('createMoMoPayment: server responded non-OK', resp.status, text);
+            throw new Error(`MoMo server responded with status ${resp.status}`);
+        }
 
-    const data = await resp.json();
-    if (data?.success && data?.payUrl) {
-        return data.payUrl;
-    } else {
-        throw new Error(data?.message || "Không lấy được link thanh toán MoMo!");
+        const data = await resp.json().catch((e) => {
+            console.error('createMoMoPayment: invalid JSON response', e);
+            return null;
+        });
+
+        if (data?.success && data?.payUrl) {
+            return data.payUrl;
+        } else {
+            // Log the whole response body for easier debugging
+            console.error('createMoMoPayment: invalid payload from server', data);
+            throw new Error(data?.message ? `MoMo error: ${data.message}` : "Không lấy được link thanh toán MoMo!");
+        }
+    } catch (err: any) {
+        console.error('createMoMoPayment failed', err);
+        throw err;
     }
 };
 
