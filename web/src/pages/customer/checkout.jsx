@@ -4,6 +4,7 @@ import MainLayout from '../../layouts/home-layout.jsx'
 import { initiateMoMoPayment, savePaymentToSupabase } from '../../services/momo.js'
 import { useAuth } from '../../context/auth-context'
 import { useUserData } from '../../hooks/use-user-data.js'
+import DeliveryAddressModal from './delivery-address-modal'
 import { supabase } from '../../lib/supabaseClient'
 
 export default function CheckoutPage() {
@@ -15,6 +16,8 @@ export default function CheckoutPage() {
   const [paymentInitiated, setPaymentInitiated] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
+  const [showAddressModal, setShowAddressModal] = useState(false)
+  const [deliveryAddress, setDeliveryAddress] = useState(null)
 
   useEffect(() => {
     const data = sessionStorage.getItem('checkoutData')
@@ -32,8 +35,34 @@ export default function CheckoutPage() {
     }
   }, [user, checkoutData, navigate])
 
+  // Check if delivery address exists
+  useEffect(() => {
+    if (userData?.address) {
+      setDeliveryAddress({
+        address: userData.address,
+        latitude: userData.latitude,
+        longitude: userData.longitude,
+      })
+      setShowAddressModal(false)
+    }
+  }, [userData])
+
+  // Show modal if no address on first load
+  useEffect(() => {
+    if (user && !deliveryAddress && !showAddressModal) {
+      setShowAddressModal(true)
+    }
+  }, [user])
+
   const handlePayment = async () => {
     if (!checkoutData || !user) return
+
+    // Verify delivery address exists
+    if (!deliveryAddress) {
+      setError('Please set a delivery address')
+      setShowAddressModal(true)
+      return
+    }
 
     if (selectedPayment === 'momo') {
       setLoading(true)
@@ -58,7 +87,7 @@ export default function CheckoutPage() {
             payment_status: 'pending',
             shipping_name: userData?.fullname || 'Customer',
             shipping_phone: userData?.phone || '',
-            shipping_address: userData?.address || '',
+            shipping_address: deliveryAddress.address,
           },
         ])
 
@@ -119,6 +148,23 @@ export default function CheckoutPage() {
     )
   }
 
+  if (showAddressModal) {
+    return (
+      <MainLayout>
+        <DeliveryAddressModal
+          userId={user?.id}
+          onAddressSelect={(address) => {
+            setDeliveryAddress(address)
+            setShowAddressModal(false)
+          }}
+          onClose={() => {
+            navigate('/cart')
+          }}
+        />
+      </MainLayout>
+    )
+  }
+
   return (
     <MainLayout>
       <div style={{ maxWidth: '600px', margin: '0 auto', padding: '20px' }}>
@@ -135,6 +181,27 @@ export default function CheckoutPage() {
           <div style={{ marginBottom: '10px' }}>
             <strong>Time:</strong> {new Date(checkoutData.timestamp).toLocaleString('en-US')}
           </div>
+        </div>
+
+        <div style={{ border: '1px solid #ccc', padding: '15px', marginBottom: '20px' }}>
+          <h3>Delivery Address</h3>
+          <div style={{ marginBottom: '10px' }}>
+            <strong>Address:</strong> {deliveryAddress?.address || 'Not set'}
+          </div>
+          <button
+            onClick={() => setShowAddressModal(true)}
+            style={{
+              padding: '8px 12px',
+              backgroundColor: '#667eea',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              fontSize: '14px',
+            }}
+          >
+            📍 Change Address
+          </button>
         </div>
 
         <div style={{ border: '1px solid #ccc', padding: '15px', marginBottom: '20px' }}>

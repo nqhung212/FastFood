@@ -26,6 +26,7 @@ import AdminCategories from '../pages/admin/categories'
 // Restaurant Owner pages
 import RestaurantRegister from '../pages/restaurant_owner/register'
 import RestaurantLogin from '../pages/restaurant_owner/login'
+import RestaurantSetup from '../pages/restaurant_owner/setup'
 import RestaurantDashboard from '../pages/restaurant_owner/dashboard'
 import ManageProducts from '../pages/restaurant_owner/manage-products'
 import ManageCategories from '../pages/restaurant_owner/manage-categories'
@@ -60,6 +61,7 @@ export const adminRoutes = [
 ]
 
 export const restaurantOwnerRoutes = [
+  { path: '/restaurant/setup', element: RestaurantSetup },
   { path: '/restaurant/dashboard', element: RestaurantDashboard },
   { path: '/restaurant/products', element: ManageProducts },
   { path: '/restaurant/categories', element: ManageCategories },

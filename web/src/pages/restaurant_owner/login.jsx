@@ -30,13 +30,8 @@ export default function RestaurantLogin() {
         .single()
 
       if (userError || !userData) {
-        throw new Error('Email not found or not a restaurant owner - please register first')
+        throw new Error('Email not found or not a restaurant owner')
       }
-
-      if (!userData.status) {
-        throw new Error('Account is inactive')
-      }
-
       // Login using Supabase Auth
       const { error: authError } = await supabase.auth.signInWithPassword({
         email,
@@ -48,12 +43,28 @@ export default function RestaurantLogin() {
         throw new Error('Invalid password')
       }
 
+      // Get restaurant info to check status
+      const { data: restaurantData, error: restaurantError } = await supabase
+        .from('restaurant')
+        .select('restaurant_id, status')
+        .eq('owner_id', userData.user_id)
+        .single()
+
+      if (restaurantError || !restaurantData) {
+        throw new Error('Restaurant not found')
+      }
+
       // Store user info in localStorage
       localStorage.setItem('restaurantOwnerId', userData.user_id)
       localStorage.setItem('restaurantOwnerEmail', email)
+      localStorage.setItem('restaurantId', restaurantData.restaurant_id)
 
       setMessage('✅ Login successful!')
-      setTimeout(() => navigate('/restaurant/dashboard'), 1000)
+
+      // Redirect to setup if restaurant is inactive, otherwise dashboard
+      const redirectPath =
+        restaurantData.status === 'inactive' ? '/restaurant/setup' : '/restaurant/dashboard'
+      setTimeout(() => navigate(redirectPath), 1000)
     } catch (err) {
       console.error('Login error:', err)
       setMessage(`❌ ${err.message}`)

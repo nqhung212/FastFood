@@ -76,7 +76,7 @@ export default function RestaurantRegister() {
         {
           owner_id: userId,
           name: form.restaurantName,
-          status: 'active',
+          status: 'inactive',
         },
       ])
 

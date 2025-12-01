@@ -518,3 +518,22 @@
 .btn-view-detail:hover {
   background-color: #5568d3;
 }
+
+.btn-track-drone {
+  align-self: flex-start;
+  padding: 8px 16px;
+  background-color: #1976d2;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+  text-decoration: none;
+}
+
+.btn-track-drone:hover {
+  background-color: #1565c0;
+}
+

@@ -1,14 +1,20 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import RestaurantLayout from '../../layouts/restaurant-layout'
 import { supabase } from '../../lib/supabaseClient'
 import '../../assets/styles/restaurant-manage.css'
+import '../../assets/styles/restaurant-setup.css'
 
 export default function RestaurantInfo() {
   const navigate = useNavigate()
   const [restaurant, setRestaurant] = useState(null)
   const [loading, setLoading] = useState(true)
   const [message, setMessage] = useState('')
+  const [showMapModal, setShowMapModal] = useState(false)
+  const [selectedLocation, setSelectedLocation] = useState(null)
+  const mapInstanceRef = useRef(null)
+  const mapRef = useRef(null)
+  const markerRef = useRef(null)
   const [form, setForm] = useState({
     name: '',
     description: '',
@@ -61,6 +67,56 @@ export default function RestaurantInfo() {
     setForm({ ...form, [e.target.name]: e.target.value })
   }
 
+  const initializeMap = () => {
+    if (mapInstanceRef.current || !mapRef.current) return
+
+    const L = window.L
+    const map = L.map(mapRef.current).setView([21.0285, 105.8542], 13)
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors',
+      maxZoom: 19,
+    }).addTo(map)
+
+    const handleMapClick = (e) => {
+      const { lat, lng } = e.latlng
+      setSelectedLocation({ lat, lng })
+
+      if (markerRef.current) {
+        map.removeLayer(markerRef.current)
+      }
+
+      markerRef.current = L.marker([lat, lng]).addTo(map)
+      map.setView([lat, lng], 15)
+    }
+
+    map.on('click', handleMapClick)
+
+    // If restaurant already has location, show it
+    if (form.latitude && form.longitude) {
+      const lat = parseFloat(form.latitude)
+      const lng = parseFloat(form.longitude)
+      setSelectedLocation({ lat, lng })
+      markerRef.current = L.marker([lat, lng]).addTo(map)
+      map.setView([lat, lng], 15)
+    }
+
+    mapInstanceRef.current = map
+
+    return () => {
+      if (mapInstanceRef.current) {
+        mapInstanceRef.current.remove()
+        mapInstanceRef.current = null
+      }
+    }
+  }
+
+  useEffect(() => {
+    if (showMapModal) {
+      setTimeout(initializeMap, 0)
+    }
+  }, [showMapModal, form.latitude, form.longitude])
+
   const handleSubmit = async (e) => {
     e.preventDefault()
     setMessage('')
@@ -91,6 +147,22 @@ export default function RestaurantInfo() {
       console.error('Error:', err)
       setMessage(`❌ ${err.message}`)
     }
+  }
+
+  const handleLocationSave = () => {
+    if (!selectedLocation) {
+      setMessage('❌ Please select a location on the map')
+      return
+    }
+
+    setForm({
+      ...form,
+      latitude: selectedLocation.lat.toFixed(4),
+      longitude: selectedLocation.lng.toFixed(4),
+    })
+
+    setShowMapModal(false)
+    setMessage('✅ Location updated. Please save the form to confirm.')
   }
 
   if (loading) {
@@ -168,6 +240,7 @@ export default function RestaurantInfo() {
                   onChange={handleChange}
                   step="0.0001"
                   placeholder="e.g., 21.0285"
+                  disabled
                 />
               </div>
 
@@ -180,8 +253,35 @@ export default function RestaurantInfo() {
                   onChange={handleChange}
                   step="0.0001"
                   placeholder="e.g., 105.8542"
+                  disabled
                 />
               </div>
+            </div>
+
+            <div className="form-group">
+              <button
+                type="button"
+                className="btn-secondary"
+                onClick={() => {
+                  setSelectedLocation(null)
+                  setShowMapModal(true)
+                }}
+                style={{
+                  backgroundColor: '#667eea',
+                  color: 'white',
+                  padding: '10px 20px',
+                  border: 'none',
+                  borderRadius: '5px',
+                  cursor: 'pointer',
+                  fontSize: '14px',
+                  width: '100%',
+                }}
+              >
+                📍{' '}
+                {form.latitude && form.longitude
+                  ? 'Update Location on Map'
+                  : 'Select Location on Map'}
+              </button>
             </div>
 
             <div className="form-group">
@@ -196,6 +296,50 @@ export default function RestaurantInfo() {
               Update Restaurant Info
             </button>
           </form>
+        )}
+
+        {showMapModal && (
+          <div className="setup-modal-overlay">
+            <div className="setup-modal-content">
+              <div className="setup-modal-header">
+                <h2>Select Restaurant Location</h2>
+                <button
+                  onClick={() => setShowMapModal(false)}
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    fontSize: '24px',
+                    cursor: 'pointer',
+                  }}
+                >
+                  ✕
+                </button>
+              </div>
+
+              <div className="setup-map-container">
+                <div ref={mapRef} style={{ width: '100%', height: '400px' }} />
+              </div>
+
+              {selectedLocation && (
+                <div className="setup-location-info">
+                  <p>
+                    <strong>Selected Location:</strong>
+                  </p>
+                  <p>Latitude: {selectedLocation.lat.toFixed(6)}</p>
+                  <p>Longitude: {selectedLocation.lng.toFixed(6)}</p>
+                </div>
+              )}
+
+              <div className="setup-button-group">
+                <button onClick={() => setShowMapModal(false)} className="btn-cancel">
+                  Cancel
+                </button>
+                <button onClick={handleLocationSave} className="btn-save">
+                  Save Location
+                </button>
+              </div>
+            </div>
+          </div>
         )}
       </div>
     </RestaurantLayout>

@@ -72,10 +72,14 @@ export default function RestaurantOrders() {
     }
 
     try {
-      const { error } = await supabase
-        .from('order')
-        .update({ order_status: nextStatus })
-        .eq('order_id', orderId)
+      const updateData = { order_status: nextStatus }
+
+      // Set delivered_at when transitioning to "delivering"
+      if (nextStatus === 'delivering') {
+        updateData.delivered_at = new Date().toISOString()
+      }
+
+      const { error } = await supabase.from('order').update(updateData).eq('order_id', orderId)
 
       if (error) throw error
       setMessage(`✅ Order status updated to ${nextStatus}`)

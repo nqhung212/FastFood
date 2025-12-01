@@ -2,7 +2,9 @@ import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { supabase } from '../../lib/supabaseClient'
 import MainLayout from '../../layouts/home-layout'
+import DroneDelivery from './drone-delivery'
 import '../../assets/styles/order-detail.css'
+import '../../assets/styles/drone-delivery.css'
 
 export default function OrderDetail() {
   const { orderId } = useParams()
@@ -12,6 +14,9 @@ export default function OrderDetail() {
   const [deliveryTracking, setDeliveryTracking] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [showDroneDelivery, setShowDroneDelivery] = useState(false)
+  const [restaurantLocation, setRestaurantLocation] = useState(null)
+  const [customerLocation, setCustomerLocation] = useState(null)
 
   useEffect(() => {
     const fetchOrderDetails = async () => {
@@ -28,6 +33,40 @@ export default function OrderDetail() {
 
         if (orderError) throw orderError
         setOrder(orderData)
+
+        // Fetch restaurant location
+        const { data: restaurantData, error: restaurantError } = await supabase
+          .from('restaurant')
+          .select('latitude, longitude, address')
+          .eq('restaurant_id', orderData.restaurant_id)
+          .single()
+
+        if (restaurantError) {
+          console.log('Restaurant location not found:', restaurantError)
+        } else {
+          setRestaurantLocation({
+            lat: restaurantData.latitude,
+            lng: restaurantData.longitude,
+            address: restaurantData.address,
+          })
+        }
+
+        // Fetch customer delivery location from customer table
+        const { data: customerData, error: customerError } = await supabase
+          .from('customer')
+          .select('latitude, longitude')
+          .eq('customer_id', orderData.customer_id)
+          .single()
+
+        if (customerError) {
+          console.log('Customer location not found:', customerError)
+        } else {
+          setCustomerLocation({
+            lat: customerData.latitude,
+            lng: customerData.longitude,
+            address: orderData.shipping_address,
+          })
+        }
 
         // Fetch order items
         const { data: itemsData, error: itemsError } = await supabase
@@ -74,6 +113,22 @@ export default function OrderDetail() {
       alert('✅ Order marked as received!')
     } catch (err) {
       console.error('Error marking order as received:', err)
+      alert(`❌ ${err.message}`)
+    }
+  }
+
+  const handleDroneCompleted = async () => {
+    try {
+      const { error } = await supabase
+        .from('order')
+        .update({ order_status: 'completed' })
+        .eq('order_id', orderId)
+
+      if (error) throw error
+      setOrder({ ...order, order_status: 'completed' })
+      setShowDroneDelivery(false)
+    } catch (err) {
+      console.error('Error marking order as completed:', err)
       alert(`❌ ${err.message}`)
     }
   }
@@ -190,6 +245,9 @@ export default function OrderDetail() {
         {/* Customer Action Buttons */}
         {order.order_status === 'delivering' && (
           <div className="customer-actions">
+            <button onClick={() => setShowDroneDelivery(true)} className="btn-track-drone">
+              🚁 Track Drone Delivery
+            </button>
             <button onClick={handleReceivedOrder} className="btn-received">
               ✓ I've Received the Order
             </button>
@@ -298,6 +356,17 @@ export default function OrderDetail() {
             </div>
           </div>
         </div>
+
+        {/* Drone Delivery Modal */}
+        {showDroneDelivery && order.order_status === 'delivering' && (
+          <DroneDelivery
+            order={order}
+            restaurantLocation={restaurantLocation}
+            customerLocation={customerLocation}
+            onCompleted={handleDroneCompleted}
+            onClose={() => setShowDroneDelivery(false)}
+          />
+        )}
       </div>
     </MainLayout>
   )

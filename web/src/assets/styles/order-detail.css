@@ -438,3 +438,23 @@
   background-color: #1e7e34;
 }
 
+.btn-track-drone {
+  padding: 12px 30px;
+  background-color: #1976d2;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+.btn-track-drone:hover {
+  background-color: #1565c0;
+}
+
+.btn-track-drone:active {
+  background-color: #0d47a1;
+}
+
