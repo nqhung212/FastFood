@@ -86,19 +86,6 @@ export default function CheckoutScreen() {
                         />
                     </View>
 
-                    {/* Nút đặt hàng */}
-                    <TouchableOpacity
-                        style={[styles.orderButton, loading && { opacity: 0.6 }]}
-                        onPress={handlePlaceOrder}
-                        disabled={loading}
-                    >
-                        {loading ? (
-                            <ActivityIndicator color="#fff" />
-                        ) : (
-                            <Text style={styles.orderText}>Đặt Hàng</Text>
-                        )}
-                    </TouchableOpacity>
-
                     {/* Nút thanh toán MoMo */}
                     <TouchableOpacity
                         style={[

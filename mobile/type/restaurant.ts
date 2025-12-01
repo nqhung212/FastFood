@@ -3,4 +3,6 @@ export interface Restaurant {
   name: string;
   description?: string;
   logo?: string;
+  // Trạng thái nhà hàng: 'active' | 'inactive'
+  status?: string;
 }

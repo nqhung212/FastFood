@@ -53,9 +53,13 @@ export default function HomeScreen() {
           fetchProducts(),
           fetchRestaurants(),
         ]);
-        setCategories(categoriesData || []);
-        setProducts(productsData || []);
-        setRestaurants(restaurantsData || []);
+  setCategories(categoriesData || []);
+  // filter active restaurants returned from service
+  const activeRestaurants = (restaurantsData || []).filter((r: any) => r.status === "active");
+  setRestaurants(activeRestaurants);
+  // only keep products that belong to active restaurants
+  const activeIds = new Set(activeRestaurants.map((r: any) => r.id));
+  setProducts((productsData || []).filter((p: any) => activeIds.has(p.restaurant_id)));
       } catch (err: any) {
         console.error("Lỗi tải dữ liệu:", err);
         setError("Không thể tải dữ liệu. Vui lòng thử lại.");

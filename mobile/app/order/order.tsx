@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, ActivityIndicator, FlatList, TouchableOpacity, Alert, StyleSheet, ScrollView } from 'react-native';
+import React, { useEffect, useState, useRef } from 'react';
+import { View, Text, ActivityIndicator, FlatList, TouchableOpacity, Alert, StyleSheet, ScrollView, Animated, Easing } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { supabase } from '@/service/supabaseClient';
+import DroneMapSimulator from './DroneMapSimulator';
 
 const STATUS_ORDER = ['pending', 'confirmed', 'preparing', 'delivering', 'completed'] as const;
 
@@ -14,6 +15,18 @@ export default function OrderDetailScreen() {
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState(false);
   const [tick, setTick] = useState(0);
+  // showSim is removed; simulator auto-appears when order is delivering
+  const [droneFinished, setDroneFinished] = useState(false);
+  const scrollRef = useRef<any>(null);
+
+  useEffect(() => {
+    // reset droneFinished state when order status changes
+    if (order?.order_status === 'delivering') {
+      setDroneFinished(false);
+    } else {
+      setDroneFinished(true);
+    }
+  }, [order?.order_status]);
 
   useEffect(() => {
     if (!orderId) return;
@@ -272,8 +285,30 @@ export default function OrderDetailScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView contentContainerStyle={{ padding: 16 }}>
+      <ScrollView ref={scrollRef} contentContainerStyle={{ padding: 16 }}>
+        {/* Drone simulator appears at top when order is delivering */}
+        {order?.order_status === 'delivering' && (
+          <View style={{ marginBottom: 12 }}>
+            <DroneMapSimulator
+              fromLat={Number(order?.delivery_tracking?.latitude) || 10.762622}
+              fromLng={Number(order?.delivery_tracking?.longitude) || 106.660172}
+              toLat={Number(order?.delivery_tracking?.customer_latitude) || 10.776889}
+              toLng={Number(order?.delivery_tracking?.customer_longitude) || 106.700806}
+              duration={30}
+              onFinish={() => {
+                setDroneFinished(true);
+                // scroll down to reveal order details after simulation
+                try { scrollRef.current?.scrollTo({ y: 0, animated: true }); } catch (e) {}
+              }}
+            />
+          </View>
+        )}
+
         <Text style={styles.title}>Tình trạng đơn hàng</Text>
+
+        {/* hide details while delivering and drone simulation not finished */}
+        {!(order?.order_status === 'delivering' && !droneFinished) && (
+        <>
 
         <View style={styles.stepsRow}>
           {STATUS_ORDER.map((s, idx) => (
@@ -312,8 +347,15 @@ export default function OrderDetailScreen() {
           </View>
         </View>
 
-        {order.order_status === 'delivering' && (
-          <TouchableOpacity style={[styles.primaryBtn, busy && { opacity: 0.6 }]} disabled={busy} onPress={markReceived}>
+          </>
+        )}
+
+        {order?.order_status === 'delivering' && droneFinished && (
+          <TouchableOpacity
+            style={[styles.primaryBtn, busy && { opacity: 0.6 }]}
+            disabled={busy}
+            onPress={markReceived}
+          >
             <Text style={styles.primaryBtnText}>Đã nhận hàng</Text>
           </TouchableOpacity>
         )}
@@ -345,5 +387,8 @@ const styles = StyleSheet.create({
   itemRow: { paddingVertical: 8, borderBottomWidth: 1, borderBottomColor: '#f1f3f5' },
   primaryBtn: { backgroundColor: '#198754', padding: 12, borderRadius: 8, alignItems: 'center', marginTop: 8 },
   primaryBtnText: { color: 'white', fontWeight: '700' },
+  secondaryBtn: { backgroundColor: '#FF6347', padding: 10, borderRadius: 8, alignItems: 'center', marginTop: 8 },
   linkBtn: { marginTop: 12, alignItems: 'center' }
 });
+
+
