@@ -17,6 +17,9 @@ CREATE TABLE customer (
   default_address TEXT,
   phone TEXT
 );
+ALTER TABLE customer
+ADD COLUMN latitude FLOAT PRECISION,
+ADD COLUMN longitude FLOAT PRECISION;
 
 CREATE TABLE restaurant (
   restaurant_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -30,8 +33,8 @@ CREATE TABLE restaurant (
 
 ALTER TABLE restaurant
 ADD COLUMN address TEXT,
-ADD COLUMN latitude DOUBLE PRECISION,
-ADD COLUMN longitude DOUBLE PRECISION;
+ADD COLUMN latitude FLOAT PRECISION,
+ADD COLUMN longitude FLOAT PRECISION;
 
 
 CREATE TABLE category (
