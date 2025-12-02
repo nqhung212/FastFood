@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { View, ActivityIndicator, Platform, StyleSheet } from 'react-native';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { View, ActivityIndicator, Platform, StyleSheet, Image } from 'react-native';
 import MapView, { Marker, AnimatedRegion, Polyline } from 'react-native-maps';
 
 export default function DroneMapSimulator({ fromLat, fromLng, toLat, toLng, duration = 30, onFinish }:
@@ -96,7 +95,11 @@ export default function DroneMapSimulator({ fromLat, fromLng, toLat, toLng, dura
           rotation={bearing}
         >
           <View style={styles.iconWrap} pointerEvents="none">
-            <MaterialCommunityIcons name="drone" size={42} color="#4b8cff" />
+            <Image
+              source={{ uri: 'https://cdn-icons-png.flaticon.com/512/3211/3211277.png' }}
+              style={{ width: 42, height: 42 }}
+              resizeMode="contain"
+            />
           </View>
         </Marker.Animated>
       </MapView>
