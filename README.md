@@ -67,11 +67,7 @@ npx ngrok@latest http 4001
 ```
 
 Copy the generated https URL and set it as `REDIRECT_URL` and `IPN_URL` (see Environment Variables). Example:
-
-```
-REDIRECT_URL=https://<your-ngrok-subdomain>.ngrok-free.dev/api/momo/callback
-IPN_URL=https://<your-ngrok-subdomain>.ngrok-free.dev/api/momo/callback
-```
+Use it for testing payment callbacks.
 
 ### Usage
 
@@ -102,52 +98,7 @@ FastFood/
 └─ README.md
 ```
 
-### Environment Variables
-
-Create `.env` files where servers run.
-
-Mobile MoMo server (folder: `mobile/server`):
-
-```
-PORT=4001
-MOMO_PARTNER_CODE=...
-MOMO_ACCESS_KEY=...
-MOMO_SECRET_KEY=...
-MOMO_ENDPOINT=https://test-payment.momo.vn/v2/gateway/api/create
-REDIRECT_URL=https://<your-ngrok>.ngrok-free.dev/api/momo/callback
-IPN_URL=https://<your-ngrok>.ngrok-free.dev/api/momo/callback
-SUPABASE_URL=...
-SUPABASE_SERVICE_ROLE_KEY=...
-```
-
-Web payment proxy (folder: `web/server`):
-
-```
-PORT=5001
-REDIRECT_URL=http://localhost:3000/payment-success
-CANCEL_URL=http://localhost:3000/payment-cancel
-```
-
-App clients (recommended):
-
-- Replace hard‑coded Supabase keys with environment variables before production.
-- Never commit service role keys.
-
-### What I Learned
-
-- Integrating MoMo payment: signature generation, redirect flow, IPN callbacks
-- Structuring a multi‑app repo (web + mobile) sharing services and patterns
-- Using Supabase for Auth and database operations
-- Expo Router with React Native Maps, gestures, and haptics
-- Managing state and cross‑platform styles
-
-### Future Improvements
-
-- Move secrets to environment variables across all clients; remove hard‑coded keys
-- Add unit/integration tests, e2e payment flow tests, and CI/CD
-- Dockerize web and payment servers, add `.env.example`
-- Add real‑time order tracking via channels (e.g., Supabase Realtime)
-- Improve error handling, logging, and observability
+###
 
 ---
 
@@ -212,11 +163,7 @@ npx ngrok@latest http 4001
 ```
 
 Sao chép URL https và đặt cho `REDIRECT_URL`, `IPN_URL` như sau:
-
-```
-REDIRECT_URL=https://<subdomain-ngrok>.ngrok-free.dev/api/momo/callback
-IPN_URL=https://<subdomain-ngrok>.ngrok-free.dev/api/momo/callback
-```
+Sử dụng URL https để thử nghiệm quy trình thanh toán và callback.
 
 ### Sử Dụng
 
@@ -239,51 +186,7 @@ FastFood/
 └─ README.md
 ```
 
-### Biến Môi Trường
-
-Tạo file `.env` ở những thư mục chạy server.
-
-Server MoMo (thư mục `mobile/server`):
-
-```
-PORT=4001
-MOMO_PARTNER_CODE=...
-MOMO_ACCESS_KEY=...
-MOMO_SECRET_KEY=...
-MOMO_ENDPOINT=https://test-payment.momo.vn/v2/gateway/api/create
-REDIRECT_URL=https://<ten-ngrok>.ngrok-free.dev/api/momo/callback
-IPN_URL=https://<ten-ngrok>.ngrok-free.dev/api/momo/callback
-SUPABASE_URL=...
-SUPABASE_SERVICE_ROLE_KEY=...
-```
-
-Proxy thanh toán Web (thư mục `web/server`):
-
-```
-PORT=5001
-REDIRECT_URL=http://localhost:3000/payment-success
-CANCEL_URL=http://localhost:3000/payment-cancel
-```
-
-Ứng dụng (khuyến nghị):
-
-- Di chuyển key Supabase ra biến môi trường; không commit key nhạy cảm.
-
-### Bài Học Rút Ra
-
-- Tích hợp thanh toán MoMo: ký HMAC, redirect, IPN
-- Tổ chức repo nhiều ứng dụng (web + mobile)
-- Dùng Supabase cho Auth và Postgres
-- Expo Router, bản đồ RN Maps, gesture/haptics trên mobile
-- Quản lý trạng thái và style đa nền tảng
-
-### Hướng Phát Triển
-
-- Chuẩn hoá biến môi trường, gỡ bỏ key hard‑code
-- Bổ sung test (unit/integration/e2e) và CI/CD
-- Docker hoá các server, thêm `.env.example`
-- Theo dõi đơn hàng thời gian thực (Supabase Realtime)
-- Cải thiện xử lý lỗi và logging
+###
 
 ---
 
