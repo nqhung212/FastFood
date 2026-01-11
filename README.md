@@ -111,6 +111,13 @@ FastFood/
 
 ## Tiếng Việt
 
+### Thông Tin Dự Án
+
+- **Thời gian:** Hoàn thành trong 1 tháng
+- **Thành viên:**
+  - Hùng - Website (React + Vite)
+  - Hậu - Mobile (Expo/React Native)
+
 ### Công Nghệ Sử Dụng
 
 - Frontend (Web): React 19, Vite 7, React Router, Axios, Leaflet/React‑Leaflet
