@@ -2,6 +2,13 @@
 
 Full‑stack food ordering platform with a Web client (React + Vite) and a Mobile app (Expo/React Native), backed by Supabase (Auth + Postgres) and integrated MoMo payment gateway with callback/IPN handling.
 
+### Project Information
+
+- **Timeline:** Completed in 1 month
+- **Team:**
+  - Hùng - Website (React + Vite)
+  - Hậu - Mobile (Expo/React Native)
+
 ---
 
 ## English
